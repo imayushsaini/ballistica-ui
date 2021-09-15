@@ -5,32 +5,29 @@
 }
 .sub-container1{
    // background-color: pink;
-    height:80vh;
-    width:50%;
+    //height:80vh;
+    margin-bottom: 2rem;
+    //width:50%;
     .sc11{
        // background-color: red;
        background-color: #272b4a;
        //border:1px solid black;
-        width: 91.5%;
-        margin-left: 6.7%;
+        width: 97%;
+       // margin-left: 6.7%;
         height: fit-content;
     }
-    .sc12{
-      //  background-color: orange;
-        width: 96%;
-        margin-left: 4%;
-        height: 56vh;
-    }
+    
 
 }
 
 .sub-container2{
    // border:1px solid black;
     background-color: #272b4a;
-    margin-left: 1rem;
+   // margin-left: 1rem;
    // background-color: lightgreen;
-    height: 80vh;
-    width: 48%;
+   // height: 80vh;
+   margin-bottom: 2rem;
+   // width: 48%;
 }
 
 .live-card{
@@ -53,7 +50,7 @@
         text-align: center;
         display: none;
     }
-    table{width: 100%;}
+    table{width: 97%;}
 }
 
 .live-players{
@@ -108,3 +105,16 @@
 .mat-table{
     background-color: #272b4a;
 }
+
+@media only screen and (max-width: 768px) {
+    .sub-container1{
+        margin-bottom: 1rem;
+        .sc11{
+            width: 100%;
+        }
+    }
+    .leaderboard{
+        table{width: 100%;}
+    }
+   
+} 

@@ -4,7 +4,7 @@
 }
 
 
-.left-container{width: 28%;}
+.left-container{width: 28%;margin-top: 2rem;}
 .leaderboard{
     width: 70%;
     height: 85vh;
@@ -23,3 +23,24 @@
 }
 .mat-form-field-appearance-standard .mat-form-field-flex{padding-top: 0em !important;}
 .mat-form-field-wrapper{padding-bottom: 0em;}
+
+
+@media only screen and (max-width: 768px) {
+    .hide{
+        display: none;
+    }
+    .display-mob-prof{
+        display: block;
+    }
+    .left-container{
+       // display: none;
+       width: 100%;
+    }
+    .leaderboard{
+       
+        width: 100%;
+    }
+    .main-container{
+        width: 85%;
+    }
+} 

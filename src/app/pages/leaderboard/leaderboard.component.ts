@@ -24,7 +24,7 @@ const NAMES: string[] = [
   styleUrls: ['./leaderboard.component.scss']
 })
 export class LeaderboardComponent implements AfterViewInit {
-
+  showPlayerProfile=false;
   displayedColumns: string[] = ['rank', 'name', 'score', 'kills'];
   dataSource: MatTableDataSource<UserData>;
 
@@ -39,6 +39,12 @@ export class LeaderboardComponent implements AfterViewInit {
 
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource(users);
+  }
+  onClose(){
+    this.showPlayerProfile=false;
+  }
+  showProfile(){  //only for mobile view
+    this.showPlayerProfile=true;
   }
 
   ngAfterViewInit() {

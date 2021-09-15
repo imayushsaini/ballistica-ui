@@ -2,7 +2,7 @@
 
 <div class="main-container">
     <div class="row">
-        <div class="sub-container1">
+        <div class=" col sub-container1">
             <div class="row">
                 <div class="sc11">
                     <div class="live-card">
@@ -13,12 +13,12 @@
                     </div>
                 </div>
             </div>
-            <div class="row sc12">
+            <div class="row">
                 <div class="leaderboard">
                     <div class="heading">
                         <h3>Leaderboard</h3>
                     </div>
-                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+                    <table mat-table [dataSource]="dataSource" class=" demo-table">
                         <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
                           <th mat-header-cell *matHeaderCellDef>
                             {{column.header}}
@@ -33,8 +33,8 @@
                       </table>
                 </div>
             </div>
-         </div>
-         <div class="sub-container2">
+        </div>
+        <div class=" col sub-container2">
              <div class="live-players">
                  <div class="server-name">
                     Mr.Smoothy #2v2 Server

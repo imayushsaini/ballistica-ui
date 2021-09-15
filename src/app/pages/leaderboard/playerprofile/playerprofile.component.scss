@@ -1,6 +1,6 @@
 .player{
     width: 100%;
-    height: 85vh;
+   // height: 85vh;
     background-color: #272b4a;
     .heading{width: 100; text-align: center;padding-top: 2em;font-size: 1.7em;}
     ul{list-style: none;padding-left: 15%;padding-top: 4em; padding-right: 15%;}
@@ -8,4 +8,14 @@
 }
 .notify-btn{
     margin-right: 15%;
+}
+.close-btn{
+    display: none;
+}
+@media only screen and (max-width: 768px) {
+    .close-btn{
+        display: block;
+        float: right;
+        padding: 1.2em 1.2em 0 0;
+    }
 }
