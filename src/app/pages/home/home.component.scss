@@ -1,0 +1,110 @@
+.main-container{
+    width: 85%;
+    margin: auto;
+    margin-top: 2rem;
+}
+.sub-container1{
+   // background-color: pink;
+    height:80vh;
+    width:50%;
+    .sc11{
+       // background-color: red;
+       background-color: #272b4a;
+       //border:1px solid black;
+        width: 91.5%;
+        margin-left: 6.7%;
+        height: fit-content;
+    }
+    .sc12{
+      //  background-color: orange;
+        width: 96%;
+        margin-left: 4%;
+        height: 56vh;
+    }
+
+}
+
+.sub-container2{
+   // border:1px solid black;
+    background-color: #272b4a;
+    margin-left: 1rem;
+   // background-color: lightgreen;
+    height: 80vh;
+    width: 48%;
+}
+
+.live-card{
+    width: 70%;
+    height: 4rem;
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    background-color: #4a5188;
+    //border:1px solid black;
+    padding-top:1.2rem;
+    padding-left:1rem;
+
+}
+.leaderboard{
+    width: 100%;
+    margin-top:1em;
+    .heading{
+        padding-top: 0.9rem;
+        text-align: center;
+        display: none;
+    }
+    table{width: 100%;}
+}
+
+.live-players{
+    .server-name{
+        margin-top: 2rem;
+        width: 100%;
+        font-size: 1.6rem;
+        text-align: center;
+    }
+    
+    .scoreboard{
+       
+        text-align: center;
+    }
+    ul {
+        list-style-type: none;
+        padding:0;
+      }
+    .teamA{
+        //border:1px solid black;
+        width: 16em;
+        padding:1rem;
+        margin-right: 1rem;
+       .header{
+        //width: 12em;
+        padding:1rem;
+        background-color: rgb(244, 67, 54);
+        .score{padding-top:4px; font-size: 1.7rem;}
+       }
+       
+    }
+    .teamB{
+        //border:1px solid black;
+        width: 16em;
+        padding:1rem;
+        margin-left: 1rem;
+        .header{
+           // width: 12em;
+            padding:1rem;
+            background-color:rgb(63, 81, 181);
+            .score{padding-top:4px; font-size: 1.7rem;}
+           }
+    }
+    .players{
+        padding-left: 0.7rem;
+        text-align: left;
+        padding-top:1rem;
+        li{padding-bottom: 1rem;}
+    }
+}
+
+.mat-table{
+    background-color: #272b4a;
+}

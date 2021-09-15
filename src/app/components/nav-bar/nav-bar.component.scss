@@ -1,0 +1,14 @@
+nav{
+    padding-top:4rem;
+    padding-left: 2rem;
+}
+ul{
+    li{
+        display: inline;
+        margin-left:4rem;
+        cursor: pointer;
+    }
+    .active{
+        font-size:2rem;
+    }
+}

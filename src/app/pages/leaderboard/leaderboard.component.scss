@@ -1,0 +1,25 @@
+.main-container{
+    width: 80%;
+    margin: auto;
+}
+
+
+.left-container{width: 28%;}
+.leaderboard{
+    width: 70%;
+    height: 85vh;
+   // background-color: pink;
+}
+.mat-table{
+    width: 100%;
+    background-color: #272b4a;
+}
+.mat-form-field{
+    margin-left: 5em;
+    width: 60%;
+}
+.mat-paginator{
+    background-color: #272b4a;
+}
+.mat-form-field-appearance-standard .mat-form-field-flex{padding-top: 0em !important;}
+.mat-form-field-wrapper{padding-bottom: 0em;}
