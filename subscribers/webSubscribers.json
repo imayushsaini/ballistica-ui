@@ -1,0 +1,24 @@
+{
+    "h799g9": {
+        "endpoint": "8h09h09h0",
+        "keys": {
+            "auth": "jj9j9j",
+            "p235dh": "ih89h98h"
+        }
+    },
+    "yMYGf7": {
+        "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABhREcqaylPll8PoXuwXu_dZBEEjwCfw1eDOLpebRL62_Dlq8DP0A4dojDnUnzvVqQblrdEODX2AfOCfkAbtcEPG1TPWM2XlkhzFeAbWsjfcxQzinMiBp1eCg3uOvIJk17NDctlxVgdfbon8SsZNpB0M553LuYhBN0NcvknOeu6fYmMPFQ",
+        "keys": {
+            "auth": "EKRfPzSex4B597wyHx2-3Q",
+            "p256dh": "BJ1Gkhl4ONdyBm82TXS1cwXsvxqrb-lTJeuxcIfWEEqg2gGrNZgnPxb_4t6itdF-t-9YhsJ0WPJmG6QoAXzwi5Y"
+        }
+    },
+    "CU6N4b": {
+        "endpoint": "https://wns2-sg2p.notify.windows.com/w/?token=BQYAAAArZTRO6ZyCDU9ufnvfPV%2f7RsWw19AuLMtjz8QY%2be9jRv8IBygc1PxKuq3lsWSfnhQviR6BVZpWBJGdTpgqYv9%2fRwN71Y6axQfRwG0K6Ex%2bxS6xCQRQKgpMSXnst5SjwX%2bpdHfNX2EK%2bD%2fTyE%2bo79ZbgzdFRCqai2llbCZUl4TCSs94YteONuEfy9CnmFuul%2br2Ky9eKnpire2fh9kBs5eu%2fGCeLQx3z0F7JTFITdpTwDN2suL2qmedcvV12vpy1jfD2AQhItjDwFRjdiEZ29HzLhd33jpAUKsVLixVL%2fJ4dajSr12D2tOanbcLeg0jOTDiZaH%2fNAm1QlelWo6wS%2f3Q",
+        "expirationTime": null,
+        "keys": {
+            "p256dh": "BOxkZMEH015EcfcuRTE2XATYYXRwhVys3Oo8krby136JsbNFckvderv0hG6jCn3-ziKmiz-1AytnYWVZvNwewQ0",
+            "auth": "6ciN7AmFgym3rU0szbxFpw"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "ballistica-web-stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imayushsaini/ballistica-web-stats.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imayushsaini/ballistica-web-stats/issues"
+  },
+  "homepage": "https://github.com/imayushsaini/ballistica-web-stats#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "discord.js": "^13.1.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "moment": "^2.29.1",
+    "request": "^2.88.2",
+    "web-push": "^3.4.5"
+  }
+}
