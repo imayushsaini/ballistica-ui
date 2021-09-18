@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const app= express();
-
+var fs=require('fs');
 const webpush = require("./service/webpush.service.js");
 
 var players=require('./subscribers/players.json');
@@ -16,6 +16,7 @@ var request = require('request');
 const port=3000;
 
 var stats;
+var playersInGame={};
 
 setInterval(()=>{updateStats()},10000)
 
@@ -32,23 +33,28 @@ function updateStats(){
 
 
 function processSubscription(livePlayers){
-
+      
       for(player in livePlayers){
-            if(players.includes(player)){        //someone subscribed to this player 
-                  last_seen=new Date(players[player]["last_seen"]);
-                  now=new Date();
-                  diff = (now-last_seen)/(1000*60);      //in minutes
-                  if(diff>=60){                          //ok he playing back after an hour 
-                     webpush.notifyFor(player);          // inform his subscribers , that he is playinng now
-                     //notify by discord dm , coming soon
+            if(!(player in playersInGame)){
+                  // so new player joined the server 
+                  if(player in players){        //someone subscribed to this player 
+                        last_seen=new Date(players[player]["last_seen"]);
+                        now=new Date();
+                        diff = (now-last_seen)/(1000*60);      //in minutes
+                        if(diff>=60){                          //ok he playing back after an hour 
+                           webpush.notifyFor(player);          // inform his subscribers , that he is playinng now
+                           //notify by discord dm , coming soon
+                        }
+                        //update his last seen
+                        players[player]["last_seen"]=new Date();
+                  
+                        fs.writeFile("./subscribers/players.json",JSON.stringify(players,null,4),function(err){
+                              console.log(err);
+                        });
                   }
-                  //update his last seen
-                  players[player]["last_seen"]=new Date();
             }
       }
-      fs.writeFile("./subscribers/players.json",JSON.stringify(players,null,4),function(err){
-            console.log(err);
-      });
+      playersInGame=livePlayers;
 }
 
 

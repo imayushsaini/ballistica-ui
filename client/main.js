@@ -28,7 +28,7 @@ function urlBase64ToUint8Array(base64String) {
           applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
         });
         console.log("sending post request")
-        msg={'subscription':subscription,'player_id':'pb-678'}
+        msg={'subscription':subscription,'player_id':'pb-JiNJARBaXEFBVF9HFkNXXF1EF0ZaRlZE'}
         await fetch('/subscribe', {
           method: 'POST',
           body: JSON.stringify(msg),

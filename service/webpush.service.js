@@ -1,7 +1,7 @@
 require('dotenv').config({ path: 'variables.env' });
 const webPush = require('web-push');
-var subscribers=require('./subscribers/webSubscribers.json');
-var players=require('./subscribers/players.json');
+var subscribers=require('../subscribers/webSubscribers.json');
+var players=require('../subscribers/players.json');
 const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 var fs=require('fs');
@@ -70,10 +70,10 @@ function sendPush(subscription,player_id){
 }
 
 function notifyFor(player_id){
-		if(players.includes(player_id)){
+		if(player_id in players){
 			 	for(sub_id in players[player_id]["webpush"] ){
-			 		 if(subscribers.includes(sub_id)){
-			 		 	     sendPush(subscribers[sub_id],player_id);    //player_id need to be change with Player name(for payload only) , later
+			 		 if(players[player_id]["webpush"][sub_id] in subscribers){
+			 		 	     sendPush(subscribers[players[player_id]["webpush"][sub_id]],player_id);    //player_id need to be change with Player name(for payload only) , later
 			 		 }
 			 	}
 		}
