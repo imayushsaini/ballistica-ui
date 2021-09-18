@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 # coding: utf-8
-
-# ba_meta require api 6
-
 from typing import Optional, Any, Dict, List, Type, Sequence
 from ba._gameactivity import GameActivity
 import ba,_ba
@@ -10,7 +7,7 @@ import psutil as p
 import json
 import os
 import _thread
-from stats import mystats
+# from stats import mystats
 os.environ['FLASK_APP'] = 'bombsquadflaskapi.py'
 os.environ['FLASK_ENV'] = 'development'
 
@@ -41,33 +38,37 @@ class BsDataThread(object):
             gametype: Type[GameActivity] =current_game_spec['resolved_type']
             
             currentMap=gametype.get_settings_display_string(current_game_spec).evaluate()
-
+        except:
+            pass
         minigame={'current':currentMap,'next':nextMap}
         system={'cpu':p.cpu_percent(),'ram':p.virtual_memory().percent}
-
+        #system={'cpu':80,'ram':34}
         stats['system']=system
         stats['roster']=liveplayers
         stats['chats']=_ba.get_chat_messages()
         stats['playlist']=minigame
         stats['teamInfo']=self.getTeamInfo()
 
-    def getTeamInfo():
+        #print(self.getTeamInfo());
+
+    def getTeamInfo(self):
         data={}
-        data['sessionType']=type(_ba.getsession()).__name__
+        
         session=_ba.get_foreground_host_session()
+        data['sessionType']=type(session).__name__
         teams=session.sessionteams
         for team in teams:
             data[team.id]={'name':team.name.evaluate(),
-                           'color':team.color,
+                           'color':list(team.color),
                            'score':team.customdata['score'],
                            'players':[]
                             }
             for player in team.players:
                 teamplayer={'name':player.getname(),
-                            'device_id':player.inputdevice().get_account_name(True),
+                            'device_id':player.inputdevice.get_account_name(True),
                             'inGame':player.in_game,
                             'character':player.character,
-                            'account_id':player.get_account_id
+                            'account_id':player.get_account_id()
                             }
                 data[team.id]['players'].append(teamplayer)
 
@@ -83,7 +84,7 @@ import flask
 from flask import request, jsonify
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+app.config["DEBUG"] = False
 
 
 @app.route('/', methods=['GET'])
@@ -94,10 +95,14 @@ def home():
 # A route to return all of the available entries in our catalog.
 @app.route('/getStats', methods=['GET'])
 def api_all():
-    return jsonify(stats)
+    return json.dumps(stats)
 
 
 # ba_meta export plugin
 class InitalRun(ba.Plugin):
     def __init__(self):
         flask_run = _thread.start_new_thread(app.run, ("0.0.0.0",5000,False ))
+
+
+# SAMPLE OUTPUT
+# {'system': {'cpu': 80, 'ram': 34}, 'roster': {}, 'chats': [], 'playlist': {'current': 'Meteor Shower @ Rampage', 'next': 'Assault @ Step Right Up'}, 'teamInfo': {'sessionType': 'DualTeamSession', 0: {'name': 'Blue', 'color': (0.1, 0.25, 1.0), 'score': 1, 'players': [{'name': 'Jolly', 'device_id': '\ue030PC295588', 'inGame': True, 'character': 'xmas', 'account_id': 'pb-IF4TVWwZUQ=='}]}, 1: {'name': 'Red', 'color': (1.0, 0.25, 0.2), 'score': 0, 'players': []}}}
