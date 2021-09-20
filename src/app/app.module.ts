@@ -5,16 +5,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HomeComponent } from './pages/home/home.component';
+import { HomeComponent, ProfileDialog } from './pages/home/home.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import {MatTableModule} from '@angular/material/table';
 import { LeaderboardComponent } from './pages/leaderboard/leaderboard.component';
-//import {MatFormFieldModule} from '@angular/material/form-field'; 
-import {MatPaginatorModule} from '@angular/material/paginator'; 
+//import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LiveplayersComponent } from './pages/leaderboard/liveplayers/liveplayers.component';
 import { PlayerprofileComponent } from './pages/leaderboard/playerprofile/playerprofile.component';
+import { HttpClientModule } from '@angular/common/http';
+import {MatDialogModule} from '@angular/material/dialog';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,17 +27,26 @@ import { PlayerprofileComponent } from './pages/leaderboard/playerprofile/player
     NavBarComponent,
     LeaderboardComponent,
     LiveplayersComponent,
-    PlayerprofileComponent
+    PlayerprofileComponent,
+    ProfileDialog
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     BrowserAnimationsModule,
     NgbModule,
     MatTableModule,
     MatFormFieldModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: true,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

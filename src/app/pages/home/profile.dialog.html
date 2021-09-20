@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>{{data.name}}</h2>
+<mat-dialog-content class="mat-typography">
+  <h3>Device_Id: {{data.device_id}}</h3>
+  Character: {{data.character}}<br>
+  In Game:{{data.inGame}}<br>
+  id: {{data.account_id}}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
+  <button class="btn btn-primary btn-block" [mat-dialog-close]=data.account_id >Subscribe</button>
+</mat-dialog-actions>

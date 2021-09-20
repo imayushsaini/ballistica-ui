@@ -6,10 +6,10 @@
             <div class="row">
                 <div class="sc11">
                     <div class="live-card">
-                        Current Map : Death Match @ Courtyard
+                        Current Map : {{playlist.current}}
                     </div>
                     <div class="live-card">
-                        Next Map : Soccer @ Hockey Stadium
+                        Next Map : {{playlist.next}}
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                             {{column.cell(row)}}
                           </td>
                         </ng-container>
-                      
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                       </table>
@@ -39,31 +39,30 @@
                  <div class="server-name">
                     Mr.Smoothy #2v2 Server
                  </div>
-                 
+
                  <div class="d-flex justify-content-center pt-5 scoreboard">
                      <div class="teamA">
-                         <div class="header">
-                            <div class="name">Team A</div>
-                            <div class="score">10</div>
+                         <div class="header" *ngIf="teamData">
+                            <div class="name">{{teamData[0].name}}</div>
+                            <div class="score">{{teamData[0].score}}</div>
                         </div>
                          <div class="players">
-                             <ul>
-                                <li>iwillneverplayagain1 <br><span>Hey Smoothy</span> </li>
-                                <li>rikko device <br><span>Nyaa </span></li>
+                             <ul *ngIf="teamData">
+                                <li *ngFor="let player of teamData[0].players">{{player.device_id}} <br><span>{{player.name}}</span> </li>
+
                              </ul>
                          </div>
                      </div>
                      <div class="teamB">
-                         <div class="header">
-                            <div class="name">Team B</div>
-                            <div class="score">05</div>
+                         <div class="header" *ngIf="teamData">
+                            <div class="name">{{teamData[1].name}}</div>
+                            <div class="score">{{teamData[1].score}}</div>
                          </div>
                         <div class="players">
-                            <ul>
-                                <li>iwillneverplayagain1 <br><span>Hey Smoothy</span> </li>
-                                <li>rikko device <br><span>Nyaa </span></li>
-                                
-                            </ul>
+                          <ul *ngIf="teamData">
+                            <li *ngFor="let player of teamData[1].players" (click)="openDialog(player)">{{player.device_id}} <br><span>{{player.name}}</span> </li>
+
+                          </ul>
                         </div>
                     </div>
                  </div>
@@ -71,3 +70,8 @@
          </div>
     </div>
 </div>
+
+<!-- <div class="popup-container">
+  Hi i am player
+</div> -->
+
