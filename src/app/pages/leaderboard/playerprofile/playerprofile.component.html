@@ -1,23 +1,25 @@
 <div class="player">
     <a class="close-btn" (click)="onClose()">X</a>
     <div class="heading">
-        Player Name
+        {{player.name}}
     </div>
-    <div class="players">
+    <div class="players" *ngIf="player!={}">
         <ul>
             <li>
-                Id: pb-ihfghigxohgofjgofgfgfdg
+                Id: {{player.id}}
             </li>
-            <li>Device ID:iwillneverplayagain</li>
-            
-            <li>Name:iwillneverplayagain</li>
-            <li>Rank: #34</li>
-            <li>Score : 34545</li>
-            <li>Kills: 6575</li>
-            <li>Death: 6564</li>
-            <li>K/D: 5646</li>
-            <li>Last Seen: 2021/08/21</li>
-            <li><button class="btn btn-primary btn-block notify-btn">Notify Me</button></li>
+
+
+            <li>Name:{{player.name}}</li>
+            <li>Rank: #{{player.rank}}</li>
+            <li>Score : {{player.scores}}</li>
+            <li>Kills: {{player.kills}}</li>
+            <li>Death: {{player.deaths}}</li>
+            <li>K/D: {{ getKD(player.kills,player.deaths)}}</li>
+            <li>Last Seen: {{parseTime(player.last_seen)}}</li>
+            <li><button class="btn btn-primary btn-block notify-btn" (click)="subscribe(player.id,player.name)">Notify Me</button>
+            <p style="color:#f03737">*Get notification when he play again</p>
+            </li>
         </ul>
     </div>
 </div>

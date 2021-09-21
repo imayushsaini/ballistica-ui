@@ -34,7 +34,7 @@ export class SubscribeService {
     this.service.triggerMessage(this.payload).subscribe(x=>console.log(x),err=>console.log(err));
     }
 
-  subscribeToNotifications(player_id:string) {
+  subscribeToNotifications(player_id:string,name:string) {
     console.log("subs2notify")
     console.log(this.swPush.isEnabled)
     if(this.swPush.isEnabled){
@@ -45,7 +45,7 @@ export class SubscribeService {
       })
       .then(sub =>{
         console.log("body ready to send to backend");
-        let msg={'subscription':sub,'player_id':player_id}
+        let msg={'subscription':sub,'player_id':player_id,'name':name}
         this.service.subscribe(msg).subscribe(x=>console.log(x),err=>console.log(err))
       })
       .catch(err => console.error("Could not subscribe to notifications", err));

@@ -48,7 +48,7 @@
                         </div>
                          <div class="players">
                              <ul *ngIf="teamData">
-                                <li *ngFor="let player of teamData[0].players">{{player.device_id}} <br><span>{{player.name}}</span> </li>
+                                <li *ngFor="let player of teamData[0].players" (click)="openDialog(player)">{{player.device_id}} <br><span>{{player.name}}</span> </li>
 
                              </ul>
                          </div>

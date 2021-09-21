@@ -12,13 +12,6 @@ export interface PlayerData {
   scores: number;
   kills: number;
 }
-const TOP_RANK_DATA: PlayerData[] = [
-  {rank: 1, name: 'DevoidBarracks11', scores: 9535, kills: 456},
-  {rank: 2, name: 'D A R K S E Ï D', scores: 5678, kills: 345},
-  {rank: 3, name: 'Linux31250', scores: 6941, kills: 445},
-  {rank: 4, name: '⎝✧GͥOͣDͫ✧⎠', scores: 9012, kills: 457},
-  {rank: 5, name: 'Mort starn', scores: 1811, kills: 234}
-];
 
 @Component({
   selector: 'app-home',
@@ -60,6 +53,7 @@ export class HomeComponent implements OnInit {
   private updateSubscription: Subscription;
 
   ngOnInit() {
+    this.getLeaderboard();
     this.lBoard.leaderboardUpdateEvent.subscribe(x=>{
       this.getLeaderboard();
       this.changeDetectorRefs.detectChanges();
@@ -82,7 +76,7 @@ export class HomeComponent implements OnInit {
       dialogRef.afterClosed().subscribe(result => {
         console.log(`Dialog result: ${result}`);
         if(result){
-          this.subService.subscribeToNotifications(result);
+          this.subService.subscribeToNotifications(result.account_id,result.name);
         }
 
       });

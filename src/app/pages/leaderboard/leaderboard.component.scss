@@ -21,6 +21,9 @@
 .mat-paginator{
     background-color: #272b4a;
 }
+td{
+  cursor: pointer;
+}
 .mat-form-field-appearance-standard .mat-form-field-flex{padding-top: 0em !important;}
 .mat-form-field-wrapper{padding-bottom: 0em;}
 
@@ -37,10 +40,10 @@
        width: 100%;
     }
     .leaderboard{
-       
+
         width: 100%;
     }
     .main-container{
         width: 85%;
     }
-} 
+}

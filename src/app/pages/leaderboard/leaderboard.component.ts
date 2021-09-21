@@ -1,51 +1,60 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-export interface UserData {
-  rank: string;
+import { Subject } from 'rxjs';
+import { LeaderboardService } from 'src/app/services/leaderboard.service';
+import { SubscribeService } from 'src/app/services/subscribe.service';
+export interface PlayerData {
   name: string;
-  score: string;
+  rank: number;
+  scores: number;
   kills: number;
 }
 
-/** Constants used to fill up our data base. */
-const kills: number[] = [
-  453, 546, 2344, 5674, 3434, 345, 2345, 3453
-];
-const NAMES: string[] = [
-  'Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack', 'Charlotte', 'Theodore', 'Isla', 'Oliver',
-  'Isabella', 'Jasper', 'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'
-];
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
   styleUrls: ['./leaderboard.component.scss']
 })
-export class LeaderboardComponent implements AfterViewInit {
+export class LeaderboardComponent implements AfterViewInit , OnInit {
   showPlayerProfile=false;
   displayedColumns: string[] = ['rank', 'name', 'score', 'kills'];
-  dataSource: MatTableDataSource<UserData>;
-
+  dataSource: MatTableDataSource<PlayerData>;
+  topPlayers:PlayerData[]=[];
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
   @ViewChild(MatSort)
   sort: MatSort;
+  selectedPlayer:any={};
 
-  constructor() {
-    // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
-
+  constructor(private subService:SubscribeService,private lBoard:LeaderboardService,private changeDetectorRefs: ChangeDetectorRef) {
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+    this.dataSource = new MatTableDataSource<PlayerData>();
   }
+  ngOnInit() {
+    this.getLeaderboard();
+    this.lBoard.leaderboardUpdateEvent.subscribe(x=>{
+      this.getLeaderboard();
+      this.changeDetectorRefs.detectChanges();
+    })
+
+    }
+  getLeaderboard(){
+      this.topPlayers= this.lBoard.getLeaderboard();
+      this.dataSource.data=this.topPlayers;
+      this.selectedPlayer=this.topPlayers[0];
+    }
   onClose(){
     this.showPlayerProfile=false;
   }
-  showProfile(){  //only for mobile view
+  showProfile(row:any){  //only for mobile view
     this.showPlayerProfile=true;
+    this.selectedPlayer=row;
+    console.log(row);
   }
+
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -62,15 +71,3 @@ export class LeaderboardComponent implements AfterViewInit {
   }
 }
 
-/** Builds and returns a new User. */
-function createNewUser(rank: number): UserData {
-  const name = NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
-
-  return {
-    rank: rank.toString(),
-    name: name,
-    score: Math.round(Math.random() * 100).toString(),
-    kills: kills[Math.round(Math.random() * (kills.length - 1))]
-  };
-}
