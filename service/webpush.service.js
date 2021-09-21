@@ -65,7 +65,7 @@ function sendPush(subscription,player_id,name){
     "notification": {
 	    "title": name+" is playing now !",
 	    "body": "Join now "+name+" is waiting for you",
-	    "icon": "assets/icons/icon-72x72.png",
+	    "icon": "assets/icons/icon-192x192.png",
 	    "vibrate": [100, 50, 100],
 	    "requireInteraction":true,
 	    "data": {"dateOfArrival": Date.now(),},
