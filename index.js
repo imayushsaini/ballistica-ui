@@ -7,9 +7,9 @@ var fs=require('fs');
 const webpush = require("./service/webpush.service.js");
 
 var players=require('./subscribers/players.json');
-
+var cors=require('cors')
 app.use(bodyParser.json());
-    
+app.use(cors())
 app.use(express.static(path.join(__dirname, 'client')));
 
 var request = require('request');
@@ -17,8 +17,26 @@ const port=3000;
 
 var stats;
 var playersInGame={};
+var leaderboard={};
+var top200={};
+setInterval(()=>{updateStats()},10*1000);
+setInterval(()=>{updateLeaderboard()},30*60*1000);
 
-setInterval(()=>{updateStats()},10000)
+
+function updateLeaderboard(){
+      request('http://149.129.178.0/getLeaderboard',function(err,res,body){
+            if(!err&&res.statusCode==200){
+                  leaderboard=JSON.parse(body);
+            }
+      });
+      request('http://149.129.178.0/getTop200',function(err,res,body){
+            if(!err&&res.statusCode==200){
+                  top200=JSON.parse(body);
+            }
+      });
+
+}
+updateLeaderboard() //call it once on server boot , then scheduler will handle it
 
 function updateStats(){
       request('http://149.129.178.0/getStats',function(err,res,body){
@@ -28,7 +46,8 @@ function updateStats(){
                   livePlayers=data['roster'];
                   processSubscription(livePlayers);
             }
-      })
+      });
+
 }
 
 
@@ -64,12 +83,21 @@ function processSubscription(livePlayers){
 // =============    APIs    ================================
 
 app.post('/subscribe', (req, res) => {
+      console.log("received subs request on backend");
       const subscription = req.body['subscription'];
-      webpush.subscribe(subscription,req.body['player_id']);
+      webpush.subscribe(subscription,req.body['player_id'],req.body['name']);
       res.status(201).json({});
     });
     
-
+app.get('/live',(req,res)=>{
+      res.status(200).json(stats);
+})
+app.get('/top200',(req,res)=>{
+      res.status(200).json(top200);
+})
+app.get('/leaderboard',(re,res)=>{
+      res.status(200).json(leaderboard);
+})
 
 app.listen(port,()=>console.log(`Server started at port ${port}`))
 

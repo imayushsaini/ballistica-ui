@@ -1,31 +1,20 @@
 {
-    "pb-123": {
+    "pb-smoothy123": {
         "webpush": [
-            "bib"
-        ],
-        "discord": [
-            "y98"
-        ]
-    },
-    "pb-678": {
-        "webpush": [
-            "yMYGf7"
+            "yMYGf7",
+            "mOb9wZ",
+            "CU6N4b"
         ],
         "discord": [],
-        "last_seen": "2021-09-17T18:06:43.052Z"
-    },
-    "pb-IF4GVU8eIQ==": {
-        "webpush": [
-            "yMYGf7"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-18T16:24:27.476Z"
+        "last_seen": "2021-09-21T17:15:16.425Z",
+        "name": "smoothy"
     },
     "pb-JiNJARBaXEFBVF9HFkNXXF1EF0ZaRlZE": {
         "webpush": [
-            "yMYGf7"
+            "g24PLS",
+            "bHFxSw"
         ],
         "discord": [],
-        "last_seen": "2021-09-18T16:50:04.899Z"
+        "last_seen": "2021-09-21T17:22:42.180Z"
     }
 }
