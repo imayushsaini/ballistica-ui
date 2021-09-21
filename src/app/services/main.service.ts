@@ -16,7 +16,7 @@ export class MainService {
   constructor(private http:HttpClient) { }
 
   getLiveStats():Observable<any>{
-      return this.http.get('http://localhost:3000/live');
+      return this.http.get('/live');
   }
 
 }

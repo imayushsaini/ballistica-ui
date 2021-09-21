@@ -9,9 +9,9 @@ import { environment } from "src/environments/environment";
 export class NotificationService {
   constructor(private http:HttpClient) { }
   subscribe(subscription:any){
-    return this.http.post('http://localhost:3000/subscribe',subscription);
+    return this.http.post('/subscribe',subscription);
   }
   triggerMessage(message:any){
-    return this.http.post('http://localhost:3000/message',JSON.parse(message));
+    return this.http.post('/message',JSON.parse(message));
   }
 }

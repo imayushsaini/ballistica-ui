@@ -1,0 +1,52 @@
+{
+    "h799g9": {
+        "endpoint": "8h09h09h0",
+        "keys": {
+            "auth": "jj9j9j",
+            "p235dh": "ih89h98h"
+        }
+    },
+    "yMYGf7": {
+        "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABhREcqaylPll8PoXuwXu_dZBEEjwCfw1eDOLpebRL62_Dlq8DP0A4dojDnUnzvVqQblrdEODX2AfOCfkAbtcEPG1TPWM2XlkhzFeAbWsjfcxQzinMiBp1eCg3uOvIJk17NDctlxVgdfbon8SsZNpB0M553LuYhBN0NcvknOeu6fYmMPFQ",
+        "keys": {
+            "auth": "EKRfPzSex4B597wyHx2-3Q",
+            "p256dh": "BJ1Gkhl4ONdyBm82TXS1cwXsvxqrb-lTJeuxcIfWEEqg2gGrNZgnPxb_4t6itdF-t-9YhsJ0WPJmG6QoAXzwi5Y"
+        }
+    },
+    "CU6N4b": {
+        "endpoint": "https://wns2-sg2p.notify.windows.com/w/?token=BQYAAAArZTRO6ZyCDU9ufnvfPV%2f7RsWw19AuLMtjz8QY%2be9jRv8IBygc1PxKuq3lsWSfnhQviR6BVZpWBJGdTpgqYv9%2fRwN71Y6axQfRwG0K6Ex%2bxS6xCQRQKgpMSXnst5SjwX%2bpdHfNX2EK%2bD%2fTyE%2bo79ZbgzdFRCqai2llbCZUl4TCSs94YteONuEfy9CnmFuul%2br2Ky9eKnpire2fh9kBs5eu%2fGCeLQx3z0F7JTFITdpTwDN2suL2qmedcvV12vpy1jfD2AQhItjDwFRjdiEZ29HzLhd33jpAUKsVLixVL%2fJ4dajSr12D2tOanbcLeg0jOTDiZaH%2fNAm1QlelWo6wS%2f3Q",
+        "expirationTime": null,
+        "keys": {
+            "p256dh": "BOxkZMEH015EcfcuRTE2XATYYXRwhVys3Oo8krby136JsbNFckvderv0hG6jCn3-ziKmiz-1AytnYWVZvNwewQ0",
+            "auth": "6ciN7AmFgym3rU0szbxFpw"
+        }
+    },
+    "mOb9wZ": {
+        "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABhSFX1MXRtqUaSz3SkTIICXT_Gw6hTBScjjFepVhQNEyoYsYXoAJSQxpYLa_PuA_zFYOvmmo4EXQt97qsvX8AZ0I0PfM-h-EvQ_Gd6zDctj7S7Ya5gcbDDG5LYeeIkfJEEjB6n24HzND6kgWTLEWKYu_Y2x6M75m5NAUdzdjboNm8jSwc",
+        "keys": {
+            "auth": "JJQ6qJDYjPpsIkQRjigI4A",
+            "p256dh": "BGjou9urTrBHLu91QF03Ce6yVMLrzpzHk3d2pkEynUZQJ8G4YWKW-nzApvneVJ8iBY62LKohQXfNxygJZNiihns"
+        }
+    },
+    "g24PLS": {
+        "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABhShTWECCxVfFsfs4odMkj29AC_JiQvMo6f2VlgNusb_MPhV10FvYimoZN2RyH01o4GCPpOZrNxzRLAInULQN1WH9M82lXtHE1pJNLkPPQQhaziHyYSgiYOCeCeonRxp_fw3enhzJJzBBl6tUcrBEu2GCtIndCO5RZuGKRH3jFQFa_sBM",
+        "keys": {
+            "auth": "kiBnhYdN5kjraLqV5tnsPw",
+            "p256dh": "BInf5on-9uWKB9z3Y4VYnQoNNhZtgeEDH5-PdG39Dphy4dnqvXbzz4VAZTAI1pybdUTBHu0oECtQ_QevxwghUAI"
+        }
+    },
+    "bHFxSw": {
+        "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABhShVI-O8UkFmyBfjiddumUpkCOkHknzV3UsF6bYa33-K4d7TWKyA7npD8e4Glsfirg2Emc5n4Ec-JpJ-ANfE7g7KrbeC74Bw4c_1Y_en_yBKtKqRDutf2AErJZ67sQGMFR92zM6nfF30w01owCGEMET1ERTmGU_1GqKEwwxYMtROg-SU",
+        "keys": {
+            "auth": "kmCPuhYnVq8ob8_D_b7XvA",
+            "p256dh": "BDjPQl6Fr3Fh-HLV-qU4R3R741q5KrtWT1N-JL985FaA70MCs1OxW76hSxpDn6LfQuFJR3t5twLRpdPMs6pnl8A"
+        }
+    },
+    "kGgCeF": {
+        "endpoint": "https://updates.push.services.mozilla.com/wpush/v2/gAAAAABhShny15OJgrXf5lrCsk8BhumF2O_lf4VUXBfmlL4I0G-KHDCZRiq8y0-9qAjuX19GWRDbY60NDvG49-LORH-yKey4FEAkNIJca2qSF3azmrmM3NLQI-09wRAvcmlC3BX1tTSsz9XVNi-zSHhEj3_E3FDnZVafQkMQtWrjzpEQFr-JCk0",
+        "keys": {
+            "auth": "XqKMBTvswMuZCdXMf_LqcQ",
+            "p256dh": "BG3p0LsbAUtLfYyTmy_X-AIP9Cz-V7aYIfhkcyygh-3kGJyV7BEMUvFIXpcwzM3fZU2-jnVt2_JE-XtAbQI7jKk"
+        }
+    }
+}

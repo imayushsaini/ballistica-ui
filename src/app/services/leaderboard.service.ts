@@ -17,10 +17,10 @@ export class LeaderboardService {
   constructor(private http:HttpClient) { }
 
   getTop200():Observable<any>{
-      return this.http.get('http://localhost:3000/top200');
+      return this.http.get('/top200');
   }
   getCompleteLeaderboard():Observable<any>{
-    return this.http.get('http://localhost:3000/leaderboard');
+    return this.http.get('/leaderboard');
   }
 
   getLeaderboard(){
