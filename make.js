@@ -11,10 +11,13 @@ data=`export const environment = {
   serverName:"$SERVER_NAME"
 };`
 Path="./src/environments/environment.ts"
-
+prod="./src/environments/environment.prod.ts"
 var res=data.replace("$VAPID_KEY",publicVapidKey);
 res=res.replace("$SERVER_NAME",serverName);
 fs.writeFile(Path,res,'utf8',(err)=>{
        if(err) console.log(err);
 })
-
+res=res.replace('false','true');
+fs.writeFile(prod,res,'utf8',(err)=>{
+  if(err) console.log(err);
+})
