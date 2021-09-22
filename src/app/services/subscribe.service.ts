@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SwPush } from '@angular/service-worker';
 import { NotificationService } from './notification.service';
 
+import { environment } from './../../environments/environment';
 const httpOption={
   headers:new HttpHeaders({'Content-Type':'application/json'})
 };
@@ -14,7 +15,7 @@ const httpOption={
 })
 
 export class SubscribeService {
-  vapidKeys:string='BLHl0OcSwB9pL9Yfi-tMa0pJMbWBO_OpkG-8QKQQqWb08cunEihuHgvvGzKYB6mU0w_RgqKtTJH8l3yCwGXWFaw';
+  vapidKeys:string= environment.vapidKey ;
   payload=JSON.stringify({
     "notification": {
     "title": "Web Mail Notification",

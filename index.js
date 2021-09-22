@@ -13,6 +13,11 @@ app.use(cors())
 app.use(express.static(path.join(__dirname, 'dist/ballistica-web')));
 
 var request = require('request');
+
+
+require('dotenv').config({ path: 'variables.env' });
+const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
+const API=process.env.SERVER_API;
 const port=3000;
 
 var stats;
@@ -24,12 +29,12 @@ setInterval(()=>{updateLeaderboard()},30*60*1000);
 
 
 function updateLeaderboard(){
-      request('http://149.129.178.0/getLeaderboard',function(err,res,body){
+      request(API+'/getLeaderboard',function(err,res,body){
             if(!err&&res.statusCode==200){
                   leaderboard=JSON.parse(body);
             }
       });
-      request('http://149.129.178.0/getTop200',function(err,res,body){
+      request(API+'/getTop200',function(err,res,body){
             if(!err&&res.statusCode==200){
                   top200=JSON.parse(body);
             }
@@ -39,7 +44,7 @@ function updateLeaderboard(){
 updateLeaderboard() //call it once on server boot , then scheduler will handle it
 
 function updateStats(){
-      request('http://149.129.178.0/getStats',function(err,res,body){
+      request(API+'/getStats',function(err,res,body){
             if(!err&&res.statusCode==200){
                   data=JSON.parse(body);
                   stats=data;

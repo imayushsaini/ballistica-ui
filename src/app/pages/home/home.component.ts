@@ -6,6 +6,7 @@ import { LeaderboardService } from 'src/app/services/leaderboard.service';
 import { MainService } from 'src/app/services/main.service';
 import { SubscribeService } from 'src/app/services/subscribe.service';
 
+import { environment } from './../../../environments/environment';
 export interface PlayerData {
   name: string;
   rank: number;
@@ -22,6 +23,7 @@ export class HomeComponent implements OnInit {
   playlist={'current':'','next':''}
   teamData:any;
   topPlayers:PlayerData[]=[];
+  serverName=environment.serverName;
 
   columns = [
     {
