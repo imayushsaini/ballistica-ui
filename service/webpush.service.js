@@ -72,7 +72,7 @@ function sendPush(subscription,player_id,name){
 	    "actions": [{"action": "nothing","title": "Launch Bombsquad",}] //need to send link of the web app
     }})
       webPush.sendNotification(subscription, payload)
-        .catch(error => console.error(error));
+        .catch(error =>{}); // lets not spam console right now , will handle expired/unsubscribed   errors later
 }
 
 function notifyFor(player_id){

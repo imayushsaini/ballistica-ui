@@ -1,26 +1,28 @@
 # BallisticaWeb
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.5.
+A single app to broadcast Bombsquad server live stats and leaderboard over discord channel and on web.And also notify players when their friends join the game via Personal message and push notification.
 
 ## Requirements
-Node: v12.15.0
-Npm: 6.13.4
-[Ballistica](https://github.com/efroemling/ballistica) : 1.6
+- Node: v12.15.0
+- Npm: 6.13.4
+- [Ballistica](https://github.com/efroemling/ballistica) : 1.6
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+*Push notification wont work in dev server.
 
 ## Getting Started
 
-Clone this repo `git clone https://github.com/imayushsaini/ballistica-web-stats.git`
-Change dir  `cd ballistica-web-stats`
-Install dependencies `npm install`
-Install web-push module `npm install web-push -g`
-Generate the VAPID keys `web-push generate-vapid-keys --json`
-Save public and private keys in variables.env
-Build the project `npm run-script build`
-Start the server `npm start`
+- Clone this repo `git clone https://github.com/imayushsaini/ballistica-web-stats.git`
+- Change dir  `cd ballistica-web-stats`
+- Install dependencies `npm install`
+- Install web-push module `npm install web-push -g`
+- Generate the VAPID keys `web-push generate-vapid-keys --json`
+- Create Discord bot and copy token
+- Save public , private keys and token in variables.env
+- Build the project `npm run-script build`
+- Start the server `npm start`
 
 ## Build
 
