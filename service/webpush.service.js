@@ -6,19 +6,16 @@ const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
 const privateVapidKey = process.env.PRIVATE_VAPID_KEY;
 var fs=require('fs');
 webPush.setVapidDetails(
-      	'mailto:heysmoothy@gmail.com',
+      	`mailto:${process.env.EMAIL}`,
       	 publicVapidKey,
       	 privateVapidKey
       	);
 
 function subscribe(sub,player_id,name){
-	var id=subscriberExists(sub);
-	console.log("called for function"+id);
+	var id=getSubscriberId(sub);
 	if(id){
-		console.log("checking id"+id);
 		if(player_id in players){
 			if (! (players[player_id]['webpush'].includes(id))){
-				console.log("id:"+id+"not a subscriber push it")
 				players[player_id]['webpush'].push(id)
 			}
 		}else{
@@ -27,17 +24,16 @@ function subscribe(sub,player_id,name){
 
 	}
      saveSubscription();
-     sendPush(sub,player_id,name);
+     sendConformation(sub,player_id,name);
 }
 
-function subscriberExists(sub){
+function getSubscriberId(sub){
 	isExists=false;
 	id="";
 	Object.entries(subscribers).map(entry=>{
 		let key=entry[0];
 		let value=entry[1];
 		if(value['endpoint']==sub['endpoint']){
-			console.log("subscriber with this end point already exists");
 			isExists=true;
 			id=key;    //wont return from .map function , need to optimize later when handling huge data
 		}
@@ -57,15 +53,15 @@ function saveSubscription(){
 	fs.writeFile("./subscribers/players.json",JSON.stringify(players,null,4),function(err){
 		console.log(err);
 	});
-	console.log("saved");
+
 }
 
 function sendPush(subscription,player_id,name){
        payload=JSON.stringify({
     "notification": {
 	    "title": name+" is playing now !",
-	    "body": "Join now "+name+" is waiting for you",
-	    "icon": "assets/icons/icon-192x192.png",
+	    "body": `Join ${process.env.SERVER_NAME} server ${name} is waiting for you `,
+	    "icon": "assets/icons/icon-96x96.png",
 	    "vibrate": [100, 50, 100],
 	    "requireInteraction":true,
 	    "data": {"dateOfArrival": Date.now(),},
@@ -73,6 +69,21 @@ function sendPush(subscription,player_id,name){
     }})
       webPush.sendNotification(subscription, payload)
         .catch(error =>{}); // lets not spam console right now , will handle expired/unsubscribed   errors later
+}
+
+function sendConformation(subscription,player_id,name){
+      payload=JSON.stringify({
+    "notification": {
+    "title": `Successfully subscribed to ${name} !`,
+    "body": `Notification working fine `,
+    "icon": "assets/icons/icon-96x96.png",
+    "vibrate": [100, 50, 100],
+    "requireInteraction":true,
+    "data": {"dateOfArrival": Date.now(),},
+    "actions": [{"action": "nothing","title": "Launch Bombsquad",}] //need to send link of the web app
+    }})
+    webPush.sendNotification(subscription, payload)
+      .catch(error =>{}); // lets not spam console right now , will handle expired/unsubscribed   errors later
 }
 
 function notifyFor(player_id){

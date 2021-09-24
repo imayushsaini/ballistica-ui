@@ -18,6 +18,7 @@ import { PlayerprofileComponent } from './pages/leaderboard/playerprofile/player
 import { HttpClientModule } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
 
 @NgModule({
@@ -41,6 +42,7 @@ import { environment } from '../environments/environment';
     MatPaginatorModule,
     MatInputModule,
     MatDialogModule,
+    MatSnackBarModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: true,
       // Register the ServiceWorker as soon as the app is stable

@@ -34,7 +34,7 @@ client.on('message', msg => {
              "id":msg.author.id,
              "usertag":msg.author.username
            }
-           subscribe(sub,res["aid"],res["name_html"].replace(/<\/?[^>]+(>|$)/g, ""))
+           subscribe(msg,sub,res["aid"],res["name_html"].replace(/<\/?[^>]+(>|$)/g, ""))
          }else{msg.reply("Id not found")}
      }
      else if(command=="unsubscribe"){
@@ -82,7 +82,6 @@ function getSubscriberId(sub){
 		let key=entry[0];
 		let value=entry[1];
 		if(value['id']==sub['id']){
-			console.log("subscriber with this end point already exists");
 			isExists=true;
 			id=key;    // return from .map function not working, need to optimize later when handling huge data
 		}
@@ -95,20 +94,20 @@ function getSubscriberId(sub){
 	return id;
 }
 
-function subscribe(sub,player_id,name){
+function subscribe(msg,sub,player_id,name){
 	var id=getSubscriberId(sub);
-	console.log("called for function"+id);
 	if(id){
-		console.log("checking id"+id);
 		if(player_id in players){
 			if (! (players[player_id]['discord'].includes(id))){
-				console.log("id:"+id+"not a subscriber push it")
 				players[player_id]['discord'].push(id)
 			}
 		}else{
 			players[player_id]={"webpush":[],"discord":[id],"last_seen":new Date(),"name":name}
 		}
-
+     msg.reply(`Subscribed to ${name}.`)
+     dmmsg=`This is a conformation that you Subscribed to ${name} and your DMs are open ! \n
+              hope you would catchup your friend :)`;
+     client.users.fetch(msg.author.id).then((user) => { user.send(dmmsg) });
 	}
      saveSubscription();
      //sendPush(sub,player_id,name);
@@ -126,7 +125,7 @@ function verifyChannel(channel){
     });
     botMsgIds.reverse();
     while(msgCount<2){
-      channel.send("msg reserved for live stats").then(mssg=>{
+      channel.send("msg reserved for live stats"+msgCount).then(mssg=>{
         botMsgIds.push(mssg.id);
       })
       msgCount++;

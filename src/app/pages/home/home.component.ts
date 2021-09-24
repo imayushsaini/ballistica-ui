@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable,Subscription, interval  } from 'rxjs';
 import { LeaderboardService } from 'src/app/services/leaderboard.service';
@@ -51,7 +52,7 @@ export class HomeComponent implements OnInit {
 
   displayedColumns = this.columns.map(c => c.columnDef);
 
-  constructor(private mainservice:MainService,public dialog: MatDialog,private subService:SubscribeService,private lBoard:LeaderboardService,private changeDetectorRefs: ChangeDetectorRef) { }
+  constructor(private mainservice:MainService,public dialog: MatDialog,private subService:SubscribeService,private lBoard:LeaderboardService,private changeDetectorRefs: ChangeDetectorRef,private _snackBar: MatSnackBar) { }
   private updateSubscription: Subscription;
 
   ngOnInit() {
@@ -79,10 +80,18 @@ export class HomeComponent implements OnInit {
         console.log(`Dialog result: ${result}`);
         if(result){
           this.subService.subscribeToNotifications(result.account_id,result.name);
+          let msg=`Subscribed to ${name} , conformation notification will be sent shortely.`
+          this.openSnackBar(msg,"ok")
         }
 
       });
     }
+
+
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
 
   refreshData(){
     this.mainservice.getLiveStats().subscribe(data=>{
