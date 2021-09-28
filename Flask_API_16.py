@@ -13,11 +13,32 @@ os.environ['FLASK_ENV'] = 'development'
 
 
 stats={}
+leaderboard={}
+top200={}
 
 class BsDataThread(object):
     def __init__(self):
         self.Timer = ba.Timer( 8,ba.Call(self.refreshStats),timetype = ba.TimeType.REAL,repeat = True)
-
+        self.Timerr = ba.Timer( 10,ba.Call(self.refreshLeaderboard),timetype = ba.TimeType.REAL,repeat = True)
+        
+    def refreshLeaderboard(self):
+        global leaderboard
+        global top200
+        _t200={}
+        f=open(statsfile)
+        lboard=json.loads(f.read())
+        leaderboard=lboard
+        entries = [(a['scores'], a['kills'], a['deaths'], a['games'], a['name_html'], a['aid'],a['last_seen']) for a in lboard.values()]
+        
+        entries.sort(reverse=True)
+        rank=0
+        for entry in entries:
+            rank+=1
+            if rank >201:
+                break
+            _t200[entry[5]]={"rank":rank,"scores":int(entry[0]),"games":int(entry[3]),"kills":int(entry[1]),"deaths":int(entry[2]),"name_html":entry[4],"last_seen":entry[6]}
+            top200=_t200
+            
     def refreshStats(self):
         
         liveplayers={}
@@ -96,6 +117,14 @@ def home():
 @app.route('/getStats', methods=['GET'])
 def api_all():
     return json.dumps(stats)
+    
+@app.route('/getLeaderboard',methods=['GET'])
+def get_l():
+    return json.dumps(leaderboard)
+
+@app.route('/getTop200',methods=['GET'])
+def get_top200():
+    return json.dumps(top200)
 
 
 # ba_meta export plugin
