@@ -3,9 +3,9 @@
 A single app to broadcast Bombsquad server live stats and leaderboard over discord channel and on web.And also notify players when their friends join the game via Personal message and push notification.
 
 ## Requirements
-- Node: v12.15.0
-- Npm: 6.13.4
-- [Ballistica](https://github.com/efroemling/ballistica) : 1.6
+- Node: v16.13.2
+- Npm: 8.1.2
+- [Ballistica scripts](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) 
 
 ## Development server
 
@@ -21,8 +21,18 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 - Generate the VAPID keys `web-push generate-vapid-keys --json`
 - Create Discord bot and copy token
 - Save public , private keys and token in variables.env
-- Build the project `npm run-script build`
 - Start the server `npm start`
+- Change index.json to port 80 and run as sudo , or better do:
+- `sudo apt install nginx` 
+- `sudo nano /etc/nginx/sites-enabled/default`
+- Near line no. 40 add proxy_pass   eg:
+ location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		proxy_pass http://localhost:3000;
+	}
+- `sudo systemctl restart nginx`
+- For notification system to work you need to use https domain, go for cloudflare .
 
 ## Build
 
@@ -31,16 +41,12 @@ Run `npm run-script build` to build the project. The build artifacts will be sto
 
 ## For Bombsquad Server
 
-Install the plugin [FLASK_API](https://github.com/imayushsaini/ballistica-web-stats/tree/BS1.6_Plugin)
-Checkout [BS1.6_Server_mods](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) to generate Stats for your server.
-Need to open port `5000` on your Bombsquad server instance.
-or setup reverse proxy with nginx with port `80` , Google for more info.
+Checkout [BS1.6_Server_mods](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) everything already setup.
 
 ## Hosting
 
 ### Host along with your game server
-- if facing any issue in opening port 
-- do same setup in your BS instance and change `variables.env/SERVER_API` to `http://127.0.0.1:5000` 
+- Just follow #Getting started and dont forget to use cloudflare for https. 
 
 ### Host on replit 
 - fork this repo , connect replit with your repo .
