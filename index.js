@@ -115,7 +115,15 @@ app.get('/leaderboard',(re,res)=>{
       res.status(200).json(leaderboard);
 })
 
-
+app.get("/discord",(req,res)=>{
+      res.status(200).json({'url':process.env.DISCORD_INVITE});
+})
+app.get("/vapidkey",(req,res)=>{
+      res.status(200).json({'key':process.env.PUBLIC_VAPID_KEY});
+})
+app.get("/serverName",(req,res)=>{
+      res.status(200).json({'name':process.env.SERVER_NAME});
+})
 app.listen(port,()=>console.log(`Server started at port ${port}`))
 
 app.get('/',(req,res)=>res.send('hello world!'));

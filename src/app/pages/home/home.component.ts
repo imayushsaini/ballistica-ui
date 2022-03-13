@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   playlist={'current':'','next':''}
   teamData:any;
   topPlayers:PlayerData[]=[];
-  serverName=environment.serverName;
+  serverName=""
 
   columns = [
     {
@@ -56,6 +56,9 @@ export class HomeComponent implements OnInit {
   private updateSubscription: Subscription;
 
   ngOnInit() {
+    this.mainservice.getServerName().subscribe(data=>{
+      this.serverName=data['name'];
+    })
     this.getLeaderboard();
     this.lBoard.leaderboardUpdateEvent.subscribe(x=>{
       this.getLeaderboard();

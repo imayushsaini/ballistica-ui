@@ -5,6 +5,7 @@ import { SwPush } from '@angular/service-worker';
 import { NotificationService } from './notification.service';
 
 import { environment } from './../../environments/environment';
+import { MainService } from './main.service';
 const httpOption={
   headers:new HttpHeaders({'Content-Type':'application/json'})
 };
@@ -27,7 +28,7 @@ export class SubscribeService {
     "actions": [{"action": "inbox","title": "Go to Web Mail",}]
     }})
 
-  constructor(private swPush: SwPush,private service:NotificationService){
+  constructor(private swPush: SwPush,private service:NotificationService,private mainservice:MainService){
 
   }
 
@@ -40,15 +41,17 @@ export class SubscribeService {
     console.log(this.swPush.isEnabled)
     if(this.swPush.isEnabled){
       this.swPush.notificationClicks.subscribe(x=>console.log(x));
-
-      this.swPush.requestSubscription({
-      serverPublicKey: this.vapidKeys
+      this.mainservice.getVapidKey().subscribe(data=>{
+        this.swPush.requestSubscription({
+          serverPublicKey: data['key']
+          })
+          .then(sub =>{
+            let msg={'subscription':sub,'player_id':player_id,'name':name}
+            this.service.subscribe(msg).subscribe(x=>console.log(x),err=>console.log(err))
+          })
+          .catch(err => console.error("Could not subscribe to notifications", err));
       })
-      .then(sub =>{
-        let msg={'subscription':sub,'player_id':player_id,'name':name}
-        this.service.subscribe(msg).subscribe(x=>console.log(x),err=>console.log(err))
-      })
-      .catch(err => console.error("Could not subscribe to notifications", err));
+      
     }
   }
 

@@ -107,7 +107,7 @@ function subscribe(msg,sub,player_id,name){
      msg.reply(`Subscribed to ${name}.`)
      dmmsg=`This is a conformation that you Subscribed to ${name} and your DMs are open ! \n
               hope you would catchup your friend :)`;
-     client.users.fetch(msg.author.id).then((user) => { user.send(dmmsg) });
+     client.users.fetch(msg.author.id).then((user) => { user.send(dmmsg) }).catch(error=>{});
 	}
      saveSubscription();
      //sendPush(sub,player_id,name);
@@ -172,7 +172,7 @@ function notifyFor(player_id){
 
 function sendNotification(to,name){
   msg=`${name} is now playing in ${process.env.SERVER_NAME} Server`
-  client.users.fetch(to).then((user) => { user.send(msg) });
+  client.users.fetch(to).then((user) => { user.send(msg) }).catch(error=>{});
 }
 
 function updateLeaderboard(data){

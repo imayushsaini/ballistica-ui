@@ -18,5 +18,14 @@ export class MainService {
   getLiveStats():Observable<any>{
       return this.http.get('/live');
   }
+  getDiscord():Observable<any>{
+    return this.http.get("/discord");
+  }
+  getVapidKey():Observable<any>{
+    return this.http.get("/vapidkey");
+  }
+  getServerName():Observable<any>{
+    return this.http.get("/serverName");
+  }
 
 }
