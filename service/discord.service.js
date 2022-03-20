@@ -135,7 +135,7 @@ function verifyChannel(channel){
 }
 
 function updateStats(stats){
-
+    if(Object.keys(stats).length==0) return;
     liveplayers=stats["roster"];
     livechat=stats["chats"];
     cpu=stats["system"]['cpu'];
