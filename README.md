@@ -19,12 +19,12 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 - Install nodejs `curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
 sudo apt-get install -y nodejs`
 - Install dependencies `npm install`
-- Install web-push module `npm install web-push -g`
+- Install web-push module `sudo npm install web-push -g`
 - Generate the VAPID keys `web-push generate-vapid-keys --json`
 - Create Discord bot and copy token
 - Save public , private keys and token in variables.env
-- Start the server `npm start`
-- Change index.json to port 80 and run as sudo , or better do:
+- Install pm2 `sudo npm install pm2 -g`
+- Start the server `pm2 start index.js`
 - `sudo apt install nginx` 
 - `sudo nano /etc/nginx/sites-enabled/default`
 - Near line no. 40 add proxy_pass   eg:
