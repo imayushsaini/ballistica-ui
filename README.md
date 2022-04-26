@@ -16,6 +16,8 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 - Clone this repo `git clone https://github.com/imayushsaini/ballistica-web-stats.git`
 - Change dir  `cd ballistica-web-stats`
+- Install nodejs `curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+sudo apt-get install -y nodejs`
 - Install dependencies `npm install`
 - Install web-push module `npm install web-push -g`
 - Generate the VAPID keys `web-push generate-vapid-keys --json`
