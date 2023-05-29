@@ -10,21 +10,23 @@
     height: 85vh;
    // background-color: pink;
 }
-.mat-table{
+.mat-mdc-table{
     width: 100%;
     background-color: #272b4a;
 }
-.mat-form-field{
+.mat-mdc-form-field{
     margin-left: 5em;
     width: 60%;
 }
-.mat-paginator{
+.mat-mdc-paginator{
     background-color: #272b4a;
 }
 td{
   cursor: pointer;
 }
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-appearance-standard .mat-form-field-flex{padding-top: 0em !important;}
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version.*/
 .mat-form-field-wrapper{padding-bottom: 0em;}
 
 

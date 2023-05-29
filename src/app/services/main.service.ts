@@ -16,7 +16,7 @@ export class MainService {
   constructor(private http:HttpClient) { }
 
   getLiveStats():Observable<any>{
-      return this.http.get('/live');
+      return this.http.get('http://localhost:3000/live');
   }
   getDiscord():Observable<any>{
     return this.http.get("/discord");
@@ -25,7 +25,7 @@ export class MainService {
     return this.http.get("/vapidkey");
   }
   getServerName():Observable<any>{
-    return this.http.get("/serverName");
+    return this.http.get("http://localhost:3000/serverName");
   }
 
 }

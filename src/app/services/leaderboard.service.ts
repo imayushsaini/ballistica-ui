@@ -17,10 +17,10 @@ export class LeaderboardService {
   constructor(private http:HttpClient) { }
 
   getTop200():Observable<any>{
-      return this.http.get('/top200');
+      return this.http.get('http://localhost:3000/top200');
   }
   getCompleteLeaderboard():Observable<any>{
-    return this.http.get('/leaderboard');
+    return this.http.get('http://localhost:3000/leaderboard');
   }
 
   getLeaderboard(){
@@ -40,10 +40,12 @@ export class LeaderboardService {
     this.getTop200().subscribe(dat=>{
 
       this.leaderboard=Object.keys(dat).map(key=>{
+        let name_ = ""
+        if (dat[key]['name_html']) name_ = dat[key]['name_html']
         return {
           "rank":dat[key]['rank'],
           "id":key,
-          "name":dat[key]['name_html'].replace(/<\/?[^>]+(>|$)/g, ""),
+          "name":name_.replace(/<\/?[^>]+(>|$)/g, ""),
           "scores":dat[key]['scores'],
           "games":dat[key]['games'],
           "kills":dat[key]['kills'],
