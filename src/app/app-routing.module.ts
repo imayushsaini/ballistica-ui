@@ -4,13 +4,13 @@ import { HomeComponent } from './pages/home/home.component';
 import { LeaderboardComponent } from './pages/leaderboard/leaderboard.component';
 
 const routes: Routes = [
-  {path:'home',component:HomeComponent},
-  {path:'leaderboard',component:LeaderboardComponent},
-  {path:'**',redirectTo:'home'}
+  { path: 'home', component: HomeComponent },
+  { path: 'leaderboard', component: LeaderboardComponent },
+  { path: '**', redirectTo: 'home' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

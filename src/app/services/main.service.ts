@@ -1,31 +1,27 @@
 import { Injectable } from '@angular/core';
-import {HttpClient,HttpHeaders}  from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const httpOption={
-  headers:new HttpHeaders({'Content-Type':'application/json'})
+const httpOption = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class MainService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http:HttpClient) { }
-
-  getLiveStats():Observable<any>{
-      return this.http.get('http://localhost:3000/live');
+  getLiveStats(): Observable<any> {
+    return this.http.get('http://localhost:3000/live');
   }
-  getDiscord():Observable<any>{
-    return this.http.get("/discord");
+  getDiscord(): Observable<any> {
+    return this.http.get('/discord');
   }
-  getVapidKey():Observable<any>{
-    return this.http.get("/vapidkey");
+  getVapidKey(): Observable<any> {
+    return this.http.get('/vapidkey');
   }
-  getServerName():Observable<any>{
-    return this.http.get("http://localhost:3000/serverName");
+  getServerName(): Observable<any> {
+    return this.http.get('http://localhost:3000/serverName');
   }
-
 }

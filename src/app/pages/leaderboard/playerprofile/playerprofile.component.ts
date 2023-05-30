@@ -5,31 +5,33 @@ import { SubscribeService } from 'src/app/services/subscribe.service';
 @Component({
   selector: 'app-playerprofile',
   templateUrl: './playerprofile.component.html',
-  styleUrls: ['./playerprofile.component.scss']
+  styleUrls: ['./playerprofile.component.scss'],
 })
 export class PlayerprofileComponent implements OnInit {
   @Input()
-  player:any;
+  player: any;
   @Output()
-  closeBtnEvent=new EventEmitter();
+  closeBtnEvent = new EventEmitter();
 
-  constructor(private subService:SubscribeService,private _snackBar: MatSnackBar) { }
+  constructor(
+    private subService: SubscribeService,
+    private _snackBar: MatSnackBar
+  ) {}
 
-  ngOnInit(): void {
-  }
-  onClose(){
+  ngOnInit(): void {}
+  onClose() {
     this.closeBtnEvent.emit('true');
   }
-  parseTime(date:string){
+  parseTime(date: string) {
     return new Date(date);
   }
-  getKD(kill:number,death:number){
-    return (kill/death).toFixed(3)
+  getKD(kill: number, death: number) {
+    return (kill / death).toFixed(3);
   }
-  subscribe(id:string,name:string){
-    this.subService.subscribeToNotifications(id,name);
-    let msg=`Subscribed to ${name} , conformation notification will be sent shortely.`
-    this.openSnackBar(msg,"ok")
+  subscribe(id: string, name: string) {
+    this.subService.subscribeToNotifications(id, name);
+    const msg = `Subscribed to ${name} , conformation notification will be sent shortely.`;
+    this.openSnackBar(msg, 'ok');
   }
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);

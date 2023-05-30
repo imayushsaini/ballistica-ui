@@ -1,60 +1,44 @@
 {
-    "pb-smoothy123": {
-        "webpush": [
-            "yMYGf7",
-            "mOb9wZ",
-            "CU6N4b"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-21T17:15:16.425Z",
-        "name": "smoothy"
-    },
-    "pb-IF5cVVEnMQ==": {
-        "webpush": [
-            "kGgCeF"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-23T11:27:11.963Z",
-        "name": "AGENT~£$"
-    },
-    "pb-IF4sVWo5Kg==": {
-        "webpush": [
-            "kGgCeF"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-23T06:05:02.564Z",
-        "name": "darkknight..."
-    },
-    "pb-IF4DVVEjBw==": {
-        "webpush": [
-            "kGgCeF"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-21T18:12:42.354Z",
-        "name": "•Rio•2606•"
-    },
-    "pb-JiNJARBaXEFBVF9HFkNXXF1EF0ZaRlZE": {
-        "webpush": [],
-        "discord": [
-            "9wdZiK"
-        ],
-        "last_seen": "2021-09-23T11:44:32.072Z",
-        "name": "Mr.Smoothy"
-    },
-    "pb-IF4iVVo-IA==": {
-        "webpush": [
-            "kGgCeF"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-24T10:43:05.118Z",
-        "name": "UnhurtAttack19"
-    },
-    "pb-IF4MVUYZDA==": {
-        "webpush": [
-            "kGgCeF"
-        ],
-        "discord": [],
-        "last_seen": "2021-09-24T10:43:49.611Z",
-        "name": "Android51597680"
-    }
+  "pb-smoothy123": {
+    "webpush": ["yMYGf7", "mOb9wZ", "CU6N4b"],
+    "discord": [],
+    "last_seen": "2021-09-21T17:15:16.425Z",
+    "name": "smoothy"
+  },
+  "pb-IF5cVVEnMQ==": {
+    "webpush": ["kGgCeF"],
+    "discord": [],
+    "last_seen": "2021-09-23T11:27:11.963Z",
+    "name": "AGENT~£$"
+  },
+  "pb-IF4sVWo5Kg==": {
+    "webpush": ["kGgCeF"],
+    "discord": [],
+    "last_seen": "2021-09-23T06:05:02.564Z",
+    "name": "darkknight..."
+  },
+  "pb-IF4DVVEjBw==": {
+    "webpush": ["kGgCeF"],
+    "discord": [],
+    "last_seen": "2021-09-21T18:12:42.354Z",
+    "name": "•Rio•2606•"
+  },
+  "pb-JiNJARBaXEFBVF9HFkNXXF1EF0ZaRlZE": {
+    "webpush": [],
+    "discord": ["9wdZiK"],
+    "last_seen": "2021-09-23T11:44:32.072Z",
+    "name": "Mr.Smoothy"
+  },
+  "pb-IF4iVVo-IA==": {
+    "webpush": ["kGgCeF"],
+    "discord": [],
+    "last_seen": "2021-09-24T10:43:05.118Z",
+    "name": "UnhurtAttack19"
+  },
+  "pb-IF4MVUYZDA==": {
+    "webpush": ["kGgCeF"],
+    "discord": [],
+    "last_seen": "2021-09-24T10:43:49.611Z",
+    "name": "Android51597680"
+  }
 }

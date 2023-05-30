@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 
 import { MatSort } from '@angular/material/sort';
@@ -16,45 +22,48 @@ export interface PlayerData {
 @Component({
   selector: 'app-leaderboard',
   templateUrl: './leaderboard.component.html',
-  styleUrls: ['./leaderboard.component.scss']
+  styleUrls: ['./leaderboard.component.scss'],
 })
-export class LeaderboardComponent implements AfterViewInit , OnInit {
-  showPlayerProfile=false;
+export class LeaderboardComponent implements AfterViewInit, OnInit {
+  showPlayerProfile = false;
   displayedColumns: string[] = ['rank', 'name', 'score', 'kills'];
   dataSource: MatTableDataSource<PlayerData>;
-  topPlayers:PlayerData[]=[];
+  topPlayers: PlayerData[] = [];
   @ViewChild(MatPaginator)
   paginator: MatPaginator;
   @ViewChild(MatSort)
   sort: MatSort;
-  selectedPlayer:any={};
+  selectedPlayer: any = {};
 
-  constructor(private subService:SubscribeService,private lBoard:LeaderboardService,private changeDetectorRefs: ChangeDetectorRef) {
+  constructor(
+    private subService: SubscribeService,
+    private lBoard: LeaderboardService,
+    private changeDetectorRefs: ChangeDetectorRef
+  ) {
     // Assign the data to the data source for the table to render
     this.dataSource = new MatTableDataSource<PlayerData>();
   }
   ngOnInit() {
     this.getLeaderboard();
-    this.lBoard.leaderboardUpdateEvent.subscribe(x=>{
+    this.lBoard.leaderboardUpdateEvent.subscribe((x) => {
       this.getLeaderboard();
       this.changeDetectorRefs.detectChanges();
-    })
-
-    }
-  getLeaderboard(){
-      this.topPlayers= this.lBoard.getLeaderboard();
-      this.dataSource.data=this.topPlayers;
-      this.selectedPlayer=this.topPlayers[0];
-    }
-  onClose(){
-    this.showPlayerProfile=false;
+    });
   }
-  showProfile(row:any){  //only for mobile view
-    this.showPlayerProfile=true;
-    this.selectedPlayer=row;
+  getLeaderboard() {
+    this.topPlayers = this.lBoard.getLeaderboard();
+    this.dataSource.data = this.topPlayers;
+    this.selectedPlayer = this.topPlayers[0];
+  }
+  onClose() {
+    this.showPlayerProfile = false;
+  }
+  showProfile(row: any) {
+    //only for mobile view
+    this.showPlayerProfile = true;
+    this.selectedPlayer = row;
     console.log(row);
   }
-
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -70,4 +79,3 @@ export class LeaderboardComponent implements AfterViewInit , OnInit {
     }
   }
 }
-

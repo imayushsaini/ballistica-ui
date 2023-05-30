@@ -17,7 +17,11 @@ app.use(cors());
 var request = require("request");
 
 var discordAvailable = false;
-if (process.env.DISCORD_LIVE_CHANNELID && process.env.DISCORD_BOT_TOKEN && false) {
+if (
+  process.env.DISCORD_LIVE_CHANNELID &&
+  process.env.DISCORD_BOT_TOKEN &&
+  false
+) {
   discordAvailable = true;
   var discord = require("./service/discord.service");
 }
@@ -66,7 +70,7 @@ function updateStats() {
     }
   });
 }
-updateStats()
+updateStats();
 function processSubscription(livePlayers) {
   for (player in livePlayers) {
     if (!(player in playersInGame)) {
