@@ -10,31 +10,31 @@
     //width:50%;
     .sc11{
        // background-color: red;
-       background-color: #272b4a;
+       background-color: rgb(139 133 133 / 20%);
        //border:1px solid black;
         width: 97%;
        // margin-left: 6.7%;
         height: fit-content;
     }
 }
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 350px;
+}
 
 .sub-container2{
-   // border:1px solid black;
-    background-color: #272b4a;
-   // margin-left: 1rem;
-   // background-color: lightgreen;
-   // height: 80vh;
-   margin-bottom: 2rem;
-   // width: 48%;
+    background-color: rgb(139 133 133 / 20%);
+    margin-bottom: 2rem;
 }
 
 .live-card{
     width: 70%;
-    height: 3 rem;
+    height: 3rem;
     margin: auto;
     margin-top: 2rem;
     margin-bottom: 2rem;
-    background-color: #4a5188;
+    background-color: rgb(167 167 167 / 10%);
     //border:1px solid black;
     padding-top:1.2rem;
     padding-left:1rem;
@@ -60,20 +60,19 @@
     }
 
     .scoreboard{
-
         text-align: center;
+        margin-top: 2rem;
+        display: flex;
+        flex-wrap: wrap;
     }
     ul {
         list-style-type: none;
         padding:0;
       }
     .teamA{
-        //border:1px solid black;
-        width: 16em;
-        padding:1rem;
+      flex-grow: 1;
         margin-right: 1rem;
        .header{
-        //width: 12em;
         padding:1rem;
         background-color: rgb(63, 81, 181);
         .score{padding-top:4px; font-size: 1.7rem;}
@@ -81,12 +80,9 @@
 
     }
     .teamB{
-        //border:1px solid black;
-        width: 16em;
-        padding:1rem;
         margin-left: 1rem;
+        flex-grow: 1;
         .header{
-           // width: 12em;
             padding:1rem;
             background-color:rgb(244, 67, 54);
             .score{padding-top:4px; font-size: 1.7rem;}
@@ -101,7 +97,7 @@
 }
 
 .mat-mdc-table{
-    background-color: #272b4a;
+    background-color: rgb(139 133 133 / 7%);
 }
 
 @media only screen and (max-width: 768px) {

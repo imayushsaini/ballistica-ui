@@ -1,11 +1,11 @@
 <div class="main-container">
     <div class="row justify-content-between">
-        <div class="left-container hide" [ngClass]="{'display-mob-prof':showPlayerProfile}">
+        <div class="left-container hide col" [ngClass]="{'display-mob-prof':showPlayerProfile}">
             <!-- <app-liveplayers></app-liveplayers> -->
             <app-playerprofile (closeBtnEvent)="onClose()" [player]=selectedPlayer></app-playerprofile>
         </div>
 
-        <div class=" leaderboard" [ngClass]="{'hide':showPlayerProfile}">
+        <div class="leaderboard" [ngClass]="{'hide':showPlayerProfile}">
             <mat-form-field>
                 <mat-label>Filter</mat-label>
                 <input matInput (keyup)="applyFilter($event)" placeholder="Ex. smoothy" #input>

@@ -19,6 +19,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { environment } from '../environments/environment';
+import { LoginComponent } from './pages/login/login.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,7 @@ import { environment } from '../environments/environment';
     LiveplayersComponent,
     PlayerprofileComponent,
     ProfileDialog,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,10 +43,12 @@ import { environment } from '../environments/environment';
     MatFormFieldModule,
     MatPaginatorModule,
     MatInputModule,
+    MatButtonModule,
+    MatIconModule,
     MatDialogModule,
     MatSnackBarModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: true,
+      enabled: false,
       // Register the ServiceWorker as soon as the app is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000',

@@ -1,0 +1,19 @@
+.main-container{
+    width: 80%;
+    margin: auto;
+    height: 75vh;
+    padding-top: 6rem;
+    display: flex;
+    justify-content: center;
+}
+
+.login-section {
+  height: fit-content;
+  text-align: center;
+  padding: 81px;
+  background-color: rgb(139 133 133 / 20%);
+  .mdc-button {
+    width: 100%;
+    background-color: #3e00bd;
+  }
+}

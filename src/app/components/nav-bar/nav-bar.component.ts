@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { MainService } from 'src/app/services/main.service';
 
 @Component({
@@ -7,9 +7,15 @@ import { MainService } from 'src/app/services/main.service';
   styleUrls: ['./nav-bar.component.scss'],
 })
 export class NavBarComponent implements OnInit {
-  constructor(private mainservice: MainService) {}
 
-  ngOnInit(): void {}
+  active = false;
+
+  constructor(private mainservice: MainService, private elementRef: ElementRef) { }
+
+  ngOnInit(): void {
+    this.active = false;
+  }
+
   openDiscord() {
     this.mainservice.getDiscord().subscribe((data) => {
       console.log(data);
@@ -17,4 +23,21 @@ export class NavBarComponent implements OnInit {
       window.open(data['url']);
     });
   }
+
+  onBurgerClicked() {
+    this.active = !this.active;
+  }
+
+  @HostListener('document:click', ['$event', '$event.target'])
+  public onClick(event: MouseEvent, targetElement: HTMLElement): void {
+    if (!targetElement) {
+            return;
+        }
+        const clickedInside = this.elementRef.nativeElement.contains(targetElement);
+        if (!clickedInside) {
+          if (this.active) {
+              this.active = false
+            }
+        }
+    }
 }

@@ -1,7 +1,19 @@
 <nav>
-    <ul>
-        <li routerLinkActive="active" routerLink='home'><a >Dashboard</a></li>
-        <li routerLink='leaderboard' routerLinkActive="active"><a >Leaderboard</a></li>
-        <li><a (click)="openDiscord()">Discord</a></li>
-    </ul>
+    <div class="nav-main">
+      <div class="burger-menu" [class.active]="active" (click)="onBurgerClicked()">
+        <div class="burger-container">
+            <div class="burger-inner"></div>
+        </div>
+      </div>
+      <div class="discord">
+        Discord
+      </div>
+    </div>
+    <div class="menu" [class.hide]="!active">
+        <ul>
+          <li routerLink='home' (click)="onBurgerClicked()">Home</li>
+          <li routerLink='leaderboard' (click)="onBurgerClicked()">leaderboard</li>
+          <li routerLink='login' (click)="onBurgerClicked()">Admin Tools</li>
+        </ul>
+    </div>
 </nav>
