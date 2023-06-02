@@ -1,0 +1,26 @@
+<div [formGroup]="formGroup">
+  <ng-container *ngFor="let controlName of getFormControls(formGroup)">
+    <ng-container [ngSwitch]="getControlType($any(formGroup.get(controlName)))">
+      <div *ngSwitchCase="'group'" [formGroup]="$any(formGroup.get(controlName))">
+        <label for="controlName"> {{ controlName }}</label>
+        <!-- Recursive rendering for nested form groups -->
+        <app-reactive-form [formGroup]="$any(formGroup.get(controlName))"></app-reactive-form>
+      </div>
+      <div *ngSwitchCase="'array'" [formArrayName]="controlName">
+        <label for="controlName">{{ controlName }}</label>
+        <div *ngFor="let arrayItem of getFormArrayControls($any(formGroup.get(controlName)))">
+          <div>
+            <input type="text" [formControlName]="arrayItem">
+          </div>
+        </div>
+      </div>
+      <div *ngSwitchDefault>
+        <label for="controlName">{{ controlName }}</label>
+        <input [formControlName]="controlName">
+        <div *ngIf="hasError($any(formGroup.get(controlName)))" class="error">
+          Invalid Input
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

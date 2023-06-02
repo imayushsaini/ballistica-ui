@@ -18,8 +18,6 @@ export class NavBarComponent implements OnInit {
 
   openDiscord() {
     this.mainservice.getDiscord().subscribe((data) => {
-      console.log(data);
-      console.log(data['url']);
       window.open(data['url']);
     });
   }

@@ -1,0 +1,23 @@
+.main-container {
+  width: 80%;
+  margin: auto;
+  padding-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.option {
+  padding: 2rem;
+  width: 100%;
+  margin-bottom: 30px;
+  margin: 1rem;
+  background-color: rgba(250, 235, 215, 0.39);
+  text-align: center;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(155, 155, 155, 0.401);
+  }
+  &:active {
+    background-color: rgba(245, 245, 248, 0.833);
+  }
+}
