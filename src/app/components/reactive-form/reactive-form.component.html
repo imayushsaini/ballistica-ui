@@ -2,24 +2,57 @@
   <ng-container *ngFor="let controlName of getFormControls(formGroup)">
     <ng-container [ngSwitch]="getControlType($any(formGroup.get(controlName)))">
       <div *ngSwitchCase="'group'" [formGroup]="$any(formGroup.get(controlName))">
-        <label for="controlName"> {{ controlName }}</label>
-        <!-- Recursive rendering for nested form groups -->
-        <app-reactive-form [formGroup]="$any(formGroup.get(controlName))"></app-reactive-form>
+        <div class="setting-title">
+          <label for="controlName"> {{ controlName }}</label>
+          <button mat-icon-button (click)="onExpandToogle(controlName)">
+            <mat-icon *ngIf="isExpended(controlName)">expand_more</mat-icon>
+            <mat-icon *ngIf="!isExpended(controlName)">chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="setting-group" *ngIf="isExpended(controlName)"
+          [@slide]="isExpended(controlName) ? 'my-div-show' : 'void'">
+          <!-- Recursive rendering for nested form groups -->
+          <app-reactive-form [formGroup]="$any(formGroup.get(controlName))"></app-reactive-form>
+        </div>
       </div>
       <div *ngSwitchCase="'array'" [formArrayName]="controlName">
-        <label for="controlName">{{ controlName }}</label>
+        <div class="setting-title">
+          <label for="controlName">{{ controlName }}</label>
+          <button mat-icon-button (click)="onExpandToogle(controlName)">
+            <mat-icon *ngIf="isExpended(controlName)">expand_more</mat-icon>
+            <mat-icon *ngIf="!isExpended(controlName)">chevron_right</mat-icon>
+          </button>
+        </div>
         <div *ngFor="let arrayItem of getFormArrayControls($any(formGroup.get(controlName)))">
-          <div>
-            <input type="text" [formControlName]="arrayItem">
+          <div class="form-field-master" *ngIf="isExpended(controlName)">
+            <mat-form-field class="form-field">
+              <mat-label>{{ controlName }}</mat-label>
+              <input matInput [formControlName]="arrayItem">
+            </mat-form-field>
           </div>
         </div>
       </div>
-      <div *ngSwitchDefault>
-        <label for="controlName">{{ controlName }}</label>
-        <input [formControlName]="controlName">
-        <div *ngIf="hasError($any(formGroup.get(controlName)))" class="error">
-          Invalid Input
-        </div>
+      <div *ngSwitchDefault class="form-field-master">
+        <mat-form-field class="form-field">
+          <mat-label>{{ controlName }}</mat-label>
+          <mat-select [formControlName]="controlName" *ngIf="valueTypeBoolean($any(formGroup.get(controlName)))">
+            <mat-option [value]=true>
+              True
+            </mat-option>
+            <mat-option [value]=false>
+              False
+            </mat-option>
+          </mat-select>
+          <input matInput [formControlName]="controlName"
+            *ngIf="!valueTypeBoolean($any(formGroup.get(controlName))) && valueTypeNumber($any(formGroup.get(controlName)))"
+            type="number" appNumberValueAccessor>
+          <input matInput [formControlName]="controlName"
+            *ngIf="!valueTypeBoolean($any(formGroup.get(controlName))) && !valueTypeNumber($any(formGroup.get(controlName)))">
+          <mat-error *ngIf="hasError($any(formGroup.get(controlName)))" class="error">
+            Invalid Input Type
+          </mat-error>
+        </mat-form-field>
       </div>
     </ng-container>
   </ng-container>

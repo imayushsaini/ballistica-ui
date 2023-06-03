@@ -18,6 +18,8 @@ export class ServerSettingsComponent implements OnInit {
   constructor(private formBuilder: FormBuilder) {}
 
   formGroup: FormGroup = this.formBuilder.group({ name: "hey" });
+  isValid = true;
+  modified = false;
   ngOnInit() {
     const jsonData = {
       name: "smoothy",
@@ -32,6 +34,7 @@ export class ServerSettingsComponent implements OnInit {
 
     // Generate the form structure
     this.formGroup = this.generateFormStructure(jsonData);
+    this.detectChanges();
   }
 
   generateFormStructure(data: any): FormGroup {
@@ -61,6 +64,7 @@ export class ServerSettingsComponent implements OnInit {
     }
     return formGroup;
   }
+
   getFormControls(formGroup: FormGroup | any): string[] {
     console.log(formGroup);
     return Object.keys(formGroup.controls);
@@ -90,16 +94,45 @@ export class ServerSettingsComponent implements OnInit {
       case "string":
         return Validators.required;
       case "number":
-        return Validators.pattern(/^\d+$/);
-      case "boolean":
-        return Validators.requiredTrue;
+        return Validators.pattern(/^\d+(\.\d+)?$/);
       default:
         return Validators.nullValidator;
     }
   }
 
+  detectChanges() {
+    // Fires on each form control value change
+    this.formGroup.valueChanges.subscribe(() => {
+      // Variable res holds the current value of the form
+      this.modified = true;
+      this.isValid =
+        this.findInvalidControlsRecursive(this.formGroup).length == 0;
+    });
+  }
+
+  public findInvalidControlsRecursive(
+    formToInvestigate: FormGroup | FormArray
+  ): string[] {
+    // eslint-disable-next-line prefer-const
+    let invalidControls: string[] = [];
+    // eslint-disable-next-line prefer-const
+    let recursiveFunc = (form: FormGroup | FormArray) => {
+      Object.keys(form.controls).forEach((field) => {
+        const control = form.get(field);
+        if (control?.invalid) invalidControls.push(field);
+        if (control instanceof FormGroup) {
+          recursiveFunc(control);
+        } else if (control instanceof FormArray) {
+          recursiveFunc(control);
+        }
+      });
+    };
+    recursiveFunc(formToInvestigate);
+    return invalidControls;
+  }
+
   onSubmit() {
-    console.log("submit");
-    console.log(this.formGroup);
+    this.modified = false;
+    console.log(JSON.stringify(this.formGroup.value));
   }
 }

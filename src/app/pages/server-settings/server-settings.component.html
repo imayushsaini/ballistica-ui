@@ -1,6 +1,8 @@
 <div class="main-container">
   <form class="settings-main">
     <app-reactive-form [formGroup]=formGroup></app-reactive-form>
-    <button (click)="onSubmit()">Submit</button>
   </form>
 </div>
+
+<div id="snackbar" [ngClass]="{'show': modified }">Save changes ? <span class="btn save" (click)="onSubmit()"
+    [ngClass]="{'invalid': isValid}">Save</span></div>

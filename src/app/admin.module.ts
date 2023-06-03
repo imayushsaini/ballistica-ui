@@ -6,9 +6,15 @@ import { AdminOptionsComponent } from "./pages/admin-options/admin-options.compo
 import { QuickToolsComponent } from "./pages/quick-tools/quick-tools.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { KeysPipe } from "./pipes/key-pipe";
-import { BrowserModule } from "@angular/platform-browser";
 import { CommonModule } from "@angular/common";
 import { ReactiveFormComponent } from "./components/reactive-form/reactive-form.component";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatSelectModule } from "@angular/material/select";
+import { AppNumberValueAccessorDirective } from "./components/reactive-form/number-value-accessor.directive";
+import { MatIconModule } from "@angular/material/icon";
+import { MatRippleModule } from "@angular/material/core";
+import { MatButtonModule } from "@angular/material/button";
 
 const routes: Routes = [
   {
@@ -24,10 +30,22 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [ServerSettingsComponent, ReactiveFormComponent, KeysPipe],
+  declarations: [
+    ServerSettingsComponent,
+    ReactiveFormComponent,
+    AppNumberValueAccessorDirective,
+    KeysPipe,
+  ],
   imports: [
     CommonModule,
+    MatIconModule,
     ReactiveFormsModule,
+    MatRippleModule,
+    MatButtonModule,
+
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
     FormsModule,
     RouterModule.forChild(routes),
   ],
