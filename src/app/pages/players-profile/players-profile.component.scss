@@ -1,0 +1,24 @@
+.main-container {
+  width: 80%;
+  margin: auto;
+  padding-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.result {
+  .mat-expansion-panel {
+    background-color: rgba(106, 103, 150, 0.741);
+  }
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.options {
+  display: flex;
+  justify-content: space-around;
+}

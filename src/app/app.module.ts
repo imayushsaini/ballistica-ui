@@ -13,7 +13,6 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { LiveplayersComponent } from "./pages/leaderboard/liveplayers/liveplayers.component";
-import { PlayerprofileComponent } from "./pages/leaderboard/playerprofile/playerprofile.component";
 import { HttpClientModule } from "@angular/common/http";
 import { MatDialogModule } from "@angular/material/dialog";
 import { ServiceWorkerModule } from "@angular/service-worker";
@@ -22,15 +21,11 @@ import { environment } from "../environments/environment";
 import { LoginComponent } from "./pages/login/login.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard.component";
-import { ServerSettingsComponent } from "./pages/server-settings/server-settings.component";
 import { QuickToolsComponent } from "./pages/quick-tools/quick-tools.component";
-import { RoleManagementComponent } from "./pages/role-management/role-management.component";
-import { PlayersProfileComponent } from "./pages/players-profile/players-profile.component";
-import { ProfileComponent } from "./pages/profile/profile.component";
 import { LogsViewerComponent } from "./pages/logs-viewer/logs-viewer.component";
-import { AdminOptionsComponent } from "./pages/admin-options/admin-options.component";
 import { ReactiveFormsModule } from "@angular/forms";
+import { PlayerprofileComponent } from "./pages/leaderboard/playerprofile/playerprofile.component";
+import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard.component";
 
 @NgModule({
   declarations: [
@@ -38,23 +33,17 @@ import { ReactiveFormsModule } from "@angular/forms";
     HomeComponent,
     NavBarComponent,
     LeaderboardComponent,
-    LiveplayersComponent,
     PlayerprofileComponent,
+    LiveplayersComponent,
+    AdminDashboardComponent,
     ProfileDialog,
     LoginComponent,
-    AdminDashboardComponent,
-
     QuickToolsComponent,
-    RoleManagementComponent,
-    PlayersProfileComponent,
-    ProfileComponent,
     LogsViewerComponent,
-    AdminOptionsComponent,
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
-
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,

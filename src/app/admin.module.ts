@@ -15,6 +15,9 @@ import { AppNumberValueAccessorDirective } from "./components/reactive-form/numb
 import { MatIconModule } from "@angular/material/icon";
 import { MatRippleModule } from "@angular/material/core";
 import { MatButtonModule } from "@angular/material/button";
+import { MatExpansionModule } from "@angular/material/expansion";
+import { RoleManagementComponent } from "./pages/role-management/role-management.component";
+import { PlayersProfileComponent } from "./pages/players-profile/players-profile.component";
 
 const routes: Routes = [
   {
@@ -25,14 +28,19 @@ const routes: Routes = [
       { path: "dashboard", component: AdminOptionsComponent },
       { path: "settings", component: ServerSettingsComponent },
       { path: "quick", component: QuickToolsComponent },
+      { path: "roles", component: RoleManagementComponent },
+      { path: "players", component: PlayersProfileComponent },
     ],
   },
 ];
 
 @NgModule({
   declarations: [
+    AdminOptionsComponent,
     ServerSettingsComponent,
+    PlayersProfileComponent,
     ReactiveFormComponent,
+    RoleManagementComponent,
     AppNumberValueAccessorDirective,
     KeysPipe,
   ],
@@ -42,9 +50,9 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatRippleModule,
     MatButtonModule,
-
     MatFormFieldModule,
     MatInputModule,
+    MatExpansionModule,
     MatSelectModule,
     FormsModule,
     RouterModule.forChild(routes),

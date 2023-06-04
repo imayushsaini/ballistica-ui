@@ -1,1 +1,42 @@
-<p>role-management works!</p>
+<div class="main-container">
+
+
+  <div class="roles-list">
+    <div class="new-role">
+      <button mat-raised-button color="primary" (click)="onAddRole()">+ Add Role</button>
+    </div>
+    <div class="add-role" *ngIf="showCreateNewRoleComponent">
+      <mat-form-field class="example-full-width">
+        <mat-label>Role Name</mat-label>
+        <input matInput [(ngModel)]="newRoleName">
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="onCreateRole()">Create</button>
+    </div>
+    <ng-container *ngFor="let controlName of getFormControls(formGroup)">
+      <div class="role" [formGroup]="$any(formGroup.get(controlName))">
+        <mat-form-field class="example-full-width">
+          <mat-label>Role (disabled)</mat-label>
+          <input matInput disabled value="{{controlName}}">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Role Tag</mat-label>
+          <input matInput [formControlName]="'tag'">
+        </mat-form-field> <br>
+        <mat-form-field class="example-full-width">
+          <mat-label>Ids</mat-label>
+          <textarea matInput [value]="formArrayToCommaSeparatedString('ids', controlName)"
+            (input)="commaSeparatedStringToFormArray($event, controlName , 'ids')"></textarea>
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+          <mat-label>Commands</mat-label>
+          <textarea matInput [value]="formArrayToCommaSeparatedString('commands', controlName)"
+            (input)="commaSeparatedStringToFormArray($event, controlName , 'commands')"></textarea>
+        </mat-form-field><br>
+        <span class="tip">* Ids and commands are comma seperated</span>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div id="snackbar" [ngClass]="{'show': modified }">Save changes ? <span class="btn save" (click)="onSave()">Save</span>
+</div>

@@ -1,1 +1,59 @@
-<p>players-profile works!</p>
+<div class="main-container">
+  <div class="players-section">
+    <div class="search">
+      <mat-form-field class="full-width">
+        <mat-label>Search</mat-label>
+        <input type="email" matInput placeholder="pb-th347Wer== or Android243">
+        <mat-hint>Search players</mat-hint>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Select database</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let db of DBS" [value]="db">
+            {{db}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="results">
+      <div class="result" *ngFor="let profile of getObjectKeys(PROFILES)">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              Name: {{ PROFILES[profile].name}}
+            </mat-panel-title>
+            <mat-panel-description>
+              account_id {{ profile }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <ul>
+            <li>Linked Accounts: {{ PROFILES[profile].display_string}}</li>
+            <li>isBanned: {{PROFILES[profile].isBan }}</li>
+            <li>isMuted: {{PROFILES[profile].isMuted }}</li>
+            <li>Account Created On: {{PROFILES[profile].accountAge }}</li>
+            <li>RegisterOn: {{PROFILES[profile].registerOn }}</li>
+            <li>CanStartKickVote: {{PROFILES[profile].canStartKickVote }}</li>
+            <li>Active SpamCount: {{PROFILES[profile].spamCount}}</li>
+            <li>lastSpam: {{PROFILES[profile].lastSpam }}</li>
+            <li>warnCount: {{PROFILES[profile].warnCount }}</li>
+            <li>lastWarned: {{PROFILES[profile].lastWarned }}4</li>
+            <li>verified:{{PROFILES[profile].verified }}</li>
+            <li>lastJoin: {{PROFILES[profile].lastJoin }}</li>
+            <li>lastIP: {{PROFILES[profile].lastIP }}</li>
+            <li>deviceUUID: {{PROFILES[profile].deviceUUID}}</li>
+            <li>lastMsgTime: {{PROFILES[profile].lastMsgTime}}</li>
+            <li>lastMsg: {{PROFILES[profile].lastMsg}}</li>
+          </ul>
+          <div class="options">
+            <button mat-raised-button color="warn" (click)="onBanClick()">Ban</button>
+            <button mat-flat-button color="accent" (click)="onUnmuteClick()">Unmute</button>
+            <button mat-flat-button color="warn" (click)="onKickClick()">disable kick votes</button>
+          </div>
+
+        </mat-expansion-panel>
+
+      </div>
+
+    </div>
+  </div>
+</div>

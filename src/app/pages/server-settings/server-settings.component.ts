@@ -66,7 +66,6 @@ export class ServerSettingsComponent implements OnInit {
   }
 
   getFormControls(formGroup: FormGroup | any): string[] {
-    console.log(formGroup);
     return Object.keys(formGroup.controls);
   }
 
