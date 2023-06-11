@@ -18,6 +18,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { RoleManagementComponent } from "./pages/role-management/role-management.component";
 import { PlayersProfileComponent } from "./pages/players-profile/players-profile.component";
+import { LogsViewerComponent } from "./pages/logs-viewer/logs-viewer.component";
+import { MatDialogModule } from "@angular/material/dialog";
 
 const routes: Routes = [
   {
@@ -30,6 +32,7 @@ const routes: Routes = [
       { path: "quick", component: QuickToolsComponent },
       { path: "roles", component: RoleManagementComponent },
       { path: "players", component: PlayersProfileComponent },
+      { path: "server-logs", component: LogsViewerComponent },
     ],
   },
 ];
@@ -41,6 +44,7 @@ const routes: Routes = [
     PlayersProfileComponent,
     ReactiveFormComponent,
     RoleManagementComponent,
+    LogsViewerComponent,
     AppNumberValueAccessorDirective,
     KeysPipe,
   ],
@@ -51,6 +55,7 @@ const routes: Routes = [
     MatRippleModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatDialogModule,
     MatInputModule,
     MatExpansionModule,
     MatSelectModule,

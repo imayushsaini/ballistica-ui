@@ -59,6 +59,10 @@ table {
     font-size: 1.6rem;
     text-align: center;
   }
+  .sessionType {
+    font-size: 1rem;
+    margin-top: 20px;
+  }
 
   .scoreboard {
     text-align: center;
@@ -102,8 +106,14 @@ table {
       padding-bottom: 1rem;
     }
   }
+  .ffa-player {
+    padding-top: 0.5rem;
+  }
 }
 
+.free-for-all {
+  justify-content: center;
+}
 .mat-mdc-table {
   background-color: rgb(139 133 133 / 13%);
 }

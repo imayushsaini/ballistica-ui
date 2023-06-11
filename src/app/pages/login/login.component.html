@@ -1,12 +1,11 @@
 <div class="main-container">
   <div class="login-section">
-    <form class="example-form">
-      <h2>LOGIN</h2><br>
-      <mat-form-field class="example-full-width">
-        <mat-label>Pass Key</mat-label>
-        <input matInput placeholder="Ex. mySuperSecretPAssKeyHere">
-      </mat-form-field> <br>
-      <button mat-raised-button routerLink='/admin'>Login</button>
-    </form>
+    <h2>LOGIN</h2><br>
+    <mat-form-field>
+      <mat-label>Pass Key</mat-label>
+      <input matInput placeholder="Ex. mySuperSecretPAssKeyHere" [formControl]="passkeyControl">
+    </mat-form-field> <br>
+    <button mat-raised-button (click)="onLogin()">Login</button>
+    <div class="error">{{this.errorMessage}}</div>
   </div>
 </div>

@@ -8,6 +8,7 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { AdminService } from "src/app/services/admin.service";
 
 @Component({
   selector: "app-server-settings",
@@ -15,26 +16,20 @@ import {
   styleUrls: ["./server-settings.component.scss"],
 })
 export class ServerSettingsComponent implements OnInit {
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminService: AdminService
+  ) {}
 
-  formGroup: FormGroup = this.formBuilder.group({ name: "hey" });
+  formGroup: FormGroup = this.formBuilder.group({});
   isValid = true;
   modified = false;
   ngOnInit() {
-    const jsonData = {
-      name: "smoothy",
-      discord: { enabled: true, token: "hey", names: ["hey hello", "bro"] },
-      hobbies: ["coding", "gaming", "reading"],
-      quickTurn: {
-        enable: true,
-        quantity: 2,
-        highlights: { color: "red", random: true },
-      },
-    };
-
-    // Generate the form structure
-    this.formGroup = this.generateFormStructure(jsonData);
-    this.detectChanges();
+    this.adminService.getSettings().subscribe((data) => {
+      // Generate the form structure
+      this.formGroup = this.generateFormStructure(data);
+      this.detectChanges();
+    });
   }
 
   generateFormStructure(data: any): FormGroup {
@@ -132,6 +127,8 @@ export class ServerSettingsComponent implements OnInit {
 
   onSubmit() {
     this.modified = false;
-    console.log(JSON.stringify(this.formGroup.value));
+    this.adminService.updateSettings(this.formGroup.value).subscribe(() => {
+      console.log("updated");
+    });
   }
 }

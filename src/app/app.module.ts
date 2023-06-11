@@ -21,11 +21,10 @@ import { environment } from "../environments/environment";
 import { LoginComponent } from "./pages/login/login.component";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
-import { QuickToolsComponent } from "./pages/quick-tools/quick-tools.component";
-import { LogsViewerComponent } from "./pages/logs-viewer/logs-viewer.component";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PlayerprofileComponent } from "./pages/leaderboard/playerprofile/playerprofile.component";
 import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard.component";
+import { authInterceptorProvider } from "./helpers/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -38,10 +37,9 @@ import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard
     AdminDashboardComponent,
     ProfileDialog,
     LoginComponent,
-    QuickToolsComponent,
-    LogsViewerComponent,
   ],
   imports: [
+    FormsModule,
     BrowserModule,
     ReactiveFormsModule,
     AppRoutingModule,
@@ -62,7 +60,7 @@ import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard
       registrationStrategy: "registerWhenStable:30000",
     }),
   ],
-  providers: [],
+  providers: [authInterceptorProvider],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

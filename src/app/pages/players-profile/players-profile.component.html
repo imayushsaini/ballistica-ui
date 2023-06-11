@@ -3,12 +3,13 @@
     <div class="search">
       <mat-form-field class="full-width">
         <mat-label>Search</mat-label>
-        <input type="email" matInput placeholder="pb-th347Wer== or Android243">
-        <mat-hint>Search players</mat-hint>
+        <input type="email" matInput placeholder="pb-th347Wer== or Android243" [formControl]="searchKeyControl"
+          (keyup.enter)="onSearch($event)" (focusout)="onSearch($event)">
+        <mat-hint>Press Enter after typing</mat-hint>
       </mat-form-field>
       <mat-form-field class="full-width">
         <mat-label>Select database</mat-label>
-        <mat-select>
+        <mat-select [formControl]="selectDBControl">
           <mat-option *ngFor="let db of DBS" [value]="db">
             {{db}}
           </mat-option>
@@ -17,7 +18,7 @@
     </div>
     <div class="results">
       <div class="result" *ngFor="let profile of getObjectKeys(PROFILES)">
-        <mat-expansion-panel>
+        <mat-expansion-panel (opened)="onOpen(profile)">
           <mat-expansion-panel-header>
             <mat-panel-title>
               Name: {{ PROFILES[profile].name}}
@@ -28,8 +29,8 @@
           </mat-expansion-panel-header>
           <ul>
             <li>Linked Accounts: {{ PROFILES[profile].display_string}}</li>
-            <li>isBanned: {{PROFILES[profile].isBan }}</li>
-            <li>isMuted: {{PROFILES[profile].isMuted }}</li>
+            <li *ngIf="getRestrictionInfo(profile)">isBanned: {{getRestrictionInfo(profile).isBan }}</li>
+            <li *ngIf="getRestrictionInfo(profile)">isMuted: {{getRestrictionInfo(profile).isMuted }}</li>
             <li>Account Created On: {{PROFILES[profile].accountAge }}</li>
             <li>RegisterOn: {{PROFILES[profile].registerOn }}</li>
             <li>CanStartKickVote: {{PROFILES[profile].canStartKickVote }}</li>
@@ -44,12 +45,18 @@
             <li>lastMsgTime: {{PROFILES[profile].lastMsgTime}}</li>
             <li>lastMsg: {{PROFILES[profile].lastMsg}}</li>
           </ul>
-          <div class="options">
-            <button mat-raised-button color="warn" (click)="onBanClick()">Ban</button>
-            <button mat-flat-button color="accent" (click)="onUnmuteClick()">Unmute</button>
-            <button mat-flat-button color="warn" (click)="onKickClick()">disable kick votes</button>
+          <div class="options" *ngIf="getRestrictionInfo(profile)">
+            <button mat-raised-button [color]="getRestrictionInfo(profile).isBan ? 'accent' : 'warn'"
+              (click)="onBanClick(profile)">{{getRestrictionInfo(profile).isBan ? 'Unban':
+              'Ban'}}</button>
+            <button mat-flat-button [color]="getRestrictionInfo(profile).isMuted ? 'accent' : 'warn'"
+              (click)="onUnmuteClick(profile)">{{getRestrictionInfo(profile).isMuted ?
+              'UnMute': 'Mute'}}</button>
+            <button mat-flat-button [color]="getRestrictionInfo(profile).isKickVoteDisabled ? 'accent' : 'warn'"
+              (click)="onKickVoteClick(profile)">
+              {{getRestrictionInfo(profile).isKickVoteDisabled ? 'enable kick votes': 'disable kick votes'}}</button>
           </div>
-
+          <span *ngIf="updateInQueue.includes(profile) ">....processing...</span>
         </mat-expansion-panel>
 
       </div>

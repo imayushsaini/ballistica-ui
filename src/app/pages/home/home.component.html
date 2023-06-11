@@ -1,77 +1,87 @@
-
-
 <div class="main-container">
-    <div class="row">
-        <div class=" col sub-container1">
-            <div class="row">
-                <div class="sc11">
-                    <div class="live-card">
-                        Current Map : {{playlist.current}}
-                    </div>
-                    <div class="live-card">
-                        Next Map : {{playlist.next}}
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="leaderboard">
-                    <div class="heading">
-                        <h3>Leaderboard</h3>
-                    </div>
-                    <table mat-table [dataSource]="dataSource" class=" demo-table">
-                        <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-                          <th mat-header-cell *matHeaderCellDef>
-                            {{column.header}}
-                          </th>
-                          <td mat-cell *matCellDef="let row">
-                            {{column.cell(row)}}
-                          </td>
-                        </ng-container>
-
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                      </table>
-                </div>
-            </div>
+  <div class="row">
+    <div class=" col sub-container1">
+      <div class="row">
+        <div class="sc11">
+          <div class="live-card">
+            Current Map : {{playlist.current}}
+          </div>
+          <div class="live-card">
+            Next Map : {{playlist.next}}
+          </div>
         </div>
-        <div class=" col sub-container2">
-             <div class="live-players">
-                 <div class="server-name">
-                    {{serverName}}
-                 </div>
+      </div>
+      <div class="row">
+        <div class="leaderboard">
+          <div class="heading">
+            <h3>Leaderboard</h3>
+          </div>
+          <table mat-table [dataSource]="dataSource" class=" demo-table">
+            <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
+              <th mat-header-cell *matHeaderCellDef>
+                {{column.header}}
+              </th>
+              <td mat-cell *matCellDef="let row">
+                {{column.cell(row)}}
+              </td>
+            </ng-container>
 
-                 <div class="justify-content-center pt-5 scoreboard">
-                     <div class="teamA">
-                         <div class="header" *ngIf="teamData">
-                            <div class="name">{{teamData[0].name}}</div>
-                            <div class="score">{{teamData[0].score}}</div>
-                        </div>
-                         <div class="players">
-                             <ul *ngIf="teamData">
-                                <li *ngFor="let player of teamData[0].players" (click)="openDialog(player)">{{player.device_id}} <br><span>{{player.name}}</span> </li>
-
-                             </ul>
-                         </div>
-                     </div>
-                     <div class="teamB">
-                         <div class="header" *ngIf="teamData">
-                            <div class="name">{{teamData[1].name}}</div>
-                            <div class="score">{{teamData[1].score}}</div>
-                         </div>
-                        <div class="players">
-                          <ul *ngIf="teamData">
-                            <li *ngFor="let player of teamData[1].players" (click)="openDialog(player)">{{player.device_id}} <br><span>{{player.name}}</span> </li>
-
-                          </ul>
-                        </div>
-                    </div>
-                 </div>
-             </div>
-         </div>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
     </div>
+    <div class=" col sub-container2">
+      <div class="live-players">
+        <div class="server-name">
+          {{serverName}} bcs fun games <br> <br>
+          <span class="sessionType"> {{sessionType}}</span>
+        </div>
+
+        <div class="justify-content-center pt-5 scoreboard" *ngIf="isDualTeam()">
+          <div class="teamA">
+            <div class="header" *ngIf="teamData">
+              <div class="name">{{teamData["0"].name}}</div>
+              <div class="score">{{teamData["0"].score}}</div>
+            </div>
+            <div class="players">
+              <ul *ngIf="teamData">
+                <li *ngFor="let player of teamData['0'].players" (click)="openDialog(player)">{{player.device_id}}
+                  <br><span>{{player.name}}</span>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="teamB">
+            <div class="header" *ngIf="teamData">
+              <div class="name">{{teamData["1"].name}}</div>
+              <div class="score">{{teamData["1"].score}}</div>
+            </div>
+            <div class="players">
+              <ul *ngIf="teamData">
+                <li *ngFor="let player of teamData['1'].players" (click)="openDialog(player)">{{player.device_id}}
+                  <br><span>{{player.name}}</span>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="free-for-all scoreboard">
+          <ul *ngIf="teamData">
+            <li *ngFor="let player of getAllPlayers()" (click)="openDialog(player)" class="players ffa-player">
+              {{player.device_id}} >
+              <span>{{player.name}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- <div class="popup-container">
   Hi i am player
 </div> -->
-

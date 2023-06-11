@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable, Subject } from "rxjs";
+import { environment } from "src/environments/environment";
 
-const httpOption = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
+const API = environment.API_ENDPOINT;
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class LeaderboardService {
   leaderboard: any[] = [];
@@ -15,15 +14,17 @@ export class LeaderboardService {
   constructor(private http: HttpClient) {}
 
   getTop200(): Observable<any> {
-    return this.http.get('http://localhost:3000/top200');
+    return this.http.get(`${API}/api/top-200`);
   }
+
   getCompleteLeaderboard(): Observable<any> {
-    return this.http.get('http://localhost:3000/leaderboard');
+    return this.http.get(`${API}/api/current-leaderboard`);
   }
 
   getLeaderboard() {
     return this.leaderboard;
   }
+
   compare(a: any, b: any) {
     if (a.rank < b.rank) {
       return -1;
@@ -37,33 +38,31 @@ export class LeaderboardService {
   loadLeaderboard() {
     this.getTop200().subscribe((dat) => {
       this.leaderboard = Object.keys(dat).map((key) => {
-        let name_ = '';
-        if (dat[key]['name_html']) name_ = dat[key]['name_html'];
         return {
-          rank: dat[key]['rank'],
+          rank: dat[key]["rank"],
           id: key,
-          name: name_.replace(/<\/?[^>]+(>|$)/g, ''),
-          scores: dat[key]['scores'],
-          games: dat[key]['games'],
-          kills: dat[key]['kills'],
-          deaths: dat[key]['deaths'],
-          last_seen: dat[key]['last_seen'],
+          name: dat[key]["name"],
+          scores: dat[key]["scores"],
+          games: dat[key]["games"],
+          kills: dat[key]["kills"],
+          deaths: dat[key]["deaths"],
+          last_seen: dat[key]["last_seen"],
         };
       });
       this.leaderboard.sort(this.compare);
       this.leaderboardUpdateEvent.next();
-      console.log('got leaderboard');
+      console.log("got leaderboard");
       this.getCompleteLeaderboard().subscribe((data) => {
-        this.leaderboard = Object.keys(dat).map((key) => {
+        this.leaderboard = Object.keys(data).map((key) => {
           return {
-            rank: dat[key]['rank'],
+            rank: dat[key]["rank"],
             id: key,
-            name: dat[key]['name_html'].replace(/<\/?[^>]+(>|$)/g, ''),
-            scores: dat[key]['scores'],
-            games: dat[key]['games'],
-            kills: dat[key]['kills'],
-            deaths: dat[key]['deaths'],
-            last_seen: dat[key]['last_seen'],
+            name: dat[key]["name"],
+            scores: dat[key]["scores"],
+            games: dat[key]["games"],
+            kills: dat[key]["kills"],
+            deaths: dat[key]["deaths"],
+            last_seen: dat[key]["last_seen"],
           };
         });
       });

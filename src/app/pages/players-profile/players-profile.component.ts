@@ -1,4 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { MatDialog } from "@angular/material/dialog";
+import { CustomDialogComponent } from "src/app/components/dialog/custom-dialog";
+import { AdminService } from "src/app/services/admin.service";
 
 interface Profile {
   display_string: string[];
@@ -28,51 +32,110 @@ interface Profile {
 interface Profiles {
   [key: string]: Profile;
 }
+interface AccountInfo {
+  extra: string;
+  isBan: boolean;
+  isKickVoteDisabled: boolean;
+  isMuted: boolean;
+}
+interface RestrictionMap {
+  [key: string]: AccountInfo;
+}
 @Component({
   selector: "app-players-profile",
   templateUrl: "./players-profile.component.html",
   styleUrls: ["./players-profile.component.scss"],
 })
-export class PlayersProfileComponent {
-  PROFILES: Profiles = {
-    "pb-123": {
-      display_string: ["\ue063HeySmoothy"],
-      profiles: [],
-      name: "\ue063HeySmoothy",
-      isBan: false,
-      isMuted: false,
-      accountAge: "2022-05-29 21:53:44",
-      registerOn: 1655022106.4740922,
-      canStartKickVote: true,
-      spamCount: 0,
-      lastSpam: 1655022106.4740927,
-      totaltimeplayer: 0,
-      lastseen: 0,
-      warnCount: 0,
-      lastWarned: 1655552812.9632144,
-      verified: true,
-      rejoincount: 1,
-      lastJoin: 1655552812.963215,
-      cMsgCount: 0,
-      lastMsgTime: 1655406931.728448,
-      lastMsg: "ok",
-      cSameMsg: 0,
-      lastIP: "axj~}j~~n`ai",
-      deviceUUID: "eedccec9b0c17d3716b936981bb753c3872d905c",
-    },
-  };
-  DBS = ["profiles.json @ Latest", "profiles.json2023-12-10"];
+export class PlayersProfileComponent implements OnInit {
+  searchKeyControl: FormControl = new FormControl();
+  selectDBControl: FormControl = new FormControl();
+  restrictionMap: RestrictionMap = {};
+  updateInQueue: string[] = [];
+  constructor(private adminService: AdminService, private dialog: MatDialog) {}
+
+  ngOnInit() {
+    this.adminService.getDBs("players").subscribe((data) => {
+      console.log(data);
+      this.DBS = data as [];
+      this.selectDBControl.setValue(this.DBS[0]);
+    });
+  }
+  PROFILES: Profiles = {};
+  DBS: string[] = [];
 
   getObjectKeys(obj: any): string[] {
     return Object.keys(obj);
   }
-  onBanClick() {
-    console.log("ban");
+  onBanClick(account_id: string) {
+    if (this.restrictionMap[account_id].isBan)
+      this.openDialog("unban", account_id, this.needDuration("unban"));
+    else this.openDialog("ban", account_id, this.needDuration("ban"));
   }
-  onUnmuteClick() {
-    console.log("mute");
+  onUnmuteClick(account_id: string) {
+    if (this.restrictionMap[account_id].isMuted)
+      this.openDialog("unmute", account_id, this.needDuration("unmute"));
+    else this.openDialog("mute", account_id, this.needDuration("mute"));
   }
-  onKickClick() {
-    console.log("kick");
+  onKickVoteClick(account_id: string) {
+    if (this.restrictionMap[account_id].isKickVoteDisabled)
+      this.openDialog(
+        "enable-kick-vote",
+        account_id,
+        this.needDuration("enable-kick-vote")
+      );
+    else
+      this.openDialog(
+        "disable-kick-vote",
+        account_id,
+        this.needDuration("disable-kick-vote")
+      );
+  }
+  onSearch(event: Event) {
+    if (
+      (event instanceof KeyboardEvent && event.key === "Enter") ||
+      event instanceof FocusEvent
+    ) {
+      this.adminService
+        .searchPlayer(this.searchKeyControl.value, this.selectDBControl.value)
+        .subscribe((data) => {
+          this.PROFILES = data as Profiles;
+        });
+    }
+  }
+
+  getRestrictionInfo(account_id: string): AccountInfo {
+    return this.restrictionMap[account_id];
+  }
+
+  onOpen(account_id: string) {
+    this.adminService.getAccountInfo(account_id).subscribe((data) => {
+      this.restrictionMap[account_id] = data as AccountInfo;
+      this.updateInQueue = this.updateInQueue.filter(
+        (item) => item !== account_id
+      );
+    });
+  }
+
+  openDialog(
+    action: string,
+    account_id: string,
+    requriedDuration: boolean
+  ): void {
+    const dialogRef = this.dialog.open(CustomDialogComponent, {
+      data: { type: action, account: account_id, requriedDuration },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result || !requriedDuration) {
+        this.updateInQueue.push(account_id);
+        this.adminService.updatePlayer(action, account_id).subscribe(() => {
+          this.onOpen(account_id);
+        });
+      }
+    });
+  }
+
+  needDuration(type: string) {
+    return ["ban", "mute", "disable-kick-vote"].includes(type);
   }
 }

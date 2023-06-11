@@ -1,27 +1,43 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { environment } from "src/environments/environment";
 
-const httpOption = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
+const API = environment.API_ENDPOINT;
 
+interface ServerInfo {
+  serverName: string;
+  discord: string;
+  vapidKey: string;
+}
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class MainService {
-  constructor(private http: HttpClient) {}
+  serverInfo: ServerInfo = {
+    serverName: "",
+    discord: "",
+    vapidKey: "",
+  };
+  constructor(private http: HttpClient) {
+    this.getServerInfo().subscribe((data: ServerInfo) => {
+      this.serverInfo = data;
+    });
+  }
 
+  getServerInfo(): Observable<any> {
+    return this.http.get(`${API}/api/server-info`);
+  }
   getLiveStats(): Observable<any> {
-    return this.http.get('http://localhost:3000/live');
+    return this.http.get(`${API}/api/live-stats`);
   }
-  getDiscord(): Observable<any> {
-    return this.http.get('/discord');
+  getDiscord(): string {
+    return this.serverInfo["discord"];
   }
-  getVapidKey(): Observable<any> {
-    return this.http.get('/vapidkey');
+  getVapidKey(): string {
+    return this.serverInfo["vapidKey"];
   }
-  getServerName(): Observable<any> {
-    return this.http.get('http://localhost:3000/serverName');
+  getServerName(): string {
+    return this.serverInfo["serverName"];
   }
 }

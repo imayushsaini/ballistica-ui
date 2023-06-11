@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { SubscribeService } from 'src/app/services/subscribe.service';
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { SubscribeService } from "src/app/services/subscribe.service";
 
 @Component({
-  selector: 'app-playerprofile',
-  templateUrl: './playerprofile.component.html',
-  styleUrls: ['./playerprofile.component.scss'],
+  selector: "app-playerprofile",
+  templateUrl: "./playerprofile.component.html",
+  styleUrls: ["./playerprofile.component.scss"],
 })
 export class PlayerprofileComponent implements OnInit {
   @Input()
@@ -20,7 +20,7 @@ export class PlayerprofileComponent implements OnInit {
 
   ngOnInit(): void {}
   onClose() {
-    this.closeBtnEvent.emit('true');
+    this.closeBtnEvent.emit("true");
   }
   parseTime(date: string) {
     return new Date(date);
@@ -31,7 +31,7 @@ export class PlayerprofileComponent implements OnInit {
   subscribe(id: string, name: string) {
     this.subService.subscribeToNotifications(id, name);
     const msg = `Subscribed to ${name} , conformation notification will be sent shortely.`;
-    this.openSnackBar(msg, 'ok');
+    this.openSnackBar(msg, "ok");
   }
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
