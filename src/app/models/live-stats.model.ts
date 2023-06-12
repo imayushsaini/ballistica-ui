@@ -39,6 +39,7 @@ interface System {
 
 export interface LiveData {
   chats: string[];
+  name: string;
   playlist: Playlist;
   roster: Roster;
   system: System;

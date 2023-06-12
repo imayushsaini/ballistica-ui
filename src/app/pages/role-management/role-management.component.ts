@@ -1,26 +1,27 @@
 /* eslint-disable no-prototype-builtins */
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-
+import { AdminService } from "src/app/services/admin.service";
+interface Role {
+  commands: string[];
+  ids: string[];
+  tag: string;
+  tagcolor: string;
+}
+interface Roles {
+  [key: string]: Role;
+}
 @Component({
   selector: "app-role-management",
   templateUrl: "./role-management.component.html",
   styleUrls: ["./role-management.component.scss"],
 })
 export class RoleManagementComponent implements OnInit {
-  ROLES = {
-    owner: {
-      tag: "\\cowner\\c",
-      ids: ["pb-sdf", "pb-32f"],
-      commands: ["sm", "nv"],
-    },
-    vip: {
-      tag: "vip",
-      ids: ["4rwer", "34rwer"],
-      commands: ["kick", "changetag"],
-    },
-  };
-  constructor(private formBuilder: FormBuilder) {}
+  ROLES: Roles = {};
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminService: AdminService
+  ) {}
 
   formGroup: FormGroup = this.formBuilder.group({});
   showCreateNewRoleComponent = false;
@@ -29,10 +30,14 @@ export class RoleManagementComponent implements OnInit {
   modified = false;
 
   ngOnInit() {
-    this.formGroup = this.generateFormStructure(this.ROLES);
-    console.log(this.formGroup);
-    this.detectChanges();
+    this.adminService.getRoles().subscribe((data) => {
+      this.ROLES = data as Roles;
+      this.formGroup = this.generateFormStructure(this.ROLES);
+      console.log(this.formGroup);
+      this.detectChanges();
+    });
   }
+
   generateFormStructure(data: any): FormGroup {
     const formGroup = this.formBuilder.group({});
 
@@ -83,7 +88,6 @@ export class RoleManagementComponent implements OnInit {
   detectChanges() {
     // Fires on each form control value change
     this.formGroup.valueChanges.subscribe(() => {
-      // Variable res holds the current value of the form
       this.modified = true;
     });
   }
@@ -121,6 +125,8 @@ export class RoleManagementComponent implements OnInit {
   }
   onSave() {
     console.log(JSON.stringify(this.formGroup.value));
-    this.modified = false;
+    this.adminService.saveRoles(this.formGroup.value).subscribe(() => {
+      this.modified = false;
+    });
   }
 }

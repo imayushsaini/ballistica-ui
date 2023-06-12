@@ -55,7 +55,6 @@ export class PlayersProfileComponent implements OnInit {
 
   ngOnInit() {
     this.adminService.getDBs("players").subscribe((data) => {
-      console.log(data);
       this.DBS = data as [];
       this.selectDBControl.setValue(this.DBS[0]);
     });

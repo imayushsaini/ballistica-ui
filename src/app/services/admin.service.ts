@@ -38,4 +38,16 @@ export class AdminService {
       .set("action", action);
     return this.http.post(`${API}/api/update-player`, {}, { params });
   }
+  getRoles() {
+    return this.http.get(`${API}/api/roles`);
+  }
+  // TODO import modelof roles here
+  saveRoles(roles: any) {
+    return this.http.post(`${API}/api/roles`, roles);
+  }
+  searchLogs(key: string, db: string) {
+    const params = new HttpParams().set("key", key).set("db", db);
+
+    return this.http.get(`${API}/api/search-logs`, { params });
+  }
 }

@@ -22,3 +22,12 @@
   display: flex;
   justify-content: space-around;
 }
+
+@media only screen and (max-width: 768px) {
+  .players-section {
+    width: 100%;
+  }
+  .main-container {
+    width: 92%;
+  }
+}
