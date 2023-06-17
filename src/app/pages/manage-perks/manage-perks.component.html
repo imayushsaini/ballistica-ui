@@ -1,0 +1,72 @@
+<div class="main-container">
+  <div class="manage-perks">
+    <h3>Customize Players Perks</h3>
+    <div class="manage-effects">
+      Manage Effects
+      <div class="new">
+        <button mat-raised-button color="primary" (click)="onAddNew('effect')">+ Add New</button>
+      </div>
+      <div class="new-effect" *ngIf="showNewEffectDialog">
+        <mat-form-field class="example-form-field">
+          <mat-label>Account id</mat-label>
+          <input matInput type="text" #newAccountForEffect [(ngModel)]="newEffectAccountId">
+        </mat-form-field>
+        <button class="save-btn" mat-raised-button color="primary" (click)="onSaveId('effect')">save</button>
+      </div>
+      <div class="player-effect" *ngFor="let account of CUSTOM['customeffects'] | keyvalue">
+        <div class="player">
+          {{account.key}}
+        </div>
+        <form>
+          <mat-form-field>
+            <mat-label>Effects</mat-label>
+            <mat-chip-grid #chipGrid aria-label="effect selection">
+              <mat-chip-row *ngFor="let effect of CUSTOM['customeffects'][account.key]"
+                (removed)="remove(effect, account.key)">
+                {{effect}}
+                <button matChipRemove [attr.aria-label]="'remove ' + effect">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+            </mat-chip-grid>
+            <input placeholder="Add new effect" [formControl]="this.accountEffectControlMap[account.key].ctrl"
+              [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="add($event, account.key)" />
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, account.key)">
+              <mat-option *ngFor="let effect of this.accountEffectControlMap[account.key].filter | async"
+                [value]="effect">
+                {{effect}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </form>
+      </div>
+    </div>
+    <hr>
+    <div class="manage-tags">
+      Manage Tags
+      <div class="new">
+        <button mat-raised-button color="primary" (click)="onAddNew('tag')">+ Add New</button>
+      </div>
+      <div class="new-tag" *ngIf="showNewTagDialog">
+        <mat-form-field class="example-form-field">
+          <mat-label>Account id</mat-label>
+          <input matInput type="text" [(ngModel)]="newTagAccountId">
+        </mat-form-field>
+        <button class="save-btn" mat-raised-button color="primary" (click)="onSaveId('tag')">save</button>
+      </div>
+      <div class="player-tag" *ngFor="let account of CUSTOM['customtag'] | keyvalue">
+        <div class="player">
+          {{account.key}}
+        </div>
+        <mat-form-field class="example-form-field">
+          <mat-label>Tag</mat-label>
+          <input matInput type="text" [value]="account.value" (change)="onTagUpdate($event, account.key)">
+        </mat-form-field>
+      </div>
+    </div>
+    <hr>
+    <br>
+    <button class="submit-btn" mat-raised-button (click)="onSubmt()">SAVE</button>
+  </div>
+</div>

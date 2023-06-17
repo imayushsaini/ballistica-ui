@@ -45,6 +45,12 @@ export class AdminService {
   saveRoles(roles: any) {
     return this.http.post(`${API}/api/roles`, roles);
   }
+  getPerks() {
+    return this.http.get(`${API}/api/perks`);
+  }
+  updatePerks(perks: any) {
+    return this.http.post(`${API}/api/perks`, perks);
+  }
   searchLogs(key: string, db: string) {
     const params = new HttpParams().set("key", key).set("db", db);
 

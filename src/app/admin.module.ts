@@ -20,6 +20,11 @@ import { RoleManagementComponent } from "./pages/role-management/role-management
 import { PlayersProfileComponent } from "./pages/players-profile/players-profile.component";
 import { LogsViewerComponent } from "./pages/logs-viewer/logs-viewer.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { ManagePerksComponent } from "./pages/manage-perks/manage-perks.component";
+import { ServerConfigComponent } from "./pages/server-config/server-config.component";
+import { MatChipsModule } from "@angular/material/chips";
+
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 const routes: Routes = [
   {
@@ -33,6 +38,9 @@ const routes: Routes = [
       { path: "roles", component: RoleManagementComponent },
       { path: "players", component: PlayersProfileComponent },
       { path: "server-logs", component: LogsViewerComponent },
+      { path: "server-config", component: ServerConfigComponent },
+      { path: "perks", component: ManagePerksComponent },
+      { path: "config", component: ServerConfigComponent },
     ],
   },
 ];
@@ -45,6 +53,8 @@ const routes: Routes = [
     ReactiveFormComponent,
     RoleManagementComponent,
     LogsViewerComponent,
+    ManagePerksComponent,
+    ServerConfigComponent,
     AppNumberValueAccessorDirective,
     KeysPipe,
   ],
@@ -55,6 +65,8 @@ const routes: Routes = [
     MatRippleModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatChipsModule,
+    MatAutocompleteModule,
     MatDialogModule,
     MatInputModule,
     MatExpansionModule,

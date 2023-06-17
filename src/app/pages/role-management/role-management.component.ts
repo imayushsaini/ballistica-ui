@@ -78,7 +78,6 @@ export class RoleManagementComponent implements OnInit {
   ) {
     const value = event.target.value;
     const newValues = value.split(",").map((item: string) => item.trim());
-    console.log(newValues);
     (this.formGroup.get(controlName) as FormGroup).setControl(
       name,
       this.formBuilder.array(newValues)
@@ -124,7 +123,6 @@ export class RoleManagementComponent implements OnInit {
     }
   }
   onSave() {
-    console.log(JSON.stringify(this.formGroup.value));
     this.adminService.saveRoles(this.formGroup.value).subscribe(() => {
       this.modified = false;
     });

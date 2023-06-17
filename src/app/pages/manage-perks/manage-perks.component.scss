@@ -1,0 +1,58 @@
+.main-container {
+  width: 80%;
+  margin: auto;
+  padding-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.manage-effects,
+.manage-tags {
+  margin: auto;
+  text-align: center;
+}
+
+.manage-perks {
+  h3 {
+    text-align: center;
+  }
+  width: 60%;
+  background-color: rgba(36, 6, 171, 0.753);
+  padding: 1rem 3rem;
+  margin-bottom: 5rem;
+}
+.new {
+  display: flex;
+  justify-content: flex-end;
+}
+.player-effect,
+.player-tag,
+.new-effect,
+.new-tag {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  .player {
+    margin: 2rem;
+  }
+  .save-btn {
+    margin: 2rem;
+  }
+}
+
+.manage-tags {
+  margin-top: 2rem;
+}
+.submit-btn {
+  width: 100%;
+  background-color: greenyellow;
+}
+@media only screen and (max-width: 768px) {
+  .main-container {
+    width: 92%;
+  }
+  .manage-perks {
+    width: 100%;
+    padding: 1rem 10px;
+  }
+}
