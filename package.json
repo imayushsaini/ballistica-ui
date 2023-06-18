@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "node index.js",
     "build": "node make.js && ng build",
+    "clean": "rimraf ./dist",
     "watch": "ng build --watch --configuration development",
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "build-deploy": "npm run clean && ng build --base-href /bombsquad-web/ && npm run copy-404",
