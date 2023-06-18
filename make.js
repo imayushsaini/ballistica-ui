@@ -1,20 +1,18 @@
 var fs = require("fs");
 
 require("dotenv").config({ path: "variables.env" });
-const publicVapidKey = process.env.PUBLIC_VAPID_KEY;
-const serverName = process.env.SERVER_NAME;
+const IP = process.env.SERVER_IP;
+const PORT = process.env.SERVER_PORT;
 
 //updating vapid key
 data = `export const environment = {
   production: false,
-  vapidKey:"$VAPID_KEY",
-  serverName:"$SERVER_NAME"
+  API_ENDPOINT: "$API"
 };`;
-Path = "./src/environments/environment.ts";
+dev = "./src/environments/environment.ts";
 prod = "./src/environments/environment.prod.ts";
-var res = data.replace("$VAPID_KEY", publicVapidKey);
-res = res.replace("$SERVER_NAME", serverName);
-fs.writeFile(Path, res, "utf8", (err) => {
+var res = data.replace("$API", `http://${IP.trim()}:${PORT.trim()}`);
+fs.writeFile(dev, res, "utf8", (err) => {
   if (err) console.log(err);
 });
 res = res.replace("false", "true");

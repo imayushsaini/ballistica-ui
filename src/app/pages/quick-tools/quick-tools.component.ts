@@ -11,19 +11,8 @@ import { MainService } from "src/app/services/main.service";
   styleUrls: ["./quick-tools.component.scss"],
 })
 export class QuickToolsComponent implements OnInit {
-  liveChats: string[] = ["nubub9g79guhjk", "yugyvyubo"];
-  roster: Roster = {
-    "pb-IF4TUGMNNg==": {
-      client_id: -1,
-      device_id: "BCS-1.7.19 ",
-      name: "BCS",
-    },
-    "pb-IF4iU0QaEw==": {
-      client_id: 113,
-      device_id: "BCS",
-      name: "<in-lobby>",
-    },
-  };
+  liveChats: string[] = [];
+  roster: Roster = {};
   message!: string;
   private updateSubscription!: Subscription;
   constructor(

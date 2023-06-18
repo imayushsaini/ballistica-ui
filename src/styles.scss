@@ -1,4 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+@use "@angular/material" as mat;
+
+// Define the dark theme.
+$_dark-primary: mat.define-palette(mat.$deep-purple-palette, 600, 50, 900, 300);
+$_dark-accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
+$_dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $_dark-primary,
+      accent: $_dark-accent,
+    ),
+    typography: mat.define-typography-config(),
+  )
+);
+// Define the light theme.
+$_light-primary: mat.define-palette(mat.$indigo-palette);
+$_light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$_light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $_light-primary,
+      accent: $_light-accent,
+    ),
+    typography: mat.define-typography-config(),
+  )
+);
+// Include material core styles.
+// Ericf note: why is this included here but not in custom-themes?
+@include mat.core();
+
+// Default , dark theme  for old browsers who dont know prefers-color-scheme , they actually living in dark ;)
+@include mat.all-component-themes($_dark-theme);
+
+// Now check if browser/host OS have any preference.
+/* Dark mode */
+// @media (prefers-color-scheme: dark) {
+//   @include mat.all-component-themes($_dark-theme);
+// }
+
+// /* Light mode */
+// @media (prefers-color-scheme: light) {
+//   @include mat.all-component-themes($_light-theme);
+// }
 
 html,
 body {
@@ -13,6 +56,15 @@ body {
   background-color: #3e00bd;
   background-image: linear-gradient(331deg, #3e00bd 0%, #1b51f4 100%);
   background-attachment: fixed;
+}
+
+.foreground {
+  background-color: rgba(105, 105, 105, 0.405);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.16), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+.mat-expansion-panel {
+  background-color: rgba(105, 105, 105, 0.405);
 }
 
 :root {
@@ -46,6 +98,9 @@ body {
   color: whitesmoke !important;
 }
 
+.mdc-menu-surface {
+  background-color: #11151ef2;
+}
 .full-width {
   width: 100%;
 }

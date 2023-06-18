@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { MainService } from "src/app/services/main.service";
 
 @Component({
@@ -6,11 +6,12 @@ import { MainService } from "src/app/services/main.service";
   templateUrl: "./admin-dashboard.component.html",
   styleUrls: ["./admin-dashboard.component.scss"],
 })
-export class AdminDashboardComponent {
+export class AdminDashboardComponent implements OnInit {
   serverName = "";
   ipPort = "";
-  constructor(private mainService: MainService) {
-    this.serverName = mainService.getServerName();
-    this.ipPort = mainService.getIP();
+  constructor(private mainService: MainService) {}
+  ngOnInit() {
+    this.serverName = this.mainService.getServerName();
+    this.ipPort = this.mainService.getIP();
   }
 }

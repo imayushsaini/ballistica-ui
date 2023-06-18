@@ -13,13 +13,16 @@ export class MainService {
   discord = "";
   vapidKey = "";
   constructor(private http: HttpClient) {
+    this.fetchStats();
+  }
+
+  fetchStats() {
     this.getLiveStats().subscribe((data) => {
       this.serverName = data.name;
       this.discord = data.discord;
       this.vapidKey = data.vapidKey;
     });
   }
-
   getLiveStats(): Observable<any> {
     return this.http.get(`${API}/api/live-stats`);
   }
@@ -30,6 +33,7 @@ export class MainService {
     return this.vapidKey;
   }
   getServerName(): string {
+    if (this.serverName === "") this.fetchStats();
     return this.serverName;
   }
   getIP(): string {

@@ -1,5 +1,5 @@
 <div class="main-container">
-  <div class="manage-perks">
+  <div class="manage-perks foreground">
     <h3>Customize Players Perks</h3>
     <div class="spinner-block" *ngIf="isLoading">
       <mat-spinner class="spinner"></mat-spinner>
@@ -10,7 +10,7 @@
         <button mat-raised-button color="primary" (click)="onAddNew('effect')">+ Add New</button>
       </div>
       <div class="new-effect" *ngIf="showNewEffectDialog">
-        <mat-form-field class="example-form-field">
+        <mat-form-field>
           <mat-label>Account id</mat-label>
           <input matInput type="text" #newAccountForEffect [(ngModel)]="newEffectAccountId">
         </mat-form-field>
@@ -52,7 +52,7 @@
         <button mat-raised-button color="primary" (click)="onAddNew('tag')">+ Add New</button>
       </div>
       <div class="new-tag" *ngIf="showNewTagDialog">
-        <mat-form-field class="example-form-field">
+        <mat-form-field>
           <mat-label>Account id</mat-label>
           <input matInput type="text" [(ngModel)]="newTagAccountId">
         </mat-form-field>
@@ -62,7 +62,7 @@
         <div class="player">
           {{account.key}}
         </div>
-        <mat-form-field class="example-form-field">
+        <mat-form-field>
           <mat-label>Tag</mat-label>
           <input matInput type="text" [value]="account.value" (change)="onTagUpdate($event, account.key)">
         </mat-form-field>
