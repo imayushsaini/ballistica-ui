@@ -8,7 +8,7 @@
     "clean": "rimraf ./dist",
     "watch": "ng build --watch --configuration development",
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
-    "build-deploy": "npm run clean && ng build --base-href /bombsquad-web/ && npm run copy-404",
+    "build-deploy": "npm run clean && ng build --base-href /ballistica-ui/ && npm run copy-404",
     "copy-404": "copyfiles -f dist/ballistica-web/index.html dist/ballistica-web/404.html",
     "test": "ng test",
     "lint": "ng lint"
