@@ -1,25 +1,27 @@
 <div class="player">
-    <a class="close-btn" (click)="onClose()">X</a>
-    <div class="heading">
-        {{player.name}}
-    </div>
-    <div class="players" *ngIf="player!={}">
-        <ul>
-            <li>
-                Id: {{player.id}}
-            </li>
+  <a class="close-btn" (click)="onClose()">X</a>
+  <div class="heading">
+    {{player.name}}
+  </div>
+  <div class="players" *ngIf="player!=={}">
+    <ul>
+      <li>
+        Id: {{player.id}}
+      </li>
 
 
-            <li>Name:{{player.name}}</li>
-            <li>Rank: #{{player.rank}}</li>
-            <li>Score : {{player.scores}}</li>
-            <li>Kills: {{player.kills}}</li>
-            <li>Death: {{player.deaths}}</li>
-            <li>K/D: {{ getKD(player.kills,player.deaths)}}</li>
-            <li>Last Seen: {{parseTime(player.last_seen)}}</li>
-            <li><button class="btn btn-primary btn-block notify-btn" (click)="subscribe(player.id,player.name)">Notify Me</button>
-            <p style="color:#f03737">*Get notification when he play again</p>
-            </li>
-        </ul>
-    </div>
+      <li>Name:{{player.name}}</li>
+      <li>Rank: #{{player.rank}}</li>
+      <li>Score : {{player.scores}}</li>
+      <li>Kills: {{player.kills}}</li>
+      <li>Death: {{player.deaths}}</li>
+      <li>K/D: {{ getKD(player.kills,player.deaths)}}</li>
+      <li>Last Seen: {{parseTime(player.last_seen)}}</li>
+      <li>
+        <button mat-raised-button color="primary" (click)="subscribe(player.id,player.name)" class="notify-btn">Notify
+          Me</button>
+        <p style="color:#f03737">*Get notification when he play again</p>
+      </li>
+    </ul>
+  </div>
 </div>

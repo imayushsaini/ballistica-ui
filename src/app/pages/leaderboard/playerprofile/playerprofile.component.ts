@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SubscribeService } from "src/app/services/subscribe.service";
 
@@ -7,7 +7,7 @@ import { SubscribeService } from "src/app/services/subscribe.service";
   templateUrl: "./playerprofile.component.html",
   styleUrls: ["./playerprofile.component.scss"],
 })
-export class PlayerprofileComponent implements OnInit {
+export class PlayerprofileComponent {
   @Input()
   player: any;
   @Output()
@@ -18,7 +18,6 @@ export class PlayerprofileComponent implements OnInit {
     private _snackBar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {}
   onClose() {
     this.closeBtnEvent.emit("true");
   }

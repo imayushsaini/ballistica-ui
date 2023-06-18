@@ -11,13 +11,32 @@
   width: 100%;
   margin-bottom: 30px;
   margin: 1rem;
-  background-color: rgba(250, 235, 215, 0.39);
   text-align: center;
+  background-color: #4158d0;
+  background-image: linear-gradient(
+    303deg,
+    #4158d0 0%,
+    #c850c0 70%,
+    #ffcc70 100%
+  );
+
   cursor: pointer;
   &:hover {
-    background-color: rgba(155, 155, 155, 0.401);
+    background-color: #4158d0;
+    background-image: linear-gradient(
+      270deg,
+      #4158d0 0%,
+      #c850c0 70%,
+      #ffcc70 100%
+    );
   }
   &:active {
-    background-color: rgba(245, 245, 248, 0.833);
+    background-color: #4158d0;
+    background-image: linear-gradient(
+      270deg,
+      #4158d0 0%,
+      #c850c0 32%,
+      #ffcc70 100%
+    );
   }
 }

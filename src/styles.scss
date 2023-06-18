@@ -1,40 +1,47 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
+/* You can add global styles to this file, and also import other style files */
 @use "@angular/material" as mat;
-// Plus imports for other components in your app.
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.core();
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$ballistica-web-primary: mat.define-palette(mat.$indigo-palette);
-$ballistica-web-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$ballistica-web-warn: mat.define-palette(mat.$red-palette);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$ballistica-web-theme: mat.define-light-theme(
+// Define the dark theme.
+$_dark-primary: mat.define-palette(mat.$deep-purple-palette, 600, 50, 900, 300);
+$_dark-accent: mat.define-palette(mat.$green-palette, A200, A100, A400);
+$_dark-theme: mat.define-dark-theme(
   (
     color: (
-      primary: $ballistica-web-primary,
-      accent: $ballistica-web-accent,
-      warn: $ballistica-web-warn,
+      primary: $_dark-primary,
+      accent: $_dark-accent,
     ),
+    typography: mat.define-typography-config(),
   )
 );
+// Define the light theme.
+$_light-primary: mat.define-palette(mat.$indigo-palette);
+$_light-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$_light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $_light-primary,
+      accent: $_light-accent,
+    ),
+    typography: mat.define-typography-config(),
+  )
+);
+// Include material core styles.
+// Ericf note: why is this included here but not in custom-themes?
+@include mat.core();
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($ballistica-web-theme);
+// Default , dark theme  for old browsers who dont know prefers-color-scheme , they actually living in dark ;)
+@include mat.all-component-themes($_dark-theme);
 
-/* You can add global styles to this file, and also import other style files */
+// Now check if browser/host OS have any preference.
+/* Dark mode */
+// @media (prefers-color-scheme: dark) {
+//   @include mat.all-component-themes($_dark-theme);
+// }
+
+// /* Light mode */
+// @media (prefers-color-scheme: light) {
+//   @include mat.all-component-themes($_light-theme);
+// }
 
 html,
 body {
@@ -49,6 +56,15 @@ body {
   background-color: #3e00bd;
   background-image: linear-gradient(331deg, #3e00bd 0%, #1b51f4 100%);
   background-attachment: fixed;
+}
+
+.foreground {
+  background-color: rgba(105, 105, 105, 0.405);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.16), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+.mat-expansion-panel {
+  background-color: rgba(105, 105, 105, 0.405);
 }
 
 :root {
@@ -82,6 +98,9 @@ body {
   color: whitesmoke !important;
 }
 
+.mdc-menu-surface {
+  background-color: #11151ef2;
+}
 .full-width {
   width: 100%;
 }

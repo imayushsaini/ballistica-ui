@@ -7,7 +7,6 @@
 }
 
 .role {
-  background-color: rgba(81, 81, 81, 0.765);
   padding: 3rem;
   margin: 20px;
 }
@@ -15,7 +14,7 @@
 .new-role {
   padding: 0 22px;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .tip {
@@ -23,7 +22,6 @@
 }
 
 .add-role {
-  background-color: rgba(81, 81, 81, 0.765);
   padding: 2rem;
   display: flex;
   justify-content: space-between;

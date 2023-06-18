@@ -1,13 +1,14 @@
+/* eslint-disable @angular-eslint/component-selector */
+/* eslint-disable @angular-eslint/component-class-suffix */
 import { ChangeDetectorRef, Component, Inject, OnInit } from "@angular/core";
 import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
-import { Observable, Subscription, interval } from "rxjs";
+import { Subscription, interval } from "rxjs";
 import { LeaderboardService } from "src/app/services/leaderboard.service";
 import { MainService } from "src/app/services/main.service";
 import { SubscribeService } from "src/app/services/subscribe.service";
 
-import { environment } from "./../../../environments/environment";
 import {
   LiveData,
   TeamInfo,
