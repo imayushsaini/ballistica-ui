@@ -5,39 +5,34 @@ import { environment } from "src/environments/environment";
 
 const API = environment.API_ENDPOINT;
 
-interface ServerInfo {
-  serverName: string;
-  discord: string;
-  vapidKey: string;
-}
 @Injectable({
   providedIn: "root",
 })
 export class MainService {
-  serverInfo: ServerInfo = {
-    serverName: "",
-    discord: "",
-    vapidKey: "",
-  };
+  serverName = "";
+  discord = "";
+  vapidKey = "";
   constructor(private http: HttpClient) {
-    this.getServerInfo().subscribe((data: ServerInfo) => {
-      this.serverInfo = data;
+    this.getLiveStats().subscribe((data) => {
+      this.serverName = data.name;
+      this.discord = data.discord;
+      this.vapidKey = data.vapidKey;
     });
   }
 
-  getServerInfo(): Observable<any> {
-    return this.http.get(`${API}/api/server-info`);
-  }
   getLiveStats(): Observable<any> {
     return this.http.get(`${API}/api/live-stats`);
   }
   getDiscord(): string {
-    return this.serverInfo["discord"];
+    return this.discord;
   }
   getVapidKey(): string {
-    return this.serverInfo["vapidKey"];
+    return this.vapidKey;
   }
   getServerName(): string {
-    return this.serverInfo["serverName"];
+    return this.serverName;
+  }
+  getIP(): string {
+    return API.replace("http://", "");
   }
 }

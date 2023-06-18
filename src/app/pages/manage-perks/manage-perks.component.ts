@@ -1,13 +1,5 @@
 /* eslint-disable no-prototype-builtins */
-import {
-  Component,
-  ElementRef,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-  inject,
-} from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { AdminService } from "src/app/services/admin.service";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
@@ -53,12 +45,14 @@ export class ManagePerksComponent implements OnInit {
   availableEffects: string[] = [];
   showNewEffectDialog = false;
   showNewTagDialog = false;
+  isLoading = true;
   constructor(private adminService: AdminService) {}
 
   ngOnInit() {
     this.adminService.getPerks().subscribe((data) => {
       this.CUSTOM = (data as Perks)["perks"];
       this.availableEffects = (data as Perks)["availableEffects"];
+      this.isLoading = false;
       this.updateEffectControls();
     });
   }

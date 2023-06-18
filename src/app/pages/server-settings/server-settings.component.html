@@ -1,5 +1,8 @@
 <div class="main-container">
   <form class="settings-main">
+    <div class="spinner-block" *ngIf="isLoading">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
     <app-reactive-form [formGroup]=formGroup></app-reactive-form>
   </form>
 </div>

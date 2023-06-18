@@ -28,12 +28,12 @@ export class RoleManagementComponent implements OnInit {
   newRoleName!: string;
   invalidNewRoleName = false;
   modified = false;
-
+  isLoading = true;
   ngOnInit() {
     this.adminService.getRoles().subscribe((data) => {
       this.ROLES = data as Roles;
+      this.isLoading = false;
       this.formGroup = this.generateFormStructure(this.ROLES);
-      console.log(this.formGroup);
       this.detectChanges();
     });
   }

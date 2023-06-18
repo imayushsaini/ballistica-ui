@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
+import { duration } from "moment";
 import { CustomDialogComponent } from "src/app/components/dialog/custom-dialog";
 import { AdminService } from "src/app/services/admin.service";
 
@@ -125,11 +126,19 @@ export class PlayersProfileComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
+      console.log(result);
       if (result || !requriedDuration) {
+        // duration wont be there for unban , unmute , enable kick vote
         this.updateInQueue.push(account_id);
-        this.adminService.updatePlayer(action, account_id).subscribe(() => {
-          this.onOpen(account_id);
-        });
+        this.adminService
+          .updatePlayer(
+            action,
+            account_id,
+            requriedDuration ? Number(result.duration) : 0
+          )
+          .subscribe(() => {
+            this.onOpen(account_id);
+          });
       }
     });
   }

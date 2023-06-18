@@ -12,6 +12,9 @@
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="onCreateRole()">Create</button>
     </div>
+    <div class="spinner-block" *ngIf="isLoading">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
     <ng-container *ngFor="let controlName of getFormControls(formGroup)">
       <div class="role" [formGroup]="$any(formGroup.get(controlName))">
         <mat-form-field>

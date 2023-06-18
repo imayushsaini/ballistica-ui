@@ -3,10 +3,10 @@
   <p>Really want to {{data.type}} ?</p>
   <mat-form-field *ngIf="data.requriedDuration">
     <mat-label>Number of days</mat-label>
-    <input matInput [(ngModel)]="duration">
+    <input matInput [(ngModel)]="duration" type="number">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="{action:duration, account: data.account}" cdkFocusInitial>Ok</button>
+  <button mat-button [mat-dialog-close]="{duration:duration, account: data.account}" cdkFocusInitial>Ok</button>
 </div>

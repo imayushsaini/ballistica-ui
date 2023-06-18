@@ -1,1 +1,28 @@
-<p>quick-tools works!</p>
+<div class="main-container">
+  <div class="quick-tools">
+    <div class="quik-button-grp">
+      <button mat-raised-button color="primary" (click)="doAction('quit')">Restart Server</button>
+    </div>
+    <div class="live">
+      <div class="roster">
+        <div class="title"> Live Players</div>
+        <div class="player" *ngFor="let player of roster | keyvalue">
+          {{player.key}} > {{player.value.device_id}} {{player.value.name}} {{player.value.client_id}}
+        </div>
+      </div>
+      <div class="chats">
+        <div class="title">Live Chats</div>
+        <div class="message" *ngFor="let message of liveChats">
+          {{message}}
+        </div>
+      </div>
+      <div class="send-message">
+        <mat-form-field class="full-width">
+          <mat-label>chat here..</mat-label>
+          <input matInput type="text" [(ngModel)]="message">
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="doAction('message')">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,28 @@
+.main-container {
+  width: 80%;
+  margin: auto;
+  padding-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+.quik-button-grp {
+  display: flex;
+  justify-content: flex-end;
+}
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.roster,
+.chats {
+  background-color: rgba(11, 11, 187, 0.839);
+  padding: 2rem;
+  margin-top: 1rem;
+}
+.send-message {
+  display: flex;
+  justify-content: space-between;
+  button {
+    margin-top: 10px;
+  }
+}

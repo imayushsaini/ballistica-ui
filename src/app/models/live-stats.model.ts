@@ -4,7 +4,7 @@ interface RosterItem {
   name: string;
 }
 
-interface Roster {
+export interface Roster {
   [key: string]: RosterItem;
 }
 

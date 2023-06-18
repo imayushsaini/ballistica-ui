@@ -16,6 +16,7 @@ import { AdminService } from "src/app/services/admin.service";
   styleUrls: ["./server-settings.component.scss"],
 })
 export class ServerSettingsComponent implements OnInit {
+  isLoading = true;
   constructor(
     private formBuilder: FormBuilder,
     private adminService: AdminService
@@ -27,6 +28,7 @@ export class ServerSettingsComponent implements OnInit {
   ngOnInit() {
     this.adminService.getSettings().subscribe((data) => {
       // Generate the form structure
+      this.isLoading = false;
       this.formGroup = this.generateFormStructure(data);
       this.detectChanges();
     });

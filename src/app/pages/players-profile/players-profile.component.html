@@ -35,15 +35,16 @@
             <li>RegisterOn: {{PROFILES[profile].registerOn }}</li>
             <li>CanStartKickVote: {{PROFILES[profile].canStartKickVote }}</li>
             <li>Active SpamCount: {{PROFILES[profile].spamCount}}</li>
-            <li>lastSpam: {{PROFILES[profile].lastSpam }}</li>
-            <li>warnCount: {{PROFILES[profile].warnCount }}</li>
-            <li>lastWarned: {{PROFILES[profile].lastWarned }}4</li>
-            <li>verified:{{PROFILES[profile].verified }}</li>
-            <li>lastJoin: {{PROFILES[profile].lastJoin }}</li>
-            <li>lastIP: {{PROFILES[profile].lastIP }}</li>
-            <li>deviceUUID: {{PROFILES[profile].deviceUUID}}</li>
-            <li>lastMsgTime: {{PROFILES[profile].lastMsgTime}}</li>
-            <li>lastMsg: {{PROFILES[profile].lastMsg}}</li>
+            <li>LastSpam: {{PROFILES[profile].lastSpam }}</li>
+            <li>WarnCount: {{PROFILES[profile].warnCount }}</li>
+            <li>LastWarned: {{PROFILES[profile].lastWarned }}</li>
+            <li>Verified:{{PROFILES[profile].verified }}</li>
+            <li>LastJoin: {{PROFILES[profile].lastJoin }}</li>
+            <li>LastIP: {{PROFILES[profile].lastIP }}</li>
+            <li>DeviceUUID: {{PROFILES[profile].deviceUUID}}</li>
+            <li>LastMsgTime: {{PROFILES[profile].lastMsgTime}}</li>
+            <li>LastMsg: {{PROFILES[profile].lastMsg}}</li>
+            <li *ngIf="getRestrictionInfo(profile)">Extra: {{getRestrictionInfo(profile).extra}}</li>
           </ul>
           <div class="options" *ngIf="getRestrictionInfo(profile)">
             <button mat-raised-button [color]="getRestrictionInfo(profile).isBan ? 'accent' : 'warn'"

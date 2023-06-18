@@ -32,10 +32,11 @@ export class AdminService {
     const params = new HttpParams().set("account-id", acocunt_id);
     return this.http.get(`${API}/api/get-player-info`, { params });
   }
-  updatePlayer(action: string, account_id: string) {
+  updatePlayer(action: string, account_id: string, duration: number) {
     const params = new HttpParams()
       .set("account-id", account_id)
-      .set("action", action);
+      .set("action", action)
+      .set("duration", duration);
     return this.http.post(`${API}/api/update-player`, {}, { params });
   }
   getRoles() {
@@ -51,9 +52,20 @@ export class AdminService {
   updatePerks(perks: any) {
     return this.http.post(`${API}/api/perks`, perks);
   }
+  getConfig() {
+    return this.http.get(`${API}/api/config`);
+  }
+  updateConfig(config: any) {
+    return this.http.post(`${API}/api/config`, config);
+  }
   searchLogs(key: string, db: string) {
     const params = new HttpParams().set("key", key).set("db", db);
 
     return this.http.get(`${API}/api/search-logs`, { params });
+  }
+  performAction(action: string, value: string) {
+    const params = new HttpParams().set("value", value).set("action", action);
+
+    return this.http.post(`${API}/api/action`, {}, { params });
   }
 }

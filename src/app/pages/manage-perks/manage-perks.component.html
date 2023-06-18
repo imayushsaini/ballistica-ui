@@ -1,7 +1,10 @@
 <div class="main-container">
   <div class="manage-perks">
     <h3>Customize Players Perks</h3>
-    <div class="manage-effects">
+    <div class="spinner-block" *ngIf="isLoading">
+      <mat-spinner class="spinner"></mat-spinner>
+    </div>
+    <div class="manage-effects" *ngIf="!isLoading">
       Manage Effects
       <div class="new">
         <button mat-raised-button color="primary" (click)="onAddNew('effect')">+ Add New</button>
@@ -43,7 +46,7 @@
       </div>
     </div>
     <hr>
-    <div class="manage-tags">
+    <div class="manage-tags" *ngIf="!isLoading">
       Manage Tags
       <div class="new">
         <button mat-raised-button color="primary" (click)="onAddNew('tag')">+ Add New</button>

@@ -23,7 +23,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { ManagePerksComponent } from "./pages/manage-perks/manage-perks.component";
 import { ServerConfigComponent } from "./pages/server-config/server-config.component";
 import { MatChipsModule } from "@angular/material/chips";
-
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 
 const routes: Routes = [
@@ -55,6 +55,7 @@ const routes: Routes = [
     LogsViewerComponent,
     ManagePerksComponent,
     ServerConfigComponent,
+    QuickToolsComponent,
     AppNumberValueAccessorDirective,
     KeysPipe,
   ],
@@ -71,6 +72,7 @@ const routes: Routes = [
     MatInputModule,
     MatExpansionModule,
     MatSelectModule,
+    MatProgressSpinnerModule,
     FormsModule,
     RouterModule.forChild(routes),
   ],
