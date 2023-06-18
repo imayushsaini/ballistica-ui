@@ -1,58 +1,29 @@
-# BallisticaWeb
+# Ballistica Server Manager
 
-A single app to broadcast Bombsquad server live stats and leaderboard over discord channel and on web.And also notify players when their friends join the game via Personal message and push notification.
+Frontend to manage your BombSquad/Ballisitca game server.
+Broadcast Bombsquad server live stats and leaderboard. Notify players when their friends join the game via web push notification and Admin panel to configure server on fly.
 
 ## Requirements
-- Node: v16.13.2
-- Npm: 8.1.2
-- [Ballistica scripts](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) 
+- [Modded Ballistica Scripts](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) required to setup game server with rest APIs.
 
 ## Development server
-
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 *Push notification wont work in dev server.
 
 ## Getting Started
-
-- Clone this repo `git clone https://github.com/imayushsaini/ballistica-web-stats.git`
-- Change dir  `cd ballistica-web-stats`
-- Install nodejs `curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
-sudo apt-get install -y nodejs`
-- Install dependencies `npm install`
-- Install web-push module `sudo npm install web-push -g`
-- Generate the VAPID keys `web-push generate-vapid-keys --json`
-- Create Discord bot and copy token
-- Save public , private keys and token in variables.env
-- Install pm2 `sudo npm install pm2 -g`
-- Start the server `pm2 start index.js`
-- `sudo apt install nginx` 
-- `sudo nano /etc/nginx/sites-enabled/default`
-- Near line no. 40 add proxy_pass   eg:
- location / {
-		# First attempt to serve request as file, then
-		# as directory, then fall back to displaying a 404.
-		proxy_pass http://localhost:3000;
-	}
-- `sudo systemctl restart nginx`
-- For notification system to work you need to use https domain, go for cloudflare .
+- Fork this repo
+- Enable the workflow that comes with this repo.
+- update variables.env, enter your game server IP PORT.
+- On your fork goto settings and enable github page on gh-page branch.
+- Finally, add your page URL on server stats button.
 
 ## Build
 
 Run `npm run-script build` to build the project. The build artifacts will be stored in the `dist/` directory.
-*Project need to be build after any UI component change or variables.env . 
+*Project need to be build after any UI component change or variables.env. 
 
 ## For Bombsquad Server
 
-Checkout [BS1.6_Server_mods](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) everything already setup.
+Checkout [BS1.7 Modded Server](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) everything is already set up.
 
-## Hosting
 
-### Host along with your game server
-- Just follow #Getting started and dont forget to use cloudflare for https. 
-
-### Host on replit 
-- fork this repo , connect replit with your repo .
-- update variables.env
-- execute `npm run-script build` in replit shell
-- Press RUN button
-- Set repl as `always on` (hacker account) , use Up-monitor to ping your server to keep it alive (if using free account).
