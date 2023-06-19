@@ -14,7 +14,6 @@ const httpOption = {
   providedIn: "root",
 })
 export class SubscribeService {
-  vapidKeys: string = environment.vapidKey;
   payload = JSON.stringify({
     notification: {
       title: "Web Mail Notification",

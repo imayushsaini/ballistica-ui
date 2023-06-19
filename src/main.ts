@@ -1,8 +1,8 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { AppModule } from "./app/app.module";
+import { environment } from "./environments/environment";
 
 if (environment.production) {
   enableProdMode();
@@ -11,10 +11,10 @@ if (environment.production) {
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .then(() => {
-    if ('serviceWorker' in navigator && environment.production) {
+    if ("serviceWorker" in navigator && environment.production) {
       navigator.serviceWorker
-        .register('/ngsw-worker.js', {
-          updateViaCache: 'none',
+        .register("ngsw-worker.js", {
+          updateViaCache: "none",
         })
         .then((sw) => {
           sw.update();
