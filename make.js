@@ -1,8 +1,7 @@
 var fs = require("fs");
 
 require("dotenv").config({ path: "variables.env" });
-const IP = process.env.SERVER_IP;
-const PORT = process.env.SERVER_PORT;
+const API = process.env.API;
 
 //updating vapid key
 data = `export const environment = {
@@ -11,7 +10,7 @@ data = `export const environment = {
 };`;
 dev = "./src/environments/environment.ts";
 prod = "./src/environments/environment.prod.ts";
-var res = data.replace("$API", `http://${IP.trim()}:${PORT.trim()}`);
+var res = data.replace("$API", API);
 fs.writeFile(dev, res, "utf8", (err) => {
   if (err) console.log(err);
 });
