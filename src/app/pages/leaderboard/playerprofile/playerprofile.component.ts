@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { MatSnackBar } from "@angular/material/snack-bar";
+
 import { SubscribeService } from "src/app/services/subscribe.service";
 
 @Component({
@@ -13,10 +13,7 @@ export class PlayerprofileComponent {
   @Output()
   closeBtnEvent = new EventEmitter();
 
-  constructor(
-    private subService: SubscribeService,
-    private _snackBar: MatSnackBar
-  ) {}
+  constructor(private subService: SubscribeService) {}
 
   onClose() {
     this.closeBtnEvent.emit("true");
@@ -29,10 +26,5 @@ export class PlayerprofileComponent {
   }
   subscribe(id: string, name: string) {
     this.subService.subscribeToNotifications(id, name);
-    const msg = `Subscribed to ${name} , conformation notification will be sent shortely.`;
-    this.openSnackBar(msg, "ok");
-  }
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action);
   }
 }

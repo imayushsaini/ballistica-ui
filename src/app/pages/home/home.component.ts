@@ -1,6 +1,12 @@
 /* eslint-disable @angular-eslint/component-selector */
 /* eslint-disable @angular-eslint/component-class-suffix */
-import { ChangeDetectorRef, Component, Inject, OnInit } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+} from "@angular/core";
 import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatTableDataSource } from "@angular/material/table";
@@ -26,7 +32,7 @@ export interface PlayerData {
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.scss"],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   playlist = { current: "", next: "" };
   teamData!: TeamInfo;
   sessionType!: string;
@@ -71,18 +77,24 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.serverName = this.mainservice.getServerName();
-
+    this.lBoard.loadLeaderboard(); // maybe leaderboard not fetched yet , just call it once for safe side.
     this.getLeaderboard();
     this.refreshData();
 
-    this.lBoard.leaderboardUpdateEvent.subscribe((x) => {
+    this.lBoard.leaderboardUpdateEvent.subscribe(() => {
       this.getLeaderboard();
       this.changeDetectorRefs.detectChanges();
     });
-
+    this.mainservice.gotServerInfo.subscribe(() => {
+      this.serverName = this.mainservice.getServerName();
+    });
     this.updateSubscription = interval(9000).subscribe(() => {
       this.refreshData();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.updateSubscription.unsubscribe();
   }
 
   getLeaderboard() {
@@ -121,7 +133,7 @@ export class HomeComponent implements OnInit {
 
   isDualTeam(): boolean {
     return (
-      Object.keys(this.teamData).length == 2 + 1 &&
+      Object.keys(this.teamData).length == 2 &&
       this.sessionType == "DualTeamSession"
     );
   }

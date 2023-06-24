@@ -12,6 +12,10 @@ export class AdminDashboardComponent implements OnInit {
   constructor(private mainService: MainService) {}
   ngOnInit() {
     this.serverName = this.mainService.getServerName();
-    this.ipPort = this.mainService.getIP();
+    // this.ipPort = this.mainService.getIP();
+    this.mainService.gotServerInfo.subscribe(() => {
+      this.serverName = this.mainService.getServerName();
+      // this.ipPort = this.mainService.getIP();
+    });
   }
 }

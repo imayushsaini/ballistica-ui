@@ -69,7 +69,7 @@
             </div>
           </div>
         </div>
-        <div class="free-for-all scoreboard">
+        <div class="free-for-all scoreboard" *ngIf="!isDualTeam()">
           <ul *ngIf="teamData">
             <li *ngFor="let player of getAllPlayers()" (click)="openDialog(player)" class="players ffa-player">
               {{player.device_id}} >

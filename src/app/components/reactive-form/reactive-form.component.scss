@@ -15,6 +15,9 @@
   display: flex;
   align-items: center;
   padding: 0 3rem;
+  label {
+    padding-left: 10px;
+  }
 }
 
 .form-field {

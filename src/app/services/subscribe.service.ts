@@ -6,6 +6,7 @@ import { NotificationService } from "./notification.service";
 
 import { environment } from "./../../environments/environment";
 import { MainService } from "./main.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 const httpOption = {
   headers: new HttpHeaders({ "Content-Type": "application/json" }),
 };
@@ -29,7 +30,8 @@ export class SubscribeService {
   constructor(
     private swPush: SwPush,
     private service: NotificationService,
-    private mainservice: MainService
+    private mainservice: MainService,
+    private _snackBar: MatSnackBar
   ) {}
 
   triggerMessage() {
@@ -50,14 +52,24 @@ export class SubscribeService {
         })
         .then((sub) => {
           const msg = { subscription: sub, player_id: player_id, name: name };
+          console.log(msg);
           this.service.subscribe(msg).subscribe(
-            (x) => console.log(x),
-            (err) => console.log(err)
+            (x: any) => {
+              console.log(x);
+              this.openSnackBar(x.message as string, "ok");
+            },
+            (err: any) => {
+              this.openSnackBar(err.message as string, "sad");
+            }
           );
         })
         .catch((err) =>
           console.error("Could not subscribe to notifications", err)
         );
     }
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
   }
 }

@@ -35,7 +35,8 @@ export class LeaderboardService {
     return 0;
   }
 
-  loadLeaderboard() {
+  loadLeaderboard() { 
+    if (this.leaderboard.length != 0) return;
     this.getTop200().subscribe((dat) => {
       this.leaderboard = Object.keys(dat).map((key) => {
         return {
@@ -51,7 +52,7 @@ export class LeaderboardService {
       });
       this.leaderboard.sort(this.compare);
       this.leaderboardUpdateEvent.next();
-      console.log("got leaderboard");
+
       this.getCompleteLeaderboard().subscribe((data) => {
         this.leaderboard = Object.keys(data).map((key) => {
           return {

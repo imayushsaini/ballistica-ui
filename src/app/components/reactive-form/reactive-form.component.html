@@ -2,7 +2,7 @@
   <ng-container *ngFor="let controlName of getFormControls(formGroup)">
     <ng-container [ngSwitch]="getControlType($any(formGroup.get(controlName)))">
       <div *ngSwitchCase="'group'" [formGroup]="$any(formGroup.get(controlName))">
-        <div class="setting-title">
+        <div class="setting-title form-field-master">
           <label for="controlName"> {{ controlName }}</label>
           <button mat-icon-button (click)="onExpandToogle(controlName)">
             <mat-icon *ngIf="isExpended(controlName)">expand_more</mat-icon>
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div *ngSwitchCase="'array'" [formArrayName]="controlName">
-        <div class="setting-title">
+        <div class="setting-title form-field-master">
           <label for="controlName">{{ controlName }}</label>
           <button mat-icon-button (click)="onExpandToogle(controlName)">
             <mat-icon *ngIf="isExpended(controlName)">expand_more</mat-icon>

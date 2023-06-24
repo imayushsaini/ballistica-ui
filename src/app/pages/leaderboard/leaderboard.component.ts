@@ -4,14 +4,14 @@ import {
   Component,
   OnInit,
   ViewChild,
-} from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
+} from "@angular/core";
+import { MatPaginator } from "@angular/material/paginator";
 
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Subject } from 'rxjs';
-import { LeaderboardService } from 'src/app/services/leaderboard.service';
-import { SubscribeService } from 'src/app/services/subscribe.service';
+import { MatSort } from "@angular/material/sort";
+import { MatTableDataSource } from "@angular/material/table";
+import { Subject } from "rxjs";
+import { LeaderboardService } from "src/app/services/leaderboard.service";
+import { SubscribeService } from "src/app/services/subscribe.service";
 export interface PlayerData {
   name: string;
   rank: number;
@@ -20,13 +20,13 @@ export interface PlayerData {
 }
 
 @Component({
-  selector: 'app-leaderboard',
-  templateUrl: './leaderboard.component.html',
-  styleUrls: ['./leaderboard.component.scss'],
+  selector: "app-leaderboard",
+  templateUrl: "./leaderboard.component.html",
+  styleUrls: ["./leaderboard.component.scss"],
 })
 export class LeaderboardComponent implements AfterViewInit, OnInit {
   showPlayerProfile = false;
-  displayedColumns: string[] = ['rank', 'name', 'score', 'kills'];
+  displayedColumns: string[] = ["rank", "name", "score", "kills"];
   dataSource: MatTableDataSource<PlayerData>;
   topPlayers: PlayerData[] = [];
   @ViewChild(MatPaginator)
@@ -44,8 +44,9 @@ export class LeaderboardComponent implements AfterViewInit, OnInit {
     this.dataSource = new MatTableDataSource<PlayerData>();
   }
   ngOnInit() {
+    this.lBoard.loadLeaderboard();
     this.getLeaderboard();
-    this.lBoard.leaderboardUpdateEvent.subscribe((x) => {
+    this.lBoard.leaderboardUpdateEvent.subscribe(() => {
       this.getLeaderboard();
       this.changeDetectorRefs.detectChanges();
     });
@@ -62,7 +63,6 @@ export class LeaderboardComponent implements AfterViewInit, OnInit {
     //only for mobile view
     this.showPlayerProfile = true;
     this.selectedPlayer = row;
-    console.log(row);
   }
 
   ngAfterViewInit() {

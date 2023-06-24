@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription, interval } from "rxjs";
 
 import { LiveData, Roster } from "src/app/models/live-stats.model";
@@ -10,7 +10,7 @@ import { MainService } from "src/app/services/main.service";
   templateUrl: "./quick-tools.component.html",
   styleUrls: ["./quick-tools.component.scss"],
 })
-export class QuickToolsComponent implements OnInit {
+export class QuickToolsComponent implements OnInit, OnDestroy {
   liveChats: string[] = [];
   roster: Roster = {};
   message!: string;
@@ -27,6 +27,10 @@ export class QuickToolsComponent implements OnInit {
       this.refreshData();
     });
   }
+  ngOnDestroy() {
+    this.updateSubscription.unsubscribe();
+  }
+
   refreshData() {
     this.mainservice.getLiveStats().subscribe((data: LiveData) => {
       this.liveChats = data.chats;

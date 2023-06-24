@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
-
+import { Subject } from "rxjs";
 const API = environment.API_ENDPOINT;
 
 @Injectable({
@@ -12,6 +12,7 @@ export class MainService {
   serverName = "";
   discord = "";
   vapidKey = "";
+  gotServerInfo = new Subject<void>();
   constructor(private http: HttpClient) {
     this.fetchStats();
   }
@@ -21,6 +22,7 @@ export class MainService {
       this.serverName = data.name;
       this.discord = data.discord;
       this.vapidKey = data.vapidKey;
+      this.gotServerInfo.next();
     });
   }
   getLiveStats(): Observable<any> {
