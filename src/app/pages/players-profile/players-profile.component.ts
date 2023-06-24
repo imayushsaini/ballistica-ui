@@ -153,6 +153,8 @@ export class PlayersProfileComponent implements OnInit {
     return ["ban", "mute", "disable-kick-vote"].includes(type);
   }
   getDateTime(timestamp: number) {
+    if (timestamp == undefined) return "-";
+
     return this.datePipe.transform(
       new Date(timestamp * 1000),
       "yyyy-MM-dd HH:mm:ss"
