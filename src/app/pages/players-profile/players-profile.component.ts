@@ -1,3 +1,4 @@
+import { DatePipe } from "@angular/common";
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
@@ -46,13 +47,18 @@ interface RestrictionMap {
   selector: "app-players-profile",
   templateUrl: "./players-profile.component.html",
   styleUrls: ["./players-profile.component.scss"],
+  providers: [DatePipe],
 })
 export class PlayersProfileComponent implements OnInit {
   searchKeyControl: FormControl = new FormControl();
   selectDBControl: FormControl = new FormControl();
   restrictionMap: RestrictionMap = {};
   updateInQueue: string[] = [];
-  constructor(private adminService: AdminService, private dialog: MatDialog) {}
+  constructor(
+    private adminService: AdminService,
+    private dialog: MatDialog,
+    private datePipe: DatePipe
+  ) {}
 
   ngOnInit() {
     this.adminService.getDBs("players").subscribe((data) => {
@@ -145,5 +151,11 @@ export class PlayersProfileComponent implements OnInit {
 
   needDuration(type: string) {
     return ["ban", "mute", "disable-kick-vote"].includes(type);
+  }
+  getDateTime(timestamp: number) {
+    return this.datePipe.transform(
+      new Date(timestamp * 1000),
+      "yyyy-MM-dd HH:mm:ss"
+    );
   }
 }

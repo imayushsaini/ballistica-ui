@@ -7,14 +7,14 @@ const TOKEN_KEY = "auth-token";
 })
 export class TokenStorageService {
   saveToken(token: string): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.setItem(TOKEN_KEY, token);
   }
 
   public getToken(): string | null {
-    return window.sessionStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
   }
   signOut(): void {
-    window.sessionStorage.clear();
+    localStorage.removeItem(TOKEN_KEY);
   }
 }
