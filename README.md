@@ -12,7 +12,7 @@ Broadcast Bombsquad server live stats and leaderboard. Notify players when their
 - Fork this repo
 - Enable the workflow that comes with this repo.
 - visit https://dash.deno.com/ log in with github, select new project > Hello World.
-- paste code from this file https://github.com/imayushsaini/ballistica-ui/proxy.js into your deno, and change IP PORT.
+- paste code from this file [proxy.js](https://github.com/imayushsaini/ballistica-ui/blob/main/proxy.js) into your deno, and change IP PORT.
 - update variables.env, and enter your server API link you got from above step.
 - On your fork go to settings and enable github page on gh-page branch.
 - Finally, add your page URL on the server stats button.
