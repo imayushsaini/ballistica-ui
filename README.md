@@ -1,26 +1,24 @@
 # Ballistica Server Manager
 
-Frontend to manage your BombSquad/Ballisitca game server.
-Broadcast Bombsquad server live stats and leaderboard. Notify players when their friends join the game via web push notification and Admin panel to configure server on fly.
+Frontend PWA to manage your BombSquad/Ballisitca game server.
+Broadcast Bombsquad server live stats and leaderboard. Notify players when their friends join the game via web push notification and Admin panel to configure a server on fly.
 
 ## Requirements
-- [Modded Ballistica Scripts](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) required to setup game server with rest APIs.
+- [Modded Ballistica Scripts](https://github.com/imayushsaini/Bombsquad-Ballistica-Modded-Server) required to set up a game server with rest APIs.
 
-## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-*Push notification wont work in dev server.
+
 
 ## Getting Started
 - Fork this repo
 - Enable the workflow that comes with this repo.
-- update variables.env, enter your game server IP PORT.
-- On your fork goto settings and enable github page on gh-page branch.
-- Finally, add your page URL on server stats button.
+- visit https://dash.deno.com/ log in with github, select new project > Hello World.
+- paste code from this file https://github.com/imayushsaini/ballistica-ui/proxy.js into your deno, and change IP PORT.
+- update variables.env, and enter your server API link you got from above step.
+- On your fork go to settings and enable github page on gh-page branch.
+- Finally, add your page URL on the server stats button.
 
-## Build
 
-Run `npm run-script build` to build the project. The build artifacts will be stored in the `dist/` directory.
-*Project need to be build after any UI component change or variables.env. 
+*Project needs to be rebuilt after any UI component change or variables.env. 
 
 ## For Bombsquad Server
 
