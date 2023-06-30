@@ -13,6 +13,7 @@ export class SelectServerComponent implements OnInit {
   showNewServerDialog = false;
   serverList: SavedTokens = {};
   newApi = "";
+  currentApi = "";
   constructor(
     private tokenService: TokenStorageService,
     private _snackBar: MatSnackBar,
@@ -21,12 +22,14 @@ export class SelectServerComponent implements OnInit {
 
   ngOnInit() {
     this.serverList = this.tokenService.getTokenDict();
+    this.currentApi = this.tokenService.getSelectedApi();
   }
 
   onAddNew() {
     this.showNewServerDialog = true;
   }
   saveNewApi() {
+    if (!this.newApi) return;
     this.tokenService.addNewApi(this.newApi);
     this.refresh();
   }

@@ -12,7 +12,8 @@
       <button class="add-btn" mat-raised-button color="primary" (click)="saveNewApi()">add</button>
     </div>
     <div class="list" *ngIf="serverList!=={}">
-      <div class="server" *ngFor="let server of serverList | keyvalue" (click)="setServer(server.key)">
+      <div class="server" [ngClass]="{'selected': server.key == currentApi}"
+        *ngFor="let server of serverList | keyvalue" (click)="setServer(server.key)">
         {{server.value.name}} <br> {{server.key}}
       </div>
     </div>

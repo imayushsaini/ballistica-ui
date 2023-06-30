@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { TokenStorageService } from "./services/token-storage.service";
+import { Location } from "@angular/common";
 
 @Component({
   selector: "app-root",
@@ -11,7 +12,8 @@ export class AppComponent implements OnInit {
   title = "ballistica-web";
   constructor(
     private route: ActivatedRoute,
-    private tokenService: TokenStorageService
+    private tokenService: TokenStorageService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -20,7 +22,14 @@ export class AppComponent implements OnInit {
       if (api) {
         this.tokenService.addNewApi(api);
         this.tokenService.saveSelectedApi(api);
+        if (api !== this.tokenService.getSelectedApi()) {
+          this.refresh();
+        }
       }
     });
+  }
+  refresh(): void {
+    this.location.go(this.location.path());
+    location.reload();
   }
 }
