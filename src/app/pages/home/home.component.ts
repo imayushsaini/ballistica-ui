@@ -94,7 +94,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.updateSubscription.unsubscribe();
+    if (this.updateSubscription) this.updateSubscription.unsubscribe();
   }
 
   getLeaderboard() {
@@ -107,7 +107,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
       if (result) {
         this.subService.subscribeToNotifications(
           result.account_id,
@@ -132,6 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   isDualTeam(): boolean {
+    if (!this.teamData) return false;
     return (
       Object.keys(this.teamData).length == 2 &&
       this.sessionType == "DualTeamSession"

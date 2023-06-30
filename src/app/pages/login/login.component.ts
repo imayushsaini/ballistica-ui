@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   }
   onLogin() {
     const passkey = this.passkeyControl.value;
-    console.log(passkey);
+
     this.adminService.login(passkey).subscribe(
       () => {
         this.tokenService.saveToken(passkey);

@@ -132,7 +132,6 @@ export class PlayersProfileComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
       if (result || !requriedDuration) {
         // duration wont be there for unban , unmute , enable kick vote
         this.updateInQueue.push(account_id);

@@ -128,7 +128,7 @@ export class ServerConfigComponent implements OnInit {
 
   onSubmit() {
     this.modified = false;
-    console.log(this.verifyConfig(this.formGroup.value));
+
     this.adminService
       .updateConfig(this.verifyConfig(this.formGroup.value))
       .subscribe(() => {

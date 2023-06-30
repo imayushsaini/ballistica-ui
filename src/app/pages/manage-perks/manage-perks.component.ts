@@ -124,7 +124,6 @@ export class ManagePerksComponent implements OnInit {
     this.CUSTOM.customtag[account_id] = event.target.value;
   }
   onSubmt() {
-    console.log(this.CUSTOM);
     this.adminService.updatePerks(this.CUSTOM).subscribe((data) => {
       console.log(data);
     });

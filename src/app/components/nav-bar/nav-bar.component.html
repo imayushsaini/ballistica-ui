@@ -1,19 +1,20 @@
 <nav>
-    <div class="nav-main">
-      <div class="burger-menu" [class.active]="active" (click)="onBurgerClicked()">
-        <div class="burger-container">
-            <div class="burger-inner"></div>
-        </div>
-      </div>
-      <div class="discord" (click)="openDiscord()">
-        Discord
+  <div class="nav-main">
+    <div class="burger-menu" [class.active]="active" (click)="onBurgerClicked()">
+      <div class="burger-container">
+        <div class="burger-inner"></div>
       </div>
     </div>
-    <div class="menu" [class.hide]="!active">
-        <ul>
-          <li routerLink='home' (click)="onBurgerClicked()">Home</li>
-          <li routerLink='leaderboard' (click)="onBurgerClicked()">leaderboard</li>
-          <li routerLink='login' (click)="onBurgerClicked()">Admin Tools</li>
-        </ul>
+    <div class="discord" (click)="openDiscord()">
+      Discord
     </div>
+  </div>
+  <div class="menu" [class.hide]="!active">
+    <ul>
+      <li routerLink='home' (click)="onBurgerClicked()">Home</li>
+      <li routerLink='leaderboard' (click)="onBurgerClicked()">leaderboard</li>
+      <li routerLink='login' (click)="onBurgerClicked()">Admin Tools</li>
+      <li routerLink='switch-server' (click)="onBurgerClicked()">Change Server</li>
+    </ul>
+  </div>
 </nav>

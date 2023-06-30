@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PlayerprofileComponent } from "./pages/leaderboard/playerprofile/playerprofile.component";
 import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard.component";
 import { authInterceptorProvider } from "./helpers/auth.interceptor";
+import { SelectServerComponent } from "./pages/select-server/select-server.component";
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { authInterceptorProvider } from "./helpers/auth.interceptor";
     PlayerprofileComponent,
     LiveplayersComponent,
     AdminDashboardComponent,
+    SelectServerComponent,
     ProfileDialog,
     LoginComponent,
   ],

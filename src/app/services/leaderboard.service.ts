@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Observable, Subject } from "rxjs";
-import { environment } from "src/environments/environment";
-
-const API = environment.API_ENDPOINT;
+import { TokenStorageService } from "./token-storage.service";
 
 @Injectable({
   providedIn: "root",
@@ -11,14 +9,20 @@ const API = environment.API_ENDPOINT;
 export class LeaderboardService {
   leaderboard: any[] = [];
   leaderboardUpdateEvent = new Subject();
-  constructor(private http: HttpClient) {}
+  api: string;
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenStorageService
+  ) {
+    this.api = tokenService.getSelectedApi();
+  }
 
   getTop200(): Observable<any> {
-    return this.http.get(`${API}/api/top-200`);
+    return this.http.get(`${this.api}/api/top-200`);
   }
 
   getCompleteLeaderboard(): Observable<any> {
-    return this.http.get(`${API}/api/current-leaderboard`);
+    return this.http.get(`${this.api}/api/current-leaderboard`);
   }
 
   getLeaderboard() {
@@ -35,7 +39,7 @@ export class LeaderboardService {
     return 0;
   }
 
-  loadLeaderboard() { 
+  loadLeaderboard() {
     if (this.leaderboard.length != 0) return;
     this.getTop200().subscribe((dat) => {
       this.leaderboard = Object.keys(dat).map((key) => {

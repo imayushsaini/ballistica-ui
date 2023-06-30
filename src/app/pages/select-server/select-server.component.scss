@@ -1,0 +1,32 @@
+.main-container {
+  width: 80%;
+  margin: auto;
+  min-height: 75vh;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+h1 {
+  text-align: center;
+}
+
+.new {
+  display: flex;
+  justify-content: flex-end;
+}
+.server {
+  background-color: rgba(43, 74, 244, 0.785);
+  padding: 2rem;
+  margin: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  min-width: 220px;
+}
+.new-server {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 15px;
+}

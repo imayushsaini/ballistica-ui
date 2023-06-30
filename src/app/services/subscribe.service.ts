@@ -1,15 +1,10 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Observable } from "rxjs";
+
 import { SwPush } from "@angular/service-worker";
 import { NotificationService } from "./notification.service";
 
-import { environment } from "./../../environments/environment";
 import { MainService } from "./main.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
-const httpOption = {
-  headers: new HttpHeaders({ "Content-Type": "application/json" }),
-};
 
 @Injectable({
   providedIn: "root",
@@ -52,10 +47,9 @@ export class SubscribeService {
         })
         .then((sub) => {
           const msg = { subscription: sub, player_id: player_id, name: name };
-          console.log(msg);
+
           this.service.subscribe(msg).subscribe(
             (x: any) => {
-              console.log(x);
               this.openSnackBar(x.message as string, "ok");
             },
             (err: any) => {
@@ -64,7 +58,10 @@ export class SubscribeService {
           );
         })
         .catch((err) =>
-          console.error("Could not subscribe to notifications", err)
+          this.openSnackBar(
+            "Failed to subscribe, permission denied or browser not supported ",
+            "ok"
+          )
         );
     }
   }

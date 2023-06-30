@@ -1,9 +1,9 @@
 <div class="player">
   <a class="close-btn" (click)="onClose()">X</a>
-  <div class="heading">
+  <div class="heading" *ngIf="player">
     {{player.name}}
   </div>
-  <div class="players" *ngIf="player!=={}">
+  <div class="players" *ngIf="player && player!=={}">
     <ul>
       <li>
         Id: {{player.id}}

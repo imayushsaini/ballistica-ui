@@ -1,9 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { environment } from "src/environments/environment";
 import { Subject } from "rxjs";
-const API = environment.API_ENDPOINT;
+import { TokenStorageService } from "./token-storage.service";
 
 @Injectable({
   providedIn: "root",
@@ -12,8 +11,15 @@ export class MainService {
   serverName = "";
   discord = "";
   vapidKey = "";
+  api: string;
   gotServerInfo = new Subject<void>();
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenStorageService
+  ) {
+    this.api = tokenService.getSelectedApi();
+    
+
     this.fetchStats();
   }
 
@@ -23,10 +29,11 @@ export class MainService {
       this.discord = data.discord;
       this.vapidKey = data.vapidKey;
       this.gotServerInfo.next();
+      this.tokenService.updateServerName(this.api, this.serverName);
     });
   }
   getLiveStats(): Observable<any> {
-    return this.http.get(`${API}/api/live-stats`);
+    return this.http.get(`${this.api}/api/live-stats`);
   }
   getDiscord(): string {
     return this.discord;
@@ -39,6 +46,6 @@ export class MainService {
     return this.serverName;
   }
   getIP(): string {
-    return API.replace("http://", "");
+    return this.api.replace("http://", "");
   }
 }

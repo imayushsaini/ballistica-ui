@@ -1,0 +1,21 @@
+<div class="main-container">
+  <div class="server-list">
+    <h1>Switch Server</h1>
+    <div class="new">
+      <button mat-raised-button color="primary" (click)="onAddNew()">+ Add New</button>
+    </div>
+    <div class="new-server" *ngIf="showNewServerDialog">
+      <mat-form-field>
+        <mat-label>server link</mat-label>
+        <input matInput type="text" [(ngModel)]="newApi">
+      </mat-form-field>
+      <button class="add-btn" mat-raised-button color="primary" (click)="saveNewApi()">add</button>
+    </div>
+    <div class="list" *ngIf="serverList!=={}">
+      <div class="server" *ngFor="let server of serverList | keyvalue" (click)="setServer(server.key)">
+        {{server.value.name}} <br> {{server.key}}
+      </div>
+    </div>
+
+  </div>
+</div>
