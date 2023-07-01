@@ -23,6 +23,7 @@ Broadcast Bombsquad server live stats and leaderboard. Notify players when their
 ### Option 2 (host website with your own name.)
 - Fork this repo
 - Enable the workflow that comes with this repo from Actions.
+- Repo settings > actions > general > workflow > enable read nad write permission.
 - update variables.env, and enter your server link/deno link you got from the above step 1.
 - On your fork go to settings and enable the GitHub page on the gh-page branch.
 - Check environments to get add your github page URL.
