@@ -1,14 +1,7 @@
 import { Injectable } from "@angular/core";
 import { catchError } from "rxjs/operators";
 
-import {
-  HttpRequest,
-  HttpHandler,
-  HttpEvent,
-  HttpInterceptor,
-  HTTP_INTERCEPTORS,
-  HttpErrorResponse,
-} from "@angular/common/http";
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from "@angular/common/http";
 import { Observable, of, throwError } from "rxjs";
 import { TokenStorageService } from "../services/token-storage.service";
 import { Router } from "@angular/router";

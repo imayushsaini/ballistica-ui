@@ -12,7 +12,7 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatInputModule } from "@angular/material/input";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { LiveplayersComponent } from "./pages/leaderboard/liveplayers/liveplayers.component";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { MatDialogModule } from "@angular/material/dialog";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { MatSnackBarModule } from "@angular/material/snack-bar";
@@ -25,42 +25,35 @@ import { AdminDashboardComponent } from "./pages/admin-dashboard/admin-dashboard
 import { authInterceptorProvider } from "./helpers/auth.interceptor";
 import { SelectServerComponent } from "./pages/select-server/select-server.component";
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    NavBarComponent,
-    LeaderboardComponent,
-    PlayerprofileComponent,
-    LiveplayersComponent,
-    AdminDashboardComponent,
-    SelectServerComponent,
-    ProfileDialog,
-    LoginComponent,
-  ],
-  imports: [
-    FormsModule,
-    BrowserModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatPaginatorModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    ServiceWorkerModule.register("ngsw-worker.js", {
-      enabled: true,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: "registerWhenStable:30000",
-    }),
-  ],
-  providers: [authInterceptorProvider],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        HomeComponent,
+        NavBarComponent,
+        LeaderboardComponent,
+        PlayerprofileComponent,
+        LiveplayersComponent,
+        AdminDashboardComponent,
+        SelectServerComponent,
+        ProfileDialog,
+        LoginComponent,
+    ],
+    bootstrap: [AppComponent], imports: [FormsModule,
+        BrowserModule,
+        ReactiveFormsModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatPaginatorModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDialogModule,
+        MatSnackBarModule,
+        ServiceWorkerModule.register("ngsw-worker.js", {
+            enabled: true,
+            // Register the ServiceWorker as soon as the app is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: "registerWhenStable:30000",
+        })], providers: [authInterceptorProvider, provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}
