@@ -1,9 +1,15 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <nav>
   <div class="nav-main">
     <div class="burger-menu" [class.active]="active" (click)="onBurgerClicked()">
       <div class="burger-container">
         <div class="burger-inner"></div>
       </div>
+    </div>
+    <div class="current">
+      {{serverName}} <br>
+      {{activeHost}} <a href="/switch-server">(change)</a>
     </div>
     <div class="discord" (click)="openDiscord()">
       Discord

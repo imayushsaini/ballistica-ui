@@ -1,22 +1,22 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { TokenStorageService } from "./token-storage.service";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HostManagerService } from './host-manager.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class NotificationService {
-  api: string;
   constructor(
     private http: HttpClient,
-    private tokenService: TokenStorageService
-  ) {
-    this.api = tokenService.getSelectedApi();
-  }
+    private hostManager: HostManagerService
+  ) {}
   subscribe(subscription: any) {
-    return this.http.post(`${this.api}/api/subscribe`, subscription);
+    return this.http.post(
+      `${this.hostManager.getProxyUrl()}/api/subscribe`,
+      subscription
+    );
   }
   triggerMessage(message: any) {
-    return this.http.post("/message", JSON.parse(message));
+    return this.http.post('/message', JSON.parse(message));
   }
 }

@@ -1,18 +1,17 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
 <div class="main-container">
   <div class="server-list">
     <h1>Switch Server</h1>
+    <h3>current proxy = {{currentProxy}}</h3>
+    <br>
     <div class="new">
+      <button mat-raised-button color="primary" (click)="onChangeProxy()">Change Proxy</button>
       <button mat-raised-button color="primary" (click)="onAddNew()">+ Add New</button>
     </div>
-    <div class="new-server" *ngIf="showNewServerDialog">
-      <mat-form-field>
-        <mat-label>server link</mat-label>
-        <input matInput type="text" [(ngModel)]="newApi">
-      </mat-form-field>
-      <button class="add-btn" mat-raised-button color="primary" (click)="saveNewApi()">add</button>
-    </div>
     <div class="list" *ngIf="serverList!=={}">
-      <div class="server" [ngClass]="{'selected': server.key == currentApi}"
+      <div class="server" [ngClass]="{'selected': server.key == currentHost}"
         *ngFor="let server of serverList | keyvalue" (click)="setServer(server.key)">
         {{server.value.name}} <br> {{server.key}}
       </div>
