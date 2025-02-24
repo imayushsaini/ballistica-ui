@@ -5,6 +5,9 @@
   <div class="server-list">
     <h1>Switch Server</h1>
     <h3>current proxy = {{currentProxy}}</h3>
+    <div class="error" *ngIf="showProxyError">Either the proxy is dead, or you are offline.<br>
+      Please check your internet connection and proxy URL. <br>
+    </div>
     <br>
     <div class="new">
       <button mat-raised-button color="primary" (click)="onChangeProxy()">Change Proxy</button>

@@ -18,6 +18,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { environment } from 'src/environments/environment';
 
 export interface DialogData {
   ip: string;
@@ -63,7 +64,7 @@ export class AddHostComponent implements OnInit {
     });
     this.addProxyForm = this.fb.group({
       proxy: [
-        '',
+        environment.API_PROXY,
         [
           Validators.required,
           Validators.pattern(

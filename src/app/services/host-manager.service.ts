@@ -41,10 +41,10 @@ export class HostManagerService {
 
   getProxyUrl(): string {
     const cache = this.getCache();
-    if (cache.proxyUrl) {
-      return cache.proxyUrl;
-    }
-    return environment.API_PROXY;
+    let proxyUrl = cache.proxyUrl ? cache.proxyUrl : environment.API_PROXY;
+    // Remove trailing slash if it exists
+    proxyUrl = proxyUrl.replace(/\/$/, '');
+    return proxyUrl;
   }
   setProxyUrl(url: string) {
     const cache = this.getCache();

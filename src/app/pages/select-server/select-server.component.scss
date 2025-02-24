@@ -35,3 +35,10 @@ h3 {
 .selected {
   background-color: rgb(5 22 116 / 79%);
 }
+
+.error {
+  color: rgb(247, 51, 51);
+  text-align: center;
+  border: rgb(247, 51, 51) 1px solid;
+  padding: 4px;
+}

@@ -23,7 +23,12 @@ async function handler(req: Request): Promise<Response> {
       headers: corsHeaders,
     });
   }
-
+  if (path === "/proxy-ping") {
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
+  }
   if (!hostHeader) {
     return new Response("Host header not found", { status: 400 });
   }

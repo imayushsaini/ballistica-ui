@@ -44,4 +44,7 @@ export class MainService {
     if (this.serverName === '') this.fetchStats();
     return this.serverName;
   }
+  pingproxy(): Observable<any> {
+    return this.http.get(`${this.hostManager.getProxyUrl()}/proxy-ping`);
+  }
 }

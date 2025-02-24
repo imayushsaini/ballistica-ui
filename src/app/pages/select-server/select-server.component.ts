@@ -5,6 +5,7 @@ import { SavedTokens } from 'src/app/models/shared.model';
 import { HostManagerService } from 'src/app/services/host-manager.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddHostComponent } from 'src/app/components/add-host/add-host.component';
+import { MainService } from 'src/app/services/main.service';
 
 export interface DialogData {
   ip: string;
@@ -21,17 +22,20 @@ export class SelectServerComponent implements OnInit {
   serverList: SavedTokens = {};
   currentProxy = '';
   currentHost = '';
+  showProxyError = false;
   readonly dialog = inject(MatDialog);
   constructor(
     private hostManager: HostManagerService,
     private _snackBar: MatSnackBar,
-    private location: Location
+    private location: Location,
+    private mainService: MainService
   ) {}
 
   ngOnInit() {
     this.serverList = this.hostManager.getHostDB();
     this.currentProxy = this.hostManager.getProxyUrl();
     this.currentHost = this.hostManager.getSelectedHost();
+    this.checkProxy();
   }
 
   onAddNew() {
@@ -54,9 +58,22 @@ export class SelectServerComponent implements OnInit {
       if (!result) return;
       this.currentProxy = result;
       this.hostManager.setProxyUrl(result);
+      this.checkProxy();
     });
   }
-
+  checkProxy() {
+    this.mainService.pingproxy().subscribe(
+      (res) => {
+        this.showProxyError = false;
+        this._snackBar.open('Proxy is working!', 'Alright');
+      },
+      (err) => {
+        console.log(err);
+        this.showProxyError = true;
+        this._snackBar.open('Proxy is not working!', 'Alright');
+      }
+    );
+  }
   setServer(host: string) {
     this.hostManager.switchHost(host);
     this._snackBar.open(`Switched to ${host}`, 'alright');
