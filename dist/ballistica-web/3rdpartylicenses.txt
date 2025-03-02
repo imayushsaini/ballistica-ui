@@ -67,11 +67,6 @@ License: "MIT"
 
 
 --------------------------------------------------------------------------------
-Package: @angular/core
-License: "MIT"
-
-
---------------------------------------------------------------------------------
 Package: rxjs
 License: "Apache-2.0"
 
@@ -277,6 +272,11 @@ License: "Apache-2.0"
  See the License for the specific language governing permissions and
  limitations under the License.
  
+
+--------------------------------------------------------------------------------
+Package: @angular/core
+License: "MIT"
+
 
 --------------------------------------------------------------------------------
 Package: @angular/common
