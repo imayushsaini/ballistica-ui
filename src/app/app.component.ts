@@ -9,7 +9,7 @@ import { HostManagerService } from './services/host-manager.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'ballistica-web';
+  title = 'server-manager';
   constructor(
     private route: ActivatedRoute,
     private hostManager: HostManagerService,

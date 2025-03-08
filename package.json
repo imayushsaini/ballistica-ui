@@ -1,5 +1,5 @@
 {
-  "name": "ballistica-web",
+  "name": "server-manager",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "pretty": "prettier --write \"./**/*.{js,jsx,ts,tsx,json}\"",
     "build-deploy": "npm run clean && node make.js && ng build --base-href /ballistica-ui/ && node postbuild.js",
-    "copy-404": "cp dist/ballistica-web/index.html dist/ballistica-web/404.html",
+    "copy-404": "cp dist/server-manager/index.html dist/server-manager/404.html",
     "test": "ng test",
     "lint": "ng lint"
   },

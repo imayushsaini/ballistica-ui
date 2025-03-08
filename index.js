@@ -12,7 +12,7 @@ var players = require("./subscribers/players.json");
 var cors = require("cors");
 app.use(bodyParser.json());
 app.use(cors());
-// app.use(express.static(path.join(__dirname, "dist/ballistica-web")));
+// app.use(express.static(path.join(__dirname, "dist/server-manager")));
 
 var request = require("request");
 
