@@ -26,7 +26,8 @@
       <li routerLink='leaderboard' (click)="onBurgerClicked()">leaderboard</li>
       <li routerLink='login' (click)="onBurgerClicked()">Admin Tools</li>
       <li routerLink='switch-server' (click)="onBurgerClicked()">Change Server</li>
-      <li *ngIf="undercommunityDomain" (click)="onBackClick()">Back to Community Website</li>
+      <li *ngIf="undercommunityDomain"> <a href="https://bombsquad-community.web.app"
+          style="text-decoration: none;">Back to Community Website</a></li>
     </ul>
   </div>
 </nav>

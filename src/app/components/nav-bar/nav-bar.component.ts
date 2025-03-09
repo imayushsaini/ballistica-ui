@@ -49,7 +49,7 @@ export class NavBarComponent implements OnInit {
   }
   onBackClick() {
     this.active = !this.active;
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl("https://bombsquad-community.web.app");
   }
 
   @HostListener('document:click', ['$event', '$event.target'])
