@@ -1,5 +1,5 @@
 export const environment = {
   production: false,
-  API_PROXY: 'https://quiet-bison-26.deno.dev',
-  HOST: '140.238.162.79:43210',
+  API_PROXY: "https://quiet-bison-26.deno.dev",
+  DEFAULT_HOST: "127.0.0.1:43210"
 };

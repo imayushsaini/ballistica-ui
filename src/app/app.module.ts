@@ -28,6 +28,7 @@ import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard
 import { authInterceptorProvider } from './helpers/auth.interceptor';
 import { SelectServerComponent } from './pages/select-server/select-server.component';
 import { errorInterceptorProvider } from './helpers/error.interceptor';
+import { WelcomeDialogComponent } from './components/welcome-dialog/welcome-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,8 @@ import { errorInterceptorProvider } from './helpers/error.interceptor';
     HomeComponent,
     NavBarComponent,
     LeaderboardComponent,
+    
+    WelcomeDialogComponent,
     PlayerprofileComponent,
     LiveplayersComponent,
     AdminDashboardComponent,

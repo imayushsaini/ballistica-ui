@@ -9,7 +9,12 @@
     </div>
     <div class="current">
       {{serverName}} <br>
-      {{activeHost}} <a href="/switch-server">(change)</a>
+      <span *ngIf="activeHost!=='127.0.0.1:43210'">
+        {{activeHost}} <a routerLink='switch-server'>(change)</a>
+      </span>
+      <span *ngIf="activeHost=='127.0.0.1:43210'">
+        <a routerLink='switch-server'> Add Host Now!!</a>
+      </span>
     </div>
     <div class="discord" (click)="openDiscord()">
       Discord
@@ -21,6 +26,7 @@
       <li routerLink='leaderboard' (click)="onBurgerClicked()">leaderboard</li>
       <li routerLink='login' (click)="onBurgerClicked()">Admin Tools</li>
       <li routerLink='switch-server' (click)="onBurgerClicked()">Change Server</li>
+      <li *ngIf="undercommunityDomain" (click)="onBackClick()">Back to Community Website</li>
     </ul>
   </div>
 </nav>

@@ -5,11 +5,13 @@ import { Subject } from 'rxjs/internal/Subject';
 
 const HOST_DB = 'HOST-db';
 const CACHE = 'cache';
-const DEFAULT_HOST = environment.HOST;
+const LOCAL_HOST = "127.0.0.1:43210"
+const DEFAULT_HOST = environment.DEFAULT_HOST;
 @Injectable({
   providedIn: 'root',
 })
 export class HostManagerService {
+
   onServerChange = new Subject<string>();
   currentHost: string | null = null;
   constructor() {}
@@ -107,7 +109,11 @@ export class HostManagerService {
       // save it in cache and host db
       const cache = this.getCache();
       cache.currentHost = this.currentHost;
-      this.addNewHost(this.currentHost);
+      if (this.currentHost !== LOCAL_HOST) {
+        // dont save local host
+        this.addNewHost(this.currentHost);
+      }
+      
       localStorage.setItem(CACHE, JSON.stringify(cache));
       return this.currentHost;
     }
