@@ -46,10 +46,11 @@ export class SelectServerComponent implements OnInit {
   }
 
   addNewHost(newHost: DialogData) {
+    const host = newHost.ip + ':' + newHost.port;
     if (!newHost) return;
-    this.hostManager.addNewHost(newHost.ip + ':' + newHost.port);
+    this.hostManager.addNewHost(host);
 
-    this.refresh();
+    this.setServer(host);
   }
 
   onChangeProxy() {
