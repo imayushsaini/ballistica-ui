@@ -26,23 +26,18 @@ table {
 .sub-container2 {
   background-color: rgba(105, 105, 105, 0.405);
   margin-bottom: 2rem;
+  min-width: 100px;
 }
 
 .live-card {
   width: 70%;
-  height: 3rem;
-  margin: auto;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-  // background-color: rgb(167 167 167 / 30%);
-
-  background-color: #06c5c8;
-  background-image: linear-gradient(90deg, #06c5c8 0%, #fc00ff 100%);
-
+  margin: 20px auto;
+  background-image: linear-gradient(90deg, #858585 0%, #626262 100%);
   border-radius: 8px;
-  //border:1px solid black;
-  padding-top: 1.2rem;
-  padding-left: 1rem;
+  text-align: center;
+  .text {
+    padding: 20px;
+  }
 }
 .leaderboard {
   width: 100%;

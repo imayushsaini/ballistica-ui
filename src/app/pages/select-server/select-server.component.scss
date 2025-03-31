@@ -8,16 +8,17 @@
   margin-bottom: 3rem;
 }
 
-h1 {
+h1,
+h3 {
   text-align: center;
 }
 
 .new {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-around;
 }
 .server {
-  background-color: rgba(43, 74, 244, 0.785);
+  background-color: rgba(93, 93, 93, 0.785);
   padding: 2rem;
   margin: 1rem;
   border-radius: 12px;
@@ -33,4 +34,11 @@ h1 {
 
 .selected {
   background-color: rgb(5 22 116 / 79%);
+}
+
+.error {
+  color: rgb(247, 51, 51);
+  text-align: center;
+  border: rgb(247, 51, 51) 1px solid;
+  padding: 4px;
 }

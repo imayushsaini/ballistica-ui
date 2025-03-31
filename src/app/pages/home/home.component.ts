@@ -6,20 +6,21 @@ import {
   Inject,
   OnDestroy,
   OnInit,
-} from "@angular/core";
-import { MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { MatTableDataSource } from "@angular/material/table";
-import { Subscription, interval } from "rxjs";
-import { LeaderboardService } from "src/app/services/leaderboard.service";
-import { MainService } from "src/app/services/main.service";
-import { SubscribeService } from "src/app/services/subscribe.service";
+} from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subscription, interval } from 'rxjs';
+import { LeaderboardService } from 'src/app/services/leaderboard.service';
+import { MainService } from 'src/app/services/main.service';
+import { SubscribeService } from 'src/app/services/subscribe.service';
 
 import {
   LiveData,
   TeamInfo,
   TeamPlayer,
-} from "src/app/models/live-stats.model";
+} from 'src/app/models/live-stats.model';
+import { HostManagerService } from 'src/app/services/host-manager.service';
 export interface PlayerData {
   name: string;
   rank: number;
@@ -28,41 +29,42 @@ export interface PlayerData {
 }
 
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.scss"],
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  playlist = { current: "", next: "" };
+  playlist = { current: '', next: '' };
   teamData!: TeamInfo;
   sessionType!: string;
   topPlayers: PlayerData[] = [];
-  serverName = "";
+  serverName = '';
 
   columns = [
     {
-      columnDef: "rank",
-      header: "No.",
+      columnDef: 'rank',
+      header: 'No.',
       cell: (element: PlayerData) => `${element.rank}`,
     },
     {
-      columnDef: "name",
-      header: "Name",
+      columnDef: 'name',
+      header: 'Name',
       cell: (element: PlayerData) => `${element.name}`,
     },
     {
-      columnDef: "scores",
-      header: "Score",
+      columnDef: 'scores',
+      header: 'Score',
       cell: (element: PlayerData) => `${element.scores}`,
     },
     {
-      columnDef: "kills",
-      header: "Kills",
+      columnDef: 'kills',
+      header: 'Kills',
       cell: (element: PlayerData) => `${element.kills}`,
     },
   ];
   dataSource = new MatTableDataSource<PlayerData>();
-
+  private updateSubscription!: Subscription;
+  public isPaused: boolean = false;
   displayedColumns = this.columns.map((c) => c.columnDef);
 
   constructor(
@@ -70,10 +72,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private subService: SubscribeService,
     private lBoard: LeaderboardService,
+    private hostManager: HostManagerService,
     private changeDetectorRefs: ChangeDetectorRef,
     private _snackBar: MatSnackBar
   ) {}
-  private updateSubscription!: Subscription;
 
   ngOnInit() {
     this.serverName = this.mainservice.getServerName();
@@ -89,10 +91,21 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.serverName = this.mainservice.getServerName();
     });
     this.updateSubscription = interval(9000).subscribe(() => {
+      if (!this.hostManager.getSelectedHost() || this.isPaused) return;
       this.refreshData();
     });
+    document.addEventListener(
+      'visibilitychange',
+      this.handleVisibilityChange.bind(this)
+    );
   }
-
+  handleVisibilityChange() {
+    if (document.hidden) {
+      this.isPaused = true;
+    } else {
+      this.isPaused = false;
+    }
+  }
   ngOnDestroy(): void {
     if (this.updateSubscription) this.updateSubscription.unsubscribe();
   }
@@ -113,7 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           result.name
         );
         const msg = `Subscribed to ${name} , conformation notification will be sent shortely.`;
-        this.openSnackBar(msg, "ok");
+        this.openSnackBar(msg, 'ok');
       }
     });
   }
@@ -123,18 +136,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   refreshData() {
-    this.mainservice.getLiveStats().subscribe((data: LiveData) => {
-      this.playlist = data.playlist;
-      this.teamData = data.teamInfo;
-      this.sessionType = data.sessionType;
-    });
+    this.mainservice.getLiveStats().subscribe(
+      (data: LiveData) => {
+        this.playlist = data.playlist;
+        this.teamData = data.teamInfo;
+        this.sessionType = data.sessionType;
+      },
+      (error) => {}
+    );
   }
 
   isDualTeam(): boolean {
     if (!this.teamData) return false;
     return (
       Object.keys(this.teamData).length == 2 &&
-      this.sessionType == "DualTeamSession"
+      this.sessionType == 'DualTeamSession'
     );
   }
   getAllPlayers(): TeamPlayer[] {
@@ -149,8 +165,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 }
 @Component({
-  selector: "profile.dialog",
-  templateUrl: "./profile.dialog.html",
+  selector: 'profile.dialog',
+  templateUrl: './profile.dialog.html',
 })
 export class ProfileDialog {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}

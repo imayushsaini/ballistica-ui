@@ -1,0 +1,19 @@
+<h2 mat-dialog-title>Connection Error</h2>
+<mat-dialog-content>
+  <p>Failed to connect to the server. Possible reasons:</p>
+  <ul>
+    <li>The selected server is offline.</li>
+    <li>The proxy is not responding.</li>
+  </ul>
+  <p>You can:</p>
+  <ul>
+    <li>Wait and retry after a few minutes.</li>
+    <li>Ensure the server is online by visiting <code>http://serverIP:PORT</code>.</li>
+    <li>Navigate to <code> <a href="/switch-server">Switch server</a></code> and select another server.</li>
+    <li>Check the console for more details.</li>
+    <li>Change the proxy if necessary (add your own if you feel so).</li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

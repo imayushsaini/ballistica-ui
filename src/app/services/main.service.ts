@@ -1,25 +1,21 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { Subject } from "rxjs";
-import { TokenStorageService } from "./token-storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { HostManagerService } from './host-manager.service';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class MainService {
-  serverName = "";
-  discord = "";
-  vapidKey = "";
-  api: string;
+  serverName = '';
+  discord = '';
+  vapidKey = '';
   gotServerInfo = new Subject<void>();
   constructor(
     private http: HttpClient,
-    private tokenService: TokenStorageService
+    private hostManager: HostManagerService
   ) {
-    this.api = tokenService.getSelectedApi();
-    
-
     this.fetchStats();
   }
 
@@ -29,11 +25,14 @@ export class MainService {
       this.discord = data.discord;
       this.vapidKey = data.vapidKey;
       this.gotServerInfo.next();
-      this.tokenService.updateServerName(this.api, this.serverName);
+      this.hostManager.saveHostName(
+        this.hostManager.getSelectedHost(),
+        this.serverName
+      );
     });
   }
   getLiveStats(): Observable<any> {
-    return this.http.get(`${this.api}/api/live-stats`);
+    return this.http.get(`${this.hostManager.getProxyUrl()}/api/live-stats`);
   }
   getDiscord(): string {
     return this.discord;
@@ -42,10 +41,10 @@ export class MainService {
     return this.vapidKey;
   }
   getServerName(): string {
-    if (this.serverName === "") this.fetchStats();
+    if (this.serverName === '') this.fetchStats();
     return this.serverName;
   }
-  getIP(): string {
-    return this.api.replace("http://", "");
+  pingproxy(): Observable<any> {
+    return this.http.get(`${this.hostManager.getProxyUrl()}/proxy-ping`);
   }
 }

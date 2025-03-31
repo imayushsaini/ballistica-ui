@@ -1,9 +1,20 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <nav>
   <div class="nav-main">
     <div class="burger-menu" [class.active]="active" (click)="onBurgerClicked()">
       <div class="burger-container">
         <div class="burger-inner"></div>
       </div>
+    </div>
+    <div class="current">
+      {{serverName}} <br>
+      <span *ngIf="activeHost!=='127.0.0.1:43210'">
+        {{activeHost}} <a routerLink='switch-server'>(change)</a>
+      </span>
+      <span *ngIf="activeHost=='127.0.0.1:43210'">
+        <a routerLink='switch-server'> Add Host Now!!</a>
+      </span>
     </div>
     <div class="discord" (click)="openDiscord()">
       Discord
@@ -15,6 +26,8 @@
       <li routerLink='leaderboard' (click)="onBurgerClicked()">leaderboard</li>
       <li routerLink='login' (click)="onBurgerClicked()">Admin Tools</li>
       <li routerLink='switch-server' (click)="onBurgerClicked()">Change Server</li>
+      <li *ngIf="undercommunityDomain"> <a href="https://bombsquad-community.web.app"
+          style="text-decoration: none;">Back to Community Website</a></li>
     </ul>
   </div>
 </nav>
