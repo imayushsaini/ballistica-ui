@@ -6,7 +6,7 @@ import { LoginComponent } from "./pages/login/login.component";
 import { SelectServerComponent } from "./pages/select-server/select-server.component";
 
 const routes: Routes = [
-  { path: "home", component: HomeComponent },
+  { path: "", component: HomeComponent },
   { path: "leaderboard", component: LeaderboardComponent },
   { path: "switch-server", component: SelectServerComponent },
   { path: "login", component: LoginComponent },
@@ -14,7 +14,7 @@ const routes: Routes = [
     path: "admin",
     loadChildren: () => import("./admin.module").then((m) => m.AdminModule),
   },
-  { path: "**", redirectTo: "home" },
+  { path: "**", redirectTo: "" },
 ];
 
 @NgModule({
