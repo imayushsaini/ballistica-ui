@@ -6,6 +6,7 @@ import { SubscribeService } from "src/app/services/subscribe.service";
   selector: "app-playerprofile",
   templateUrl: "./playerprofile.component.html",
   styleUrls: ["./playerprofile.component.scss"],
+  standalone: false,
 })
 export class PlayerprofileComponent {
   @Input()

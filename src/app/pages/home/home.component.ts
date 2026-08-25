@@ -14,6 +14,7 @@ import { Subscription, interval } from 'rxjs';
 import { LeaderboardService } from 'src/app/services/leaderboard.service';
 import { MainService } from 'src/app/services/main.service';
 import { SubscribeService } from 'src/app/services/subscribe.service';
+import { ManageProxyDialogComponent } from 'src/app/components/manage-proxy-dialog/manage-proxy-dialog.component';
 
 import {
   LiveData,
@@ -21,6 +22,7 @@ import {
   TeamPlayer,
 } from 'src/app/models/live-stats.model';
 import { HostManagerService } from 'src/app/services/host-manager.service';
+
 export interface PlayerData {
   name: string;
   rank: number;
@@ -32,6 +34,7 @@ export interface PlayerData {
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  standalone: false,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   playlist = { current: '', next: '' };
@@ -39,6 +42,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   sessionType!: string;
   topPlayers: PlayerData[] = [];
   serverName = '';
+  isOffline = false;
+  isProxyFailure = false;
+  isLoadingStats = true;
 
   columns = [
     {
@@ -72,14 +78,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private subService: SubscribeService,
     private lBoard: LeaderboardService,
-    private hostManager: HostManagerService,
+    public hostManager: HostManagerService,
     private changeDetectorRefs: ChangeDetectorRef,
     private _snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
     this.serverName = this.mainservice.getServerName();
-    this.lBoard.loadLeaderboard(); // maybe leaderboard not fetched yet , just call it once for safe side.
+    this.lBoard.loadLeaderboard();
     this.getLeaderboard();
     this.refreshData();
 
@@ -87,25 +93,37 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.getLeaderboard();
       this.changeDetectorRefs.detectChanges();
     });
+
     this.mainservice.gotServerInfo.subscribe(() => {
       this.serverName = this.mainservice.getServerName();
     });
-    this.updateSubscription = interval(9000).subscribe(() => {
-      if (!this.hostManager.getSelectedHost() || this.isPaused) return;
+
+    this.hostManager.onServerChange.subscribe(() => {
       this.refreshData();
     });
+
+    this.updateSubscription = interval(9000).subscribe(() => {
+      if (!this.hostManager.getSelectedHost() || this.isPaused || this.isOffline) return;
+      this.refreshData(true);
+    });
+
     document.addEventListener(
       'visibilitychange',
       this.handleVisibilityChange.bind(this)
     );
   }
+
   handleVisibilityChange() {
     if (document.hidden) {
       this.isPaused = true;
     } else {
       this.isPaused = false;
+      if (this.isOffline) {
+        this.refreshData();
+      }
     }
   }
+
   ngOnDestroy(): void {
     if (this.updateSubscription) this.updateSubscription.unsubscribe();
   }
@@ -114,6 +132,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.topPlayers = this.lBoard.getLeaderboard().slice(0, 5);
     this.dataSource.data = this.topPlayers;
   }
+
   openDialog(profile: any) {
     const dialogRef = this.dialog.open(ProfileDialog, {
       data: profile,
@@ -125,25 +144,60 @@ export class HomeComponent implements OnInit, OnDestroy {
           result.account_id,
           result.name
         );
-        const msg = `Subscribed to ${name} , conformation notification will be sent shortely.`;
-        this.openSnackBar(msg, 'ok');
+        const msg = `Subscribed to ${result.name}, notification will be sent when they join.`;
+        this.openSnackBar(msg, 'OK');
       }
     });
   }
 
   openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action);
+    this._snackBar.open(message, action, { duration: 3500 });
   }
 
-  refreshData() {
-    this.mainservice.getLiveStats().subscribe(
-      (data: LiveData) => {
-        this.playlist = data.playlist;
-        this.teamData = data.teamInfo;
-        this.sessionType = data.sessionType;
+  openProxyDialog() {
+    this.dialog.open(ManageProxyDialogComponent, {
+      width: '540px',
+      panelClass: 'custom-dialog-container',
+    });
+  }
+
+  refreshData(isBackgroundPoll = false) {
+    if (!isBackgroundPoll) {
+      this.isLoadingStats = true;
+    }
+
+    this.mainservice.getLiveStats().subscribe({
+      next: (data: LiveData) => {
+        this.isLoadingStats = false;
+        this.isOffline = false;
+        this.isProxyFailure = false;
+        this.playlist = data.playlist || { current: '', next: '' };
+        this.teamData = data.teamInfo || {};
+        this.sessionType = data.sessionType || 'FreeForAll';
+        if (data.name) {
+          this.serverName = data.name;
+        }
       },
-      (error) => {}
-    );
+      error: () => {
+        this.isLoadingStats = false;
+        this.isOffline = true;
+        const currentHost = this.hostManager.getSelectedHost();
+
+        if (!this.hostManager.isLocalIp(currentHost)) {
+          // Check if proxy gateway itself is offline
+          this.mainservice.pingproxy().subscribe({
+            next: () => {
+              this.isProxyFailure = false; // proxy is up, server is down
+            },
+            error: () => {
+              this.isProxyFailure = true; // proxy is unreachable
+            },
+          });
+        } else {
+          this.isProxyFailure = false;
+        }
+      },
+    });
   }
 
   isDualTeam(): boolean {
@@ -153,20 +207,26 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.sessionType == 'DualTeamSession'
     );
   }
+
   getAllPlayers(): TeamPlayer[] {
-    const playersList = [];
+    const playersList: TeamPlayer[] = [];
+    if (!this.teamData) return playersList;
     for (const key in this.teamData) {
       if (!isNaN(parseInt(key))) {
         const players = this.teamData[key].players;
-        playersList.push(...players);
+        if (Array.isArray(players)) {
+          playersList.push(...players);
+        }
       }
     }
     return playersList;
   }
 }
+
 @Component({
   selector: 'profile.dialog',
   templateUrl: './profile.dialog.html',
+  standalone: false,
 })
 export class ProfileDialog {
   constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}

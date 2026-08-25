@@ -32,7 +32,7 @@ export class MainService {
     });
   }
   getLiveStats(): Observable<any> {
-    return this.http.get(`${this.hostManager.getProxyUrl()}/api/live-stats`);
+    return this.http.get(`${this.hostManager.getHostUrl()}/api/live-stats`);
   }
   getDiscord(): string {
     return this.discord;

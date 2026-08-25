@@ -4,6 +4,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 
 @Directive({
   selector: "[appNumberValueAccessor]",
+  standalone: false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

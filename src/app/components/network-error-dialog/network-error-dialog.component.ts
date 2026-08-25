@@ -6,6 +6,8 @@ import {
   MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-network-error-dialog',
@@ -16,6 +18,8 @@ import {
     MatDialogActions,
     MatDialogClose,
     MatButtonModule,
+    MatIconModule,
+    RouterModule,
   ],
   templateUrl: './network-error-dialog.component.html',
   styleUrl: './network-error-dialog.component.scss',

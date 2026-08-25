@@ -1,57 +1,301 @@
-.main-container {
-  width: 80%;
-  margin: auto;
-  padding-top: 3rem;
+.perks-page {
+  padding-bottom: 60px;
+
+  .tool-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .tool-title-group {
+      h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 4px 0;
+
+        .title-icon {
+          color: #ba68c8;
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      p {
+        font-size: 0.84rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+    }
+
+    .btn-save-perks {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px !important;
+
+      mat-icon.spinning {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Available Effects Banner
+.available-effects-banner {
+  padding: 14px 18px;
+  margin-bottom: 24px;
   display: flex;
-  justify-content: center;
-}
+  flex-direction: column;
+  gap: 8px;
 
-.manage-effects,
-.manage-tags {
-  margin: auto;
-  text-align: center;
-}
+  .effects-badge-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #ce93d8;
 
-.manage-perks {
-  h3 {
-    text-align: center;
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
   }
-  width: 60%;
-  padding: 1rem 3rem;
-  margin-bottom: 5rem;
+
+  .effects-chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+
+    .effect-pill-preview {
+      background: rgba(156, 39, 176, 0.15);
+      border: 1px solid rgba(156, 39, 176, 0.35);
+      color: #e1bee7;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 600;
+      font-family: monospace;
+    }
+  }
 }
-.new {
+
+// 2-Column Perks Grid
+.perks-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.perk-section-card {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  overflow: hidden;
+
+  .card-header-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-subtle);
+
+    .header-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .header-icon {
+        color: var(--primary-accent);
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+      }
+    }
+
+    .btn-add-perk {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(63, 81, 181, 0.18);
+      border: 1px solid rgba(63, 81, 181, 0.4);
+      color: #9fa8da;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      mat-icon {
+        font-size: 16px;
+        width: 16px;
+        height: 16px;
+      }
+
+      &:hover {
+        background: #3f51b5;
+        color: #ffffff;
+      }
+    }
+  }
 }
-.player-effect,
-.player-tag,
-.new-effect,
-.new-tag {
+
+.inline-add-box {
+  background: rgba(63, 81, 181, 0.08);
+  border-bottom: 1px solid rgba(63, 81, 181, 0.2);
+  padding: 14px 18px;
+
+  .inline-add-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 4px;
+
+    .btn-dialog-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #b0bec5;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+  }
+}
+
+.perks-body-list {
+  padding: 16px;
   display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  .player {
-    margin: 2rem;
-  }
-  .save-btn {
-    margin: 2rem;
-  }
+  flex-direction: column;
+  gap: 14px;
+  min-height: 200px;
 }
 
-.manage-tags {
-  margin-top: 2rem;
-}
-.submit-btn {
-  width: 100%;
-}
+.perk-item-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 
-@media only screen and (max-width: 768px) {
-  .main-container {
-    width: 92%;
+  .perk-item-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .account-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #9fa8da;
+      }
+
+      code {
+        font-size: 0.82rem;
+        color: #ffffff;
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    }
+
+    .btn-delete-perk {
+      background: transparent;
+      border: none;
+      color: #78909c;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      transition: color 0.15s ease;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        color: #ef5350;
+      }
+    }
   }
-  .manage-perks {
+
+  .chip-form {
+    mat-form-field {
+      width: 100%;
+    }
+
+    .effect-active-chip {
+      background: rgba(156, 39, 176, 0.25) !important;
+      border: 1px solid rgba(156, 39, 176, 0.5) !important;
+      color: #e1bee7 !important;
+    }
+  }
+
+  .tag-input-field {
     width: 100%;
-    padding: 1rem 10px;
+
+    .field-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #78909c;
+      margin-right: 6px;
+    }
+  }
+}
+
+.empty-perks {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-muted);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #607d8b;
+    margin-bottom: 6px;
+  }
+
+  p {
+    font-size: 0.84rem;
+    margin: 0;
   }
 }

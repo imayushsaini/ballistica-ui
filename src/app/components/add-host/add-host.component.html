@@ -1,43 +1,101 @@
-<h2 mat-dialog-title>Add Server</h2>
-<mat-dialog-content *ngIf="mode === 'host'" [formGroup]="addHostForm">
-  <mat-form-field>
-    <mat-label>IP</mat-label>
-    <input matInput formControlName="ip" />
-    <mat-error *ngIf="addHostForm.get('ip')?.hasError('required')">
-      IP is required
-    </mat-error>
-    <mat-error *ngIf="addHostForm.get('ip')?.hasError('pattern')">
-      Invalid IP format
-    </mat-error>
-  </mat-form-field> <br>
-  <mat-form-field>
-    <mat-label>PORT</mat-label>
-    <input matInput formControlName="port" />
-    <mat-error *ngIf="addHostForm.get('port')?.hasError('required')">
-      Port is required
-    </mat-error>
-    <mat-error *ngIf="addHostForm.get('port')?.hasError('pattern')">
-      Invalid port format
-    </mat-error>
-  </mat-form-field>
-</mat-dialog-content>
-<mat-dialog-content *ngIf="mode === 'proxy'" [formGroup]="addProxyForm">
-  <mat-form-field>
-    <mat-label>Proxy</mat-label>
-    <input matInput formControlName="proxy" />
-    <mat-error *ngIf="addProxyForm.get('proxy')?.hasError('required')">
-      Proxy is required
-    </mat-error>
-    <mat-error *ngIf="addProxyForm.get('proxy')?.hasError('pattern')">
-      Invalid proxy url, put valid https link
-    </mat-error>
-  </mat-form-field>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onNoClick()">cancel</button>
-  <button mat-button *ngIf="mode === 'host'" (click)="onSubmit()" [disabled]="addHostForm.invalid"
-    cdkFocusInitial>Ok</button>
-  <button mat-button *ngIf="mode === 'proxy'" (click)="onSubmit()" [disabled]="addProxyForm.invalid"
-    cdkFocusInitial>Ok</button>
+<div class="add-host-dialog">
+  <div class="dialog-header">
+    <div class="dialog-title-wrap">
+      <mat-icon class="dialog-icon">{{ mode === 'host' ? 'add_to_queue' : 'vpn_lock' }}</mat-icon>
+      <h2>{{ mode === 'host' ? 'Add New Game Server' : 'Configure Proxy Gateway' }}</h2>
+    </div>
+    <button mat-icon-button (click)="onNoClick()" class="btn-close-dialog" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-</mat-dialog-actions>
+  <!-- Add Host Mode -->
+  <mat-dialog-content *ngIf="mode === 'host'" [formGroup]="addHostForm" class="dialog-body">
+    <p class="dialog-desc">
+      Enter the IP address (or hostname) and port of your running BallisticaKit server instance.
+    </p>
+
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Host IP / Domain</mat-label>
+        <input matInput formControlName="ip" placeholder="e.g. 192.168.1.100 or localhost" />
+        <mat-icon matPrefix class="field-icon">dns</mat-icon>
+        <mat-error *ngIf="addHostForm.get('ip')?.hasError('required')">
+          Host IP or address is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Port</mat-label>
+        <input matInput formControlName="port" placeholder="e.g. 43210" />
+        <mat-icon matPrefix class="field-icon">tag</mat-icon>
+        <mat-error *ngIf="addHostForm.get('port')?.hasError('required')">
+          Port number is required
+        </mat-error>
+        <mat-error *ngIf="addHostForm.get('port')?.hasError('pattern')">
+          Port must be a valid number (e.g. 43210)
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Quick Presets -->
+    <div class="presets-wrap">
+      <span class="presets-label">Quick Presets:</span>
+      <div class="preset-chips">
+        <button type="button" class="preset-btn" (click)="setPreset('127.0.0.1', '43210')">
+          Localhost (127.0.0.1:43210)
+        </button>
+        <button type="button" class="preset-btn" (click)="setPreset('172.30.209.34', '43210')">
+          WSL / LAN (172.30.209.34:43210)
+        </button>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Configure Proxy Mode -->
+  <mat-dialog-content *ngIf="mode === 'proxy'" [formGroup]="addProxyForm" class="dialog-body">
+    <p class="dialog-desc">
+      Configure the HTTPS proxy URL used for relaying requests to remote or non-local server endpoints.
+    </p>
+
+    <div class="form-row">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>HTTPS Proxy Gateway URL</mat-label>
+        <input matInput formControlName="proxy" placeholder="https://your-proxy-endpoint.com" />
+        <mat-icon matPrefix class="field-icon">link</mat-icon>
+        <mat-error *ngIf="addProxyForm.get('proxy')?.hasError('required')">
+          Proxy URL is required
+        </mat-error>
+        <mat-error *ngIf="addProxyForm.get('proxy')?.hasError('pattern')">
+          Please enter a valid HTTP/HTTPS URL
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <button type="button" class="btn-dialog-secondary" (click)="onNoClick()">Cancel</button>
+    <button
+      type="button"
+      *ngIf="mode === 'host'"
+      class="btn-primary-glow"
+      (click)="onSubmit()"
+      [disabled]="addHostForm.invalid"
+    >
+      <mat-icon>add</mat-icon>
+      <span>Connect Server</span>
+    </button>
+    <button
+      type="button"
+      *ngIf="mode === 'proxy'"
+      class="btn-primary-glow"
+      (click)="onSubmit()"
+      [disabled]="addProxyForm.invalid"
+    >
+      <mat-icon>save</mat-icon>
+      <span>Save Proxy</span>
+    </button>
+  </mat-dialog-actions>
+</div>

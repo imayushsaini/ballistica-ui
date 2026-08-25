@@ -9,12 +9,15 @@ import { MainService } from 'src/app/services/main.service';
   selector: 'app-nav-bar',
   templateUrl: './nav-bar.component.html',
   styleUrls: ['./nav-bar.component.scss'],
+  standalone: false,
 })
 export class NavBarComponent implements OnInit {
   active = false;
   undercommunityDomain = false;
   activeHost = '';
   serverName = '';
+  isLoggedIn = false;
+
   constructor(
     private mainservice: MainService,
     private elementRef: ElementRef,
@@ -25,19 +28,32 @@ export class NavBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.active = false;
-    console.log(this.document.location.hostname);
-    if (this.document.location.hostname.includes('local') || 
-    this.document.location.hostname.includes('community')) {
+    if (
+      this.document.location.hostname.includes('local') ||
+      this.document.location.hostname.includes('community')
+    ) {
       this.undercommunityDomain = true;
     }
-    this.activeHost = this.hostManager.getSelectedHost();
-    this.serverName = this.hostManager.getHostDB()[this.activeHost]?.name;
-    this.hostManager.onServerChange.subscribe(() => {
-      this.activeHost = this.hostManager.getSelectedHost();
+    this.updateState();
 
-      this.serverName = this.hostManager.getHostDB()[this.activeHost].name;
+    this.hostManager.onServerChange.subscribe(() => {
+      this.updateState();
     });
-    
+
+    this.hostManager.onAuthChange.subscribe((auth) => {
+      this.isLoggedIn = auth;
+    });
+
+    this.mainservice.gotServerInfo.subscribe(() => {
+      this.serverName = this.mainservice.getServerName();
+    });
+  }
+
+  updateState() {
+    this.activeHost = this.hostManager.getSelectedHost();
+    this.isLoggedIn = this.hostManager.isAuthenticated(this.activeHost);
+    const hostInfo = this.hostManager.getHostDB()[this.activeHost];
+    this.serverName = hostInfo?.name || this.mainservice.getServerName() || '';
   }
 
   openDiscord() {
@@ -47,9 +63,14 @@ export class NavBarComponent implements OnInit {
   onBurgerClicked() {
     this.active = !this.active;
   }
+
+  closeMenu() {
+    this.active = false;
+  }
+
   onBackClick() {
     this.active = !this.active;
-    this.router.navigateByUrl("https://bombsquad-community.web.app");
+    this.router.navigateByUrl('https://bombsquad-community.web.app');
   }
 
   @HostListener('document:click', ['$event', '$event.target'])

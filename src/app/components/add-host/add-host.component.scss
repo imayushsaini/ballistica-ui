@@ -1,0 +1,125 @@
+.add-host-dialog {
+  min-width: 320px;
+  max-width: 460px;
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+
+  .dialog-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .dialog-icon {
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
+      color: var(--primary-accent);
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+
+  .btn-close-dialog {
+    color: var(--text-muted);
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: #ffffff;
+    }
+  }
+}
+
+.dialog-body {
+  padding: 20px !important;
+
+  .dialog-desc {
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.45;
+  }
+
+  .form-row {
+    margin-bottom: 12px;
+  }
+
+  .field-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #607d8b;
+    margin-right: 8px;
+  }
+}
+
+.presets-wrap {
+  margin-top: 8px;
+
+  .presets-label {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .preset-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .preset-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cfd8dc;
+    font-size: 0.78rem;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba(63, 81, 181, 0.2);
+      border-color: rgba(63, 81, 181, 0.4);
+      color: #ffffff;
+    }
+  }
+}
+
+.dialog-actions {
+  padding: 12px 20px !important;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 10px;
+
+  .btn-dialog-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #b0bec5;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+  }
+}

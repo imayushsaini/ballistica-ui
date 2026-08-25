@@ -1,11 +1,59 @@
-<h2 mat-dialog-title>{{data.name}}</h2>
-<mat-dialog-content class="mat-typography">
-  <h3>Device_Id: {{data.device_id}}</h3>
-  Character: {{data.character}}<br>
-  In Game:{{data.inGame}}<br>
-  id: {{data.account_id}}
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <!-- <button mat-button mat-dialog-close>Cancel</button> -->
-  <button class="btn btn-primary btn-block" [mat-dialog-close]=data >Subscribe</button>
-</mat-dialog-actions>
+<div class="player-dialog-container">
+  <div class="dialog-header">
+    <div class="dialog-title-wrap">
+      <div class="player-icon-badge">
+        <mat-icon>account_circle</mat-icon>
+      </div>
+      <div>
+        <h2 class="dialog-player-name">{{ data.name || 'Player Profile' }}</h2>
+        <span class="dialog-player-id">{{ data.account_id || 'ID: Unknown' }}</span>
+      </div>
+    </div>
+    <button mat-icon-button mat-dialog-close class="btn-close-dialog" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <div class="profile-details-grid">
+      <div class="profile-detail-card">
+        <span class="detail-label">Display / Device ID</span>
+        <span class="detail-value">{{ data.device_id || 'N/A' }}</span>
+      </div>
+
+      <div class="profile-detail-card" *ngIf="data.character">
+        <span class="detail-label">Character</span>
+        <span class="detail-value">{{ data.character }}</span>
+      </div>
+
+      <div class="profile-detail-card">
+        <span class="detail-label">Current Status</span>
+        <span class="detail-value status-online">
+          <span class="status-dot"></span>
+          <span>{{ data.inGame ? 'In Match' : 'In Lobby' }}</span>
+        </span>
+      </div>
+
+      <div class="profile-detail-card" *ngIf="data.client_id !== undefined">
+        <span class="detail-label">Client ID</span>
+        <span class="detail-value">#{{ data.client_id }}</span>
+      </div>
+    </div>
+
+    <div class="subscribe-notice-box">
+      <mat-icon class="notice-icon">notifications_active</mat-icon>
+      <div class="notice-text">
+        <strong>Push Notifications</strong>
+        <p>Subscribe to receive real-time push alerts whenever this player joins the server.</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <button type="button" class="btn-dialog-secondary" mat-dialog-close>Close</button>
+    <button type="button" class="btn-primary-glow btn-dialog-primary" [mat-dialog-close]="data">
+      <mat-icon>notifications</mat-icon>
+      <span>Subscribe to Alerts</span>
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,8 +1,141 @@
-.headline {
-  text-align: center;
-  .server-name {
-    font-size: 2rem;
-    padding: 0 2rem 2rem;
-    line-height: normal;
+.admin-shell {
+  min-height: 88vh;
+  background-color: var(--bg-primary);
+}
+
+.admin-subnav-bar {
+  background: #12141a;
+  border-bottom: 1px solid var(--border-subtle);
+  position: sticky;
+  top: 60px;
+  z-index: 900;
+  backdrop-filter: blur(10px);
+}
+
+.admin-subnav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.admin-server-meta {
+  .server-badge-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 4px 12px;
+    border-radius: 20px;
+
+    .server-name-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .server-host-label {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      font-family: monospace;
+    }
   }
+}
+
+.admin-top-actions {
+  .btn-admin-signout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(244, 67, 54, 0.12);
+    border: 1px solid rgba(244, 67, 54, 0.3);
+    color: #ff8a80;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background: rgba(244, 67, 54, 0.25);
+      color: #ffffff;
+      border-color: rgba(244, 67, 54, 0.5);
+    }
+  }
+}
+
+.admin-tabs-scroll {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.admin-tabs-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+
+  .admin-tab-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #8c9ba5;
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #607d8b;
+      transition: color 0.15s ease;
+    }
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.03);
+
+      mat-icon {
+        color: #9fa8da;
+      }
+    }
+
+    &.active {
+      color: #ffffff;
+      border-bottom-color: var(--primary-accent);
+      background: rgba(63, 81, 181, 0.12);
+
+      mat-icon {
+        color: var(--primary-accent);
+      }
+    }
+  }
+}
+
+.admin-main-viewport {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
 }

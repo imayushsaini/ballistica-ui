@@ -8,19 +8,19 @@ import { HostManagerService } from './host-manager.service';
 })
 export class LeaderboardService {
   leaderboard: any[] = [];
-  leaderboardUpdateEvent = new Subject();
+  leaderboardUpdateEvent = new Subject<void>();
   constructor(
     private http: HttpClient,
     private hostManager: HostManagerService
   ) {}
 
   getTop200(): Observable<any> {
-    return this.http.get(`${this.hostManager.getProxyUrl()}/api/top-200`);
+    return this.http.get(`${this.hostManager.getHostUrl()}/api/top-200`);
   }
 
   getCompleteLeaderboard(): Observable<any> {
     return this.http.get(
-      `${this.hostManager.getProxyUrl()}/api/current-leaderboard`
+      `${this.hostManager.getHostUrl()}/api/current-leaderboard`
     );
   }
 

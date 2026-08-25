@@ -9,6 +9,7 @@ import {
 } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { MatIconModule } from "@angular/material/icon";
 
 @Component({
   selector: "app-custom-dialog",
@@ -21,10 +22,11 @@ import { MatInputModule } from "@angular/material/input";
     FormsModule,
     CommonModule,
     MatButtonModule,
+    MatIconModule,
   ],
 })
 export class CustomDialogComponent {
-  duration = 1;
+  duration = 7;
 
   constructor(
     public dialogRef: MatDialogRef<CustomDialogComponent>,

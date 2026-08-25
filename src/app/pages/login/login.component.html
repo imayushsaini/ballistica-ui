@@ -1,11 +1,78 @@
-<div class="main-container">
-  <div class="login-section">
-    <h2>LOGIN</h2><br>
-    <mat-form-field>
-      <mat-label>Pass Key</mat-label>
-      <input matInput placeholder="Ex. mySuperSecretPAssKeyHere" [formControl]="passkeyControl">
-    </mat-form-field> <br>
-    <button mat-raised-button (click)="onLogin()">Login</button>
-    <div class="error">{{this.errorMessage}}</div>
+<div class="page-wrapper login-page-wrapper">
+  <div class="login-container">
+    <div class="glass-card login-card">
+      <!-- Card Header -->
+      <div class="login-header">
+        <div class="auth-icon-wrap">
+          <mat-icon>lock</mat-icon>
+        </div>
+        <h1 class="login-title">Admin Authentication</h1>
+        <p class="login-sub">Enter the Secret-Key for your Ballistica server instance to access administrative tools.</p>
+      </div>
+
+      <!-- Auth Required Notice (if redirected from /admin) -->
+      <div class="login-notice-alert" *ngIf="authRequiredNotice">
+        <mat-icon>shield</mat-icon>
+        <span>Authentication required to access administrative controls for this server instance.</span>
+      </div>
+
+      <!-- Target Server Target Banner -->
+      <div class="target-server-badge">
+        <span class="status-dot"></span>
+        <div class="target-info">
+          <span class="target-label">Target Server Instance</span>
+          <span class="target-host">{{ activeHost }}</span>
+        </div>
+        <a routerLink="/switch-server" class="target-change-btn" title="Switch server">Switch</a>
+      </div>
+
+      <!-- Login Form -->
+      <form class="login-form" (ngSubmit)="onLogin()">
+        <mat-form-field appearance="fill" class="full-width-field">
+          <mat-label>Server Secret-Key</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            [formControl]="passkeyControl"
+            placeholder="e.g. my_secerT_password_very_hard"
+            autocomplete="current-password"
+            required
+          />
+          <mat-icon matPrefix class="field-icon">key</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+            class="btn-toggle-eye"
+          >
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Error Message Alert -->
+        <div class="login-error-alert" *ngIf="errorMessage">
+          <mat-icon>error_outline</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button
+          type="submit"
+          class="btn-primary-glow btn-login-submit"
+          [disabled]="isLoading || !passkeyControl.value"
+        >
+          <mat-icon [class.spinning]="isLoading">{{ isLoading ? 'sync' : 'lock_open' }}</mat-icon>
+          <span>{{ isLoading ? 'Authenticating...' : 'Unlock Admin Panel' }}</span>
+        </button>
+      </form>
+
+      <!-- Footer Info -->
+      <div class="login-footer">
+        <mat-icon>info_outline</mat-icon>
+        <span>Password is defined in your server's <code>ballistica_web.server_password</code> config.</span>
+      </div>
+    </div>
   </div>
 </div>

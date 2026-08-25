@@ -22,17 +22,28 @@ import { LogsViewerComponent } from "./pages/logs-viewer/logs-viewer.component";
 import { MatDialogModule } from "@angular/material/dialog";
 import { ManagePerksComponent } from "./pages/manage-perks/manage-perks.component";
 import { ServerConfigComponent } from "./pages/server-config/server-config.component";
+import { EconomyManagementComponent } from "./pages/economy-management/economy-management.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatTabsModule } from "@angular/material/tabs";
+import { MatTableModule } from "@angular/material/table";
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatSortModule } from "@angular/material/sort";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { AdminGuard } from "./guards/admin.guard";
 
 const routes: Routes = [
   {
     path: "",
     component: AdminDashboardComponent,
+    canActivate: [AdminGuard],
+    canActivateChild: [AdminGuard],
     children: [
       { path: "", redirectTo: "dashboard", pathMatch: "full" },
       { path: "dashboard", component: AdminOptionsComponent },
+      { path: "economy", component: EconomyManagementComponent },
       { path: "settings", component: ServerSettingsComponent },
       { path: "quick", component: QuickToolsComponent },
       { path: "roles", component: RoleManagementComponent },
@@ -48,6 +59,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AdminOptionsComponent,
+    EconomyManagementComponent,
     ServerSettingsComponent,
     PlayersProfileComponent,
     ReactiveFormComponent,
@@ -73,6 +85,12 @@ const routes: Routes = [
     MatExpansionModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatTabsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatSlideToggleModule,
+    MatTooltipModule,
     FormsModule,
     RouterModule.forChild(routes),
   ],

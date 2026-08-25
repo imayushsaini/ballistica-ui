@@ -1,12 +1,38 @@
-<h1 mat-dialog-title> </h1>
-<div mat-dialog-content>
-  <p>Really want to {{data.type}} ?</p>
-  <mat-form-field *ngIf="data.requriedDuration">
-    <mat-label>Number of days</mat-label>
-    <input matInput [(ngModel)]="duration" type="number">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="{duration:duration, account: data.account}" cdkFocusInitial>Ok</button>
+<div class="custom-action-dialog">
+  <div class="dialog-header">
+    <div class="header-icon-wrap" [class.danger-icon]="data.type === 'ban' || data.type === 'mute' || data.type === 'disable-kick-vote'">
+      <mat-icon>{{ data.type === 'ban' ? 'block' : data.type === 'mute' ? 'volume_off' : data.type.includes('un') || data.type.includes('enable') ? 'check_circle' : 'gavel' }}</mat-icon>
+    </div>
+    <div>
+      <h2 class="dialog-title">Confirm {{ data.type | titlecase }}</h2>
+      <span class="dialog-sub">Account: {{ data.account }}</span>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-body">
+    <p class="confirm-p">Are you sure you want to execute action <strong>"{{ data.type }}"</strong> on this player?</p>
+
+    <div *ngIf="data.requriedDuration" class="duration-input-wrap">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Restriction Duration (in Days)</mat-label>
+        <input matInput [(ngModel)]="duration" type="number" min="1" max="365" placeholder="e.g. 7" />
+        <mat-icon matPrefix class="field-icon">calendar_month</mat-icon>
+        <mat-hint>Enter number of days this restriction should remain active</mat-hint>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <button type="button" class="btn-dialog-secondary" (click)="onNoClick()">Cancel</button>
+    <button
+      type="button"
+      class="btn-primary-glow"
+      [class.btn-danger-glow]="data.type === 'ban' || data.type === 'mute'"
+      [mat-dialog-close]="{ duration: duration, account: data.account }"
+      cdkFocusInitial
+    >
+      <mat-icon>check</mat-icon>
+      <span>Confirm {{ data.type | titlecase }}</span>
+    </button>
+  </mat-dialog-actions>
 </div>

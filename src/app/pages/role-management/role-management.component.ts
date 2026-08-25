@@ -1,40 +1,58 @@
 /* eslint-disable no-prototype-builtins */
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { AdminService } from "src/app/services/admin.service";
+
 interface Role {
   commands: string[];
   ids: string[];
   tag: string;
-  tagcolor: string;
+  tagcolor: number[];
 }
+
 interface Roles {
   [key: string]: Role;
 }
+
 @Component({
   selector: "app-role-management",
   templateUrl: "./role-management.component.html",
   styleUrls: ["./role-management.component.scss"],
+  standalone: false,
 })
 export class RoleManagementComponent implements OnInit {
   ROLES: Roles = {};
-  constructor(
-    private formBuilder: FormBuilder,
-    private adminService: AdminService
-  ) {}
-
   formGroup: FormGroup = this.formBuilder.group({});
   showCreateNewRoleComponent = false;
-  newRoleName!: string;
-  invalidNewRoleName = false;
+  newRoleName = "";
   modified = false;
   isLoading = true;
+  isSaving = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminService: AdminService,
+    private snackBar: MatSnackBar
+  ) {}
+
   ngOnInit() {
-    this.adminService.getRoles().subscribe((data) => {
-      this.ROLES = data as Roles;
-      this.isLoading = false;
-      this.formGroup = this.generateFormStructure(this.ROLES);
-      this.detectChanges();
+    this.loadRoles();
+  }
+
+  loadRoles() {
+    this.isLoading = true;
+    this.adminService.getRoles().subscribe({
+      next: (data) => {
+        this.ROLES = (data as Roles) || {};
+        this.isLoading = false;
+        this.formGroup = this.generateFormStructure(this.ROLES);
+        this.detectChanges();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error("Roles fetch error:", err);
+      },
     });
   }
 
@@ -64,28 +82,35 @@ export class RoleManagementComponent implements OnInit {
   }
 
   getFormControls(formGroup: FormGroup | any): string[] {
-    return Object.keys(formGroup.controls);
+    return formGroup && formGroup.controls ? Object.keys(formGroup.controls) : [];
   }
 
-  formArrayToCommaSeparatedString(name: string, controlName: string) {
-    const values = (this.formGroup.get(controlName) as FormGroup).value[name];
-    return values.join(",");
+  formArrayToCommaSeparatedString(name: string, controlName: string): string {
+    const group = this.formGroup.get(controlName) as FormGroup;
+    if (!group || !group.value) return "";
+    const values = group.value[name];
+    return Array.isArray(values) ? values.join(", ") : "";
   }
+
   commaSeparatedStringToFormArray(
     event: any,
     controlName: string,
     name: string
   ) {
     const value = event.target.value;
-    const newValues = value.split(",").map((item: string) => item.trim());
-    (this.formGroup.get(controlName) as FormGroup).setControl(
-      name,
-      this.formBuilder.array(newValues)
-    );
+    const newValues = value
+      .split(",")
+      .map((item: string) => item.trim())
+      .filter((item: string) => item.length > 0);
+
+    const group = this.formGroup.get(controlName) as FormGroup;
+    if (group) {
+      group.setControl(name, this.formBuilder.array(newValues));
+      this.modified = true;
+    }
   }
 
   detectChanges() {
-    // Fires on each form control value change
     this.formGroup.valueChanges.subscribe(() => {
       this.modified = true;
     });
@@ -105,26 +130,61 @@ export class RoleManagementComponent implements OnInit {
 
   onAddRole() {
     this.showCreateNewRoleComponent = true;
+    this.newRoleName = "";
   }
 
   onCreateRole() {
-    if (Object.keys(this.formGroup.controls).includes(this.newRoleName)) {
-      this.invalidNewRoleName = true;
-      alert(`role "${this.newRoleName}" already exists`);
+    if (!this.newRoleName || !this.newRoleName.trim()) return;
+    const roleKey = this.newRoleName.trim().toLowerCase();
+
+    if (Object.keys(this.formGroup.controls).includes(roleKey)) {
+      this.snackBar.open(`Role "${roleKey}" already exists`, "OK", {
+        duration: 3000,
+      });
     } else {
       this.showCreateNewRoleComponent = false;
-      const formGroup = this.generateFormStructure({
-        tag: this.newRoleName,
+      const newRoleGroup = this.generateFormStructure({
+        tag: this.newRoleName.trim(),
         commands: [],
         ids: [],
         tagcolor: [1, 1, 1],
       });
-      this.formGroup.addControl(this.newRoleName, formGroup);
+      this.formGroup.addControl(roleKey, newRoleGroup);
+      this.modified = true;
+      this.snackBar.open(`Created role "${roleKey}". Don't forget to save changes!`, "OK", {
+        duration: 3500,
+      });
     }
   }
+
+  onDeleteRole(controlName: string) {
+    if (confirm(`Are you sure you want to delete role "${controlName}"?`)) {
+      this.formGroup.removeControl(controlName);
+      this.modified = true;
+      this.snackBar.open(`Role "${controlName}" removed. Click Save to apply.`, "OK", {
+        duration: 3500,
+      });
+    }
+  }
+
   onSave() {
-    this.adminService.saveRoles(this.formGroup.value).subscribe(() => {
-      this.modified = false;
+    this.isSaving = true;
+    this.adminService.saveRoles(this.formGroup.value).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.modified = false;
+        this.snackBar.open("Roles and permissions saved successfully", "OK", {
+          duration: 3000,
+        });
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.snackBar.open(
+          "Failed to save roles: " + (err?.error?.message || err?.message),
+          "OK",
+          { duration: 4000 }
+        );
+      },
     });
   }
 }

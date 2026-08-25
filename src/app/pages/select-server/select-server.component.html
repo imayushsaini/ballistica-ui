@@ -1,24 +1,101 @@
-<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
-<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
-<!-- eslint-disable @angular-eslint/template/eqeqeq -->
-<div class="main-container">
-  <div class="server-list">
-    <h1>Switch Server</h1>
-    <h3>current proxy = {{currentProxy}}</h3>
-    <div class="error" *ngIf="showProxyError">Either the proxy is dead, or you are offline.<br>
-      Please check your internet connection and proxy URL. <br>
-    </div>
-    <br>
-    <div class="new">
-      <button mat-raised-button color="primary" (click)="onChangeProxy()">Change Proxy</button>
-      <button mat-raised-button color="primary" (click)="onAddNew()">+ Add New</button>
-    </div>
-    <div class="list" *ngIf="serverList!=={}">
-      <div class="server" [ngClass]="{'selected': server.key == currentHost}"
-        *ngFor="let server of serverList | keyvalue" (click)="setServer(server.key)">
-        {{server.value.name}} <br> {{server.key}}
+<div class="page-wrapper select-server-page">
+  <div class="content-container">
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <div class="hero-pill">
+        <mat-icon>dns</mat-icon>
+        <span>Server Management</span>
+      </div>
+      <h1 class="hero-main-title">Switch &amp; Manage Servers</h1>
+      <p class="hero-description">
+        Connect to local LAN or remote BallisticaKit instances. Local addresses connect directly.
+      </p>
+
+      <!-- Action Toolbar -->
+      <div class="server-actions-toolbar">
+        <button type="button" class="btn-primary-glow btn-add-server" (click)="onAddNew()">
+          <mat-icon>add_circle</mat-icon>
+          <span>Add New Server</span>
+        </button>
+
+        <button type="button" class="btn-toolbar-secondary" (click)="onOpenProxyManager()" title="Manage or test API forwarding proxy gateways">
+          <mat-icon>vpn_lock</mat-icon>
+          <span>Manage Proxies</span>
+        </button>
       </div>
     </div>
 
+    <!-- Saved Servers Grid -->
+    <div class="servers-section">
+      <div class="section-title-row">
+        <h2>Saved Server Instances</h2>
+        <span class="count-badge">{{ (serverList | keyvalue)?.length || 0 }} Servers</span>
+      </div>
+
+      <div class="servers-cards-grid" *ngIf="serverList && (serverList | keyvalue).length > 0">
+        <div
+          *ngFor="let server of serverList | keyvalue"
+          class="glass-card server-card"
+          [class.selected-server]="server.key === currentHost"
+          (click)="setServer(server.key)"
+        >
+          <!-- Active Status Top Badge -->
+          <div class="server-card-top">
+            <div class="server-status-wrap">
+              <span class="status-dot" [class.offline]="server.key !== currentHost"></span>
+              <span class="status-text">{{ server.key === currentHost ? 'Active & Connected' : 'Saved Instance' }}</span>
+            </div>
+
+            <span class="connection-type-badge" [class.local-badge]="isLocalIp(server.key)">
+              <mat-icon>{{ isLocalIp(server.key) ? 'lan' : 'public' }}</mat-icon>
+              <span>{{ isLocalIp(server.key) ? 'Direct LAN/Local' : 'Remote Proxy' }}</span>
+            </span>
+          </div>
+
+          <!-- Server Identity -->
+          <div class="server-card-body">
+            <div class="server-avatar">
+              <mat-icon>sports_esports</mat-icon>
+            </div>
+            <div class="server-identity">
+              <h3 class="server-title">{{ server.value.name || 'Ballistica Server' }}</h3>
+              <span class="server-endpoint">{{ server.key }}</span>
+            </div>
+          </div>
+
+          <!-- Card Footer Actions -->
+          <div class="server-card-footer">
+            <button
+              type="button"
+              class="btn-card-action btn-connect"
+              [class.btn-current]="server.key === currentHost"
+            >
+              <mat-icon>{{ server.key === currentHost ? 'check_circle' : 'login' }}</mat-icon>
+              <span>{{ server.key === currentHost ? 'Current Server' : 'Switch Here' }}</span>
+            </button>
+
+            <button
+              type="button"
+              class="btn-card-action btn-delete"
+              (click)="onDeleteServer(server.key, $event)"
+              title="Remove from saved servers"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Empty Servers State -->
+      <div class="empty-servers-state glass-card" *ngIf="!serverList || (serverList | keyvalue).length === 0">
+        <mat-icon class="empty-icon">dns</mat-icon>
+        <h3>No Servers Saved Yet</h3>
+        <p>Click "Add New Server" above to connect your first Ballistica game host.</p>
+        <button type="button" class="btn-primary-glow" (click)="onAddNew()">
+          <mat-icon>add</mat-icon>
+          <span>Add Server Instance</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,24 +1,143 @@
-.main-container {
-  width: 80%;
-  margin: auto;
-  padding-top: 3rem;
-  display: flex;
-  justify-content: center;
+.admin-overview-container {
+  padding: 16px 0 40px;
 }
 
-.option {
-  padding: 2rem;
-  width: 100%;
-  margin-bottom: 30px;
-  margin: 1rem;
-  text-align: center;
-  background-color: #6c6c6d;
+.admin-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 18px;
+}
 
-  cursor: pointer;
+.tool-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-card);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
   &:hover {
-    background-color: #454545;
+    border-color: rgba(92, 107, 192, 0.45);
+    background: var(--bg-card-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+    .tool-card-arrow {
+      color: var(--primary-accent);
+      transform: translateX(4px);
+    }
   }
-  &:active {
-    background-color: #252525;
+
+  .tool-icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
+
+    &.icon-quick {
+      background: rgba(255, 152, 0, 0.15);
+      color: #ffb74d;
+    }
+    &.icon-players {
+      background: rgba(0, 188, 212, 0.15);
+      color: #4dd0e1;
+    }
+    &.icon-economy {
+      background: rgba(255, 215, 0, 0.15);
+      color: #ffd700;
+    }
+    &.icon-roles {
+      background: rgba(76, 175, 80, 0.15);
+      color: #81c784;
+    }
+    &.icon-perks {
+      background: rgba(156, 39, 176, 0.15);
+      color: #ba68c8;
+    }
+    &.icon-settings {
+      background: rgba(63, 81, 181, 0.18);
+      color: #9fa8da;
+    }
+    &.icon-config {
+      background: rgba(33, 150, 243, 0.15);
+      color: #64b5f6;
+    }
+    &.icon-logs {
+      background: rgba(244, 67, 54, 0.15);
+      color: #ff8a80;
+    }
+  }
+
+  .tool-card-content {
+    flex: 1;
+
+    .tool-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+
+      h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0;
+      }
+
+      .tool-tag {
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #b0bec5;
+
+        &.tag-live {
+          background: rgba(0, 230, 118, 0.15);
+          color: #00e676;
+          border: 1px solid rgba(0, 230, 118, 0.3);
+        }
+
+        &.tag-v2 {
+          background: linear-gradient(135deg, rgba(0, 188, 212, 0.25), rgba(63, 81, 181, 0.25));
+          color: #4dd0e1;
+          border: 1px solid rgba(0, 188, 212, 0.4);
+        }
+      }
+    }
+
+    p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+  }
+
+  .tool-card-arrow {
+    align-self: center;
+    color: #607d8b;
+    transition: all 0.2s ease;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
   }
 }

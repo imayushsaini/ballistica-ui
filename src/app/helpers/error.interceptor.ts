@@ -9,16 +9,13 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { MatDialog } from '@angular/material/dialog';
-import { NetworkErrorDialogComponent } from '../components/network-error-dialog/network-error-dialog.component';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   private _snackBar = inject(MatSnackBar);
 
-  private snackBarRef: MatSnackBarRef<any> | null = null;
-  constructor(private dialog: MatDialog) {}
+  constructor() {}
 
   intercept(
     request: HttpRequest<any>,
@@ -26,21 +23,17 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status >= 500 && error.status < 600) {
-          // this.dialog.open(NetworkErrorDialogComponent, {});
-          if (!this.snackBarRef) {
-            this.snackBarRef = this._snackBar.open(
-              'Network Error! something is wrong',
-              'know more',
-              {
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-              }
+        // Skip popup for background ping / live-stats (handled cleanly on page)
+        if (
+          !request.url.includes('/api/live-stats') &&
+          !request.url.includes('/proxy-ping')
+        ) {
+          if (error.status >= 500 && error.status < 600) {
+            this._snackBar.open(
+              'Server Error (HTTP ' + error.status + '). Please verify connection.',
+              'OK',
+              { duration: 4000 }
             );
-            this.snackBarRef.afterDismissed().subscribe(() => {
-              this.snackBarRef = null;
-              this.dialog.open(NetworkErrorDialogComponent, {});
-            });
           }
         }
         return throwError(error);
@@ -48,6 +41,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     );
   }
 }
+
 export const errorInterceptorProvider = [
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 ];

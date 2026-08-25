@@ -1,56 +1,166 @@
-<div class="main-container">
-    <div class="row justify-content-between">
-        <div class="left-container hide col" [ngClass]="{'display-mob-prof':showPlayerProfile}">
-            <!-- <app-liveplayers></app-liveplayers> -->
-            <app-playerprofile (closeBtnEvent)="onClose()" [player]=selectedPlayer></app-playerprofile>
-        </div>
-
-        <div class="leaderboard" [ngClass]="{'hide':showPlayerProfile}">
-            <mat-form-field>
-                <mat-label>Filter</mat-label>
-                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. smoothy" #input>
-              </mat-form-field>
-
-              <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>
-
-                  <!-- Rank Column -->
-                  <ng-container matColumnDef="rank">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Rank </th>
-                    <td mat-cell *matCellDef="let row" (click)="showProfile(row)"> {{row.rank}} </td>
-                  </ng-container>
-
-                  <!-- score Column -->
-                  <ng-container matColumnDef="score">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Score </th>
-                    <td mat-cell *matCellDef="let row" (click)="showProfile(row)"> {{row.scores}} </td>
-                  </ng-container>
-
-                  <!-- Name Column -->
-                  <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                    <td mat-cell *matCellDef="let row" (click)="showProfile(row)"> {{row.name}} </td>
-                  </ng-container>
-
-                  <!-- kills Column -->
-                  <ng-container matColumnDef="kills">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Kills </th>
-                    <td mat-cell *matCellDef="let row" (click)="showProfile(row)"> {{row.kills}} </td>
-                  </ng-container>
-
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                  <!-- Row shown when there is no matching data. -->
-                  <tr class="mat-row" *matNoDataRow>
-                    <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
-                  </tr>
-                </table>
-
-                <mat-paginator [pageSizeOptions]="[9]" aria-label="Select page of users"></mat-paginator>
-              </div>
-
-        </div>
+<div class="page-wrapper leaderboard-page">
+  <div class="content-container">
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <div class="hero-pill">
+        <mat-icon>military_tech</mat-icon>
+        <span>Server Hall of Fame</span>
+      </div>
+      <h1 class="hero-main-title">Player Leaderboard &amp; Rankings</h1>
+      <p class="hero-description">
+        Top ranking players on this server. Track scores, kills, deaths, K/D ratios, and subscribe to push alerts when your favorite player joins.
+      </p>
     </div>
-</div>
 
+    <!-- Top 3 Podium Highlights -->
+    <div class="podium-grid" *ngIf="topPlayers && topPlayers.length >= 3">
+      <!-- 2nd Place (Silver) -->
+      <div class="glass-card podium-card podium-silver" (click)="selectPlayer(topPlayers[1])">
+        <div class="podium-badge silver-badge">
+          <mat-icon>workspace_premium</mat-icon>
+          <span>#2 Rank</span>
+        </div>
+        <div class="podium-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <h3 class="podium-name">{{ topPlayers[1].name }}</h3>
+        <div class="podium-stats">
+          <span class="stat-score">{{ (topPlayers[1].scores || 0) | number }} pts</span>
+          <span class="stat-meta">{{ topPlayers[1].kills || 0 }} kills &bull; {{ getKD(topPlayers[1].kills, topPlayers[1].deaths) }} K/D</span>
+        </div>
+      </div>
+
+      <!-- 1st Place (Gold Champion) -->
+      <div class="glass-card podium-card podium-gold" (click)="selectPlayer(topPlayers[0])">
+        <div class="podium-badge gold-badge">
+          <mat-icon>emoji_events</mat-icon>
+          <span>#1 Champion</span>
+        </div>
+        <div class="podium-avatar champion-avatar">
+          <mat-icon>military_tech</mat-icon>
+        </div>
+        <h3 class="podium-name">{{ topPlayers[0].name }}</h3>
+        <div class="podium-stats">
+          <span class="stat-score gold-text">{{ (topPlayers[0].scores || 0) | number }} pts</span>
+          <span class="stat-meta">{{ topPlayers[0].kills || 0 }} kills &bull; {{ getKD(topPlayers[0].kills, topPlayers[0].deaths) }} K/D</span>
+        </div>
+      </div>
+
+      <!-- 3rd Place (Bronze) -->
+      <div class="glass-card podium-card podium-bronze" (click)="selectPlayer(topPlayers[2])">
+        <div class="podium-badge bronze-badge">
+          <mat-icon>workspace_premium</mat-icon>
+          <span>#3 Rank</span>
+        </div>
+        <div class="podium-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <h3 class="podium-name">{{ topPlayers[2].name }}</h3>
+        <div class="podium-stats">
+          <span class="stat-score">{{ (topPlayers[2].scores || 0) | number }} pts</span>
+          <span class="stat-meta">{{ topPlayers[2].kills || 0 }} kills &bull; {{ getKD(topPlayers[2].kills, topPlayers[2].deaths) }} K/D</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Layout: Leaderboard Table & Player Inspector Side-by-Side -->
+    <div class="leaderboard-layout">
+      <!-- Left: Interactive Player Profile Inspector -->
+      <div class="inspector-column" [class.mobile-open]="showPlayerProfile">
+        <app-playerprofile
+          (closeBtnEvent)="onClose()"
+          [player]="selectedPlayer"
+        ></app-playerprofile>
+      </div>
+
+      <!-- Right: Main Rankings Table -->
+      <div class="table-column">
+        <div class="glass-card table-card">
+          <!-- Table Toolbar with Search Filter -->
+          <div class="table-toolbar">
+            <div class="toolbar-title-wrap">
+              <mat-icon class="table-icon">format_list_numbered</mat-icon>
+              <h2>All Players Rankings</h2>
+            </div>
+
+            <div class="search-filter-wrap">
+              <mat-form-field appearance="fill" class="search-form-field">
+                <mat-icon matPrefix class="search-icon">search</mat-icon>
+                <mat-label>Search player name...</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="e.g. Smoothy" #input />
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Material Table -->
+          <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+              <!-- Rank Column -->
+              <ng-container matColumnDef="rank">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Rank</th>
+                <td mat-cell *matCellDef="let row" (click)="selectPlayer(row)">
+                  <span class="rank-badge rank-{{ row.rank }}">#{{ row.rank }}</span>
+                </td>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Player Name</th>
+                <td mat-cell *matCellDef="let row" (click)="selectPlayer(row)" class="player-cell">
+                  <div class="player-cell-wrap">
+                    <span class="player-name-text">{{ row.name }}</span>
+                    <span class="player-id-sub" *ngIf="row.id">{{ row.id }}</span>
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Score Column -->
+              <ng-container matColumnDef="score">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Score</th>
+                <td mat-cell *matCellDef="let row" (click)="selectPlayer(row)" class="score-cell text-right">
+                  {{ (row.scores || 0) | number }}
+                </td>
+              </ng-container>
+
+              <!-- Kills Column -->
+              <ng-container matColumnDef="kills">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-right">Kills</th>
+                <td mat-cell *matCellDef="let row" (click)="selectPlayer(row)" class="kills-cell text-right">
+                  {{ (row.kills || 0) | number }}
+                </td>
+              </ng-container>
+
+              <!-- K/D Column -->
+              <ng-container matColumnDef="kd">
+                <th mat-header-cell *matHeaderCellDef class="text-right">K/D</th>
+                <td mat-cell *matCellDef="let row" (click)="selectPlayer(row)" class="kd-cell text-right">
+                  {{ getKD(row.kills, row.deaths) }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *matRowDef="let row; columns: displayedColumns"
+                [class.selected-row]="selectedPlayer?.name === row.name"
+              ></tr>
+
+              <!-- No Matching Data Row -->
+              <tr class="mat-row empty-search-row" *matNoDataRow>
+                <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+                  <div class="empty-search-state">
+                    <mat-icon>person_search</mat-icon>
+                    <p>No players match the search filter "{{ input.value }}"</p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Paginator -->
+          <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" aria-label="Select page of players"></mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

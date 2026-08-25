@@ -11,6 +11,7 @@ import { FormArray, FormControl, FormGroup } from "@angular/forms";
   selector: "app-reactive-form",
   templateUrl: "./reactive-form.component.html",
   styleUrls: ["./reactive-form.component.scss"],
+  standalone: false,
   animations: [
     trigger("slide", [
       state("void", style({ transform: "translateY(-20%)", opacity: 0 })),

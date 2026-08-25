@@ -1,75 +1,191 @@
-<div class="main-container">
-  <div class="manage-perks foreground">
-    <h3>Customize Players Perks</h3>
-    <div class="spinner-block" *ngIf="isLoading">
-      <mat-spinner class="spinner"></mat-spinner>
+<div class="admin-tool-page perks-page">
+  <!-- Top Action Bar -->
+  <div class="tool-top-bar">
+    <div class="tool-title-group">
+      <h2><mat-icon class="title-icon">auto_awesome</mat-icon> Perks &amp; Character Effects</h2>
+      <p>Assign custom in-game title tags and particle visual effects to specific player accounts.</p>
     </div>
-    <div class="manage-effects" *ngIf="!isLoading">
-      Manage Effects
-      <div class="new">
-        <button mat-raised-button color="primary" (click)="onAddNew('effect')">+ Add New</button>
-      </div>
-      <div class="new-effect" *ngIf="showNewEffectDialog">
-        <mat-form-field>
-          <mat-label>Account id</mat-label>
-          <input matInput type="text" #newAccountForEffect [(ngModel)]="newEffectAccountId">
-        </mat-form-field>
-        <button class="save-btn" mat-raised-button color="primary" (click)="onSaveId('effect')">save</button>
-      </div>
-      <div class="player-effect" *ngFor="let account of CUSTOM['customeffects'] | keyvalue">
-        <div class="player">
-          {{account.key}}
+
+    <button
+      type="button"
+      class="btn-primary-glow btn-save-perks"
+      (click)="onSubmit()"
+      [disabled]="isSaving || isLoading"
+    >
+      <mat-icon [class.spinning]="isSaving">save</mat-icon>
+      <span>{{ isSaving ? 'Saving...' : 'Save Perks' }}</span>
+    </button>
+  </div>
+
+  <!-- Available Effects List Overview -->
+  <div class="glass-card available-effects-banner" *ngIf="availableEffects.length > 0">
+    <span class="effects-badge-title"><mat-icon>flare</mat-icon> Available Game Engine Particle Effects:</span>
+    <div class="effects-chips-row">
+      <span *ngFor="let fx of availableEffects" class="effect-pill-preview">{{ fx }}</span>
+    </div>
+  </div>
+
+  <div class="table-loading-state" *ngIf="isLoading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Loading perks and particle effects...</p>
+  </div>
+
+  <!-- Main 2-Column Split: Custom Effects (Left) & Custom Tags (Right) -->
+  <div class="perks-grid" *ngIf="!isLoading">
+    <!-- Left Column: Custom Character Effects -->
+    <div class="glass-card perk-section-card">
+      <div class="card-header-bar">
+        <div class="header-title-wrap">
+          <mat-icon class="header-icon">sparkles</mat-icon>
+          <h3>Player Particle Effects</h3>
         </div>
-        <form>
-          <mat-form-field>
-            <mat-label>Effects</mat-label>
-            <mat-chip-grid #chipGrid aria-label="effect selection">
-              <mat-chip-row *ngFor="let effect of CUSTOM['customeffects'][account.key]"
-                (removed)="remove(effect, account.key)">
-                {{effect}}
-                <button matChipRemove [attr.aria-label]="'remove ' + effect">
-                  <mat-icon>cancel</mat-icon>
-                </button>
-              </mat-chip-row>
-            </mat-chip-grid>
-            <input placeholder="Add new effect" [formControl]="this.accountEffectControlMap[account.key].ctrl"
-              [matChipInputFor]="chipGrid" [matAutocomplete]="auto" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-              (matChipInputTokenEnd)="add($event, account.key)" />
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event, account.key)">
-              <mat-option *ngFor="let effect of this.accountEffectControlMap[account.key].filter | async"
-                [value]="effect">
-                {{effect}}
-              </mat-option>
-            </mat-autocomplete>
+        <button type="button" class="btn-add-perk" (click)="onAddNew('effect')">
+          <mat-icon>add</mat-icon>
+          <span>Add Account</span>
+        </button>
+      </div>
+
+      <!-- Add New Account Form (Effects) -->
+      <div class="inline-add-box" *ngIf="showNewEffectDialog">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Account ID for Effects</mat-label>
+          <input matInput [(ngModel)]="newEffectAccountId" placeholder="e.g. pb-IF4VAk4a" (keyup.enter)="onSaveId('effect')" />
+        </mat-form-field>
+        <div class="inline-add-actions">
+          <button type="button" class="btn-dialog-secondary" (click)="showNewEffectDialog = false">Cancel</button>
+          <button type="button" class="btn-primary-glow" (click)="onSaveId('effect')" [disabled]="!newEffectAccountId.trim()">Confirm</button>
+        </div>
+      </div>
+
+      <div class="perks-body-list">
+        <div
+          *ngFor="let account of CUSTOM['customeffects'] | keyvalue"
+          class="perk-item-card"
+        >
+          <div class="perk-item-top">
+            <div class="account-badge">
+              <mat-icon>account_circle</mat-icon>
+              <code>{{ account.key }}</code>
+            </div>
+            <button
+              type="button"
+              class="btn-delete-perk"
+              (click)="onDeletePlayerEffect(account.key)"
+              title="Remove effects for this player"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
+          <form class="chip-form">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Assigned Particle Effects</mat-label>
+              <mat-chip-grid #chipGrid aria-label="effect selection">
+                <mat-chip-row
+                  *ngFor="let effect of CUSTOM['customeffects'][account.key]"
+                  (removed)="remove(effect, account.key)"
+                  class="effect-active-chip"
+                >
+                  <span>{{ effect }}</span>
+                  <button matChipRemove [attr.aria-label]="'remove ' + effect">
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              </mat-chip-grid>
+
+              <input
+                placeholder="Type or select effect (e.g. glow, spark)..."
+                [formControl]="getAccountEffectControl(account.key)"
+                [matChipInputFor]="chipGrid"
+                [matAutocomplete]="auto"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="add($event, account.key)"
+              />
+
+              <mat-autocomplete
+                #auto="matAutocomplete"
+                (optionSelected)="selected($event, account.key)"
+              >
+                <mat-option
+                  *ngFor="let effect of this.accountEffectControlMap[account.key]?.filter | async"
+                  [value]="effect"
+                >
+                  {{ effect }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </form>
+        </div>
+
+        <div class="empty-perks" *ngIf="(CUSTOM['customeffects'] | keyvalue).length === 0">
+          <mat-icon>auto_awesome_motion</mat-icon>
+          <p>No custom player particle effects assigned yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Custom Tags -->
+    <div class="glass-card perk-section-card">
+      <div class="card-header-bar">
+        <div class="header-title-wrap">
+          <mat-icon class="header-icon">label</mat-icon>
+          <h3>Player In-Game Tags</h3>
+        </div>
+        <button type="button" class="btn-add-perk" (click)="onAddNew('tag')">
+          <mat-icon>add</mat-icon>
+          <span>Add Account</span>
+        </button>
+      </div>
+
+      <!-- Add New Account Form (Tags) -->
+      <div class="inline-add-box" *ngIf="showNewTagDialog">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Account ID for Custom Tag</mat-label>
+          <input matInput [(ngModel)]="newTagAccountId" placeholder="e.g. pb-IF4VAk4a" (keyup.enter)="onSaveId('tag')" />
+        </mat-form-field>
+        <div class="inline-add-actions">
+          <button type="button" class="btn-dialog-secondary" (click)="showNewTagDialog = false">Cancel</button>
+          <button type="button" class="btn-primary-glow" (click)="onSaveId('tag')" [disabled]="!newTagAccountId.trim()">Confirm</button>
+        </div>
+      </div>
+
+      <div class="perks-body-list">
+        <div
+          *ngFor="let account of CUSTOM['customtag'] | keyvalue"
+          class="perk-item-card"
+        >
+          <div class="perk-item-top">
+            <div class="account-badge">
+              <mat-icon>account_circle</mat-icon>
+              <code>{{ account.key }}</code>
+            </div>
+            <button
+              type="button"
+              class="btn-delete-perk"
+              (click)="onDeletePlayerTag(account.key)"
+              title="Remove tag for this player"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+
+          <mat-form-field appearance="fill" class="full-width tag-input-field">
+            <mat-label>Custom Tag Text</mat-label>
+            <input
+              matInput
+              [value]="account.value"
+              (change)="onTagUpdate($event, account.key)"
+              placeholder="e.g. [PRO] or [VIP]"
+            />
+            <mat-icon matPrefix class="field-icon">badge</mat-icon>
           </mat-form-field>
-        </form>
-      </div>
-    </div>
-    <hr>
-    <div class="manage-tags" *ngIf="!isLoading">
-      Manage Tags
-      <div class="new">
-        <button mat-raised-button color="primary" (click)="onAddNew('tag')">+ Add New</button>
-      </div>
-      <div class="new-tag" *ngIf="showNewTagDialog">
-        <mat-form-field>
-          <mat-label>Account id</mat-label>
-          <input matInput type="text" [(ngModel)]="newTagAccountId">
-        </mat-form-field>
-        <button class="save-btn" mat-raised-button color="primary" (click)="onSaveId('tag')">save</button>
-      </div>
-      <div class="player-tag" *ngFor="let account of CUSTOM['customtag'] | keyvalue">
-        <div class="player">
-          {{account.key}}
         </div>
-        <mat-form-field>
-          <mat-label>Tag</mat-label>
-          <input matInput type="text" [value]="account.value" (change)="onTagUpdate($event, account.key)">
-        </mat-form-field>
+
+        <div class="empty-perks" *ngIf="(CUSTOM['customtag'] | keyvalue).length === 0">
+          <mat-icon>local_offer</mat-icon>
+          <p>No custom player title tags assigned yet.</p>
+        </div>
       </div>
     </div>
-    <hr>
-    <br>
-    <button class="submit-btn" mat-raised-button (click)="onSubmt()" style="background-color: #2ecc71">SAVE</button>
   </div>
 </div>

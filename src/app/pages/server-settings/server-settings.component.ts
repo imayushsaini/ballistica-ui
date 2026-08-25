@@ -8,29 +8,44 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { AdminService } from "src/app/services/admin.service";
 
 @Component({
   selector: "app-server-settings",
   templateUrl: "./server-settings.component.html",
   styleUrls: ["./server-settings.component.scss"],
+  standalone: false,
 })
 export class ServerSettingsComponent implements OnInit {
   isLoading = true;
-  constructor(
-    private formBuilder: FormBuilder,
-    private adminService: AdminService
-  ) {}
-
+  isSaving = false;
   formGroup: FormGroup = this.formBuilder.group({});
   isValid = true;
   modified = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminService: AdminService,
+    private snackBar: MatSnackBar
+  ) {}
+
   ngOnInit() {
-    this.adminService.getSettings().subscribe((data) => {
-      // Generate the form structure
-      this.isLoading = false;
-      this.formGroup = this.generateFormStructure(data);
-      this.detectChanges();
+    this.loadSettings();
+  }
+
+  loadSettings() {
+    this.isLoading = true;
+    this.adminService.getSettings().subscribe({
+      next: (data) => {
+        this.isLoading = false;
+        this.formGroup = this.generateFormStructure(data);
+        this.detectChanges();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error("Settings load error:", err);
+      },
     });
   }
 
@@ -43,11 +58,9 @@ export class ServerSettingsComponent implements OnInit {
 
         if (Array.isArray(value)) {
           const formArray = this.formBuilder.array([]);
-
           value.forEach((arrayItem: any) => {
             formArray.push(this.formBuilder.control(arrayItem));
           });
-
           formGroup.addControl(key, formArray);
         } else if (typeof value === "object" && value !== null) {
           formGroup.addControl(key, this.generateFormStructure(value));
@@ -60,28 +73,6 @@ export class ServerSettingsComponent implements OnInit {
       }
     }
     return formGroup;
-  }
-
-  getFormControls(formGroup: FormGroup | any): string[] {
-    return Object.keys(formGroup.controls);
-  }
-
-  getControlType(control: FormControl | FormGroup | any): string {
-    if (control instanceof FormGroup) {
-      return "group";
-    }
-
-    if (control instanceof FormArray) {
-      return "array";
-    }
-
-    return "control";
-  }
-
-  getFormArrayControls(formArray: FormArray | any): string[] {
-    return formArray.controls.map(
-      (control: any, index: { toString: () => any }) => index.toString()
-    );
   }
 
   getValidator(value: any) {
@@ -97,22 +88,18 @@ export class ServerSettingsComponent implements OnInit {
   }
 
   detectChanges() {
-    // Fires on each form control value change
     this.formGroup.valueChanges.subscribe(() => {
-      // Variable res holds the current value of the form
       this.modified = true;
       this.isValid =
-        this.findInvalidControlsRecursive(this.formGroup).length == 0;
+        this.findInvalidControlsRecursive(this.formGroup).length === 0;
     });
   }
 
   public findInvalidControlsRecursive(
     formToInvestigate: FormGroup | FormArray
   ): string[] {
-    // eslint-disable-next-line prefer-const
-    let invalidControls: string[] = [];
-    // eslint-disable-next-line prefer-const
-    let recursiveFunc = (form: FormGroup | FormArray) => {
+    const invalidControls: string[] = [];
+    const recursiveFunc = (form: FormGroup | FormArray) => {
       Object.keys(form.controls).forEach((field) => {
         const control = form.get(field);
         if (control?.invalid) invalidControls.push(field);
@@ -128,9 +115,23 @@ export class ServerSettingsComponent implements OnInit {
   }
 
   onSubmit() {
-    this.modified = false;
-    this.adminService.updateSettings(this.formGroup.value).subscribe(() => {
-      console.log("updated");
+    this.isSaving = true;
+    this.adminService.updateSettings(this.formGroup.value).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.modified = false;
+        this.snackBar.open("Server settings updated successfully", "OK", {
+          duration: 3000,
+        });
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.snackBar.open(
+          "Failed to update settings: " + (err?.error?.message || err?.message),
+          "OK",
+          { duration: 4000 }
+        );
+      },
     });
   }
 }

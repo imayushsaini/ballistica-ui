@@ -7,29 +7,44 @@ import {
   FormArray,
   Validators,
 } from "@angular/forms";
+import { MatSnackBar } from "@angular/material/snack-bar";
 import { AdminService } from "src/app/services/admin.service";
 
 @Component({
   selector: "app-server-config",
   templateUrl: "./server-config.component.html",
   styleUrls: ["./server-config.component.scss"],
+  standalone: false,
 })
 export class ServerConfigComponent implements OnInit {
-  constructor(
-    private formBuilder: FormBuilder,
-    private adminService: AdminService
-  ) {}
-
   formGroup: FormGroup = this.formBuilder.group({});
   isValid = true;
   modified = false;
   isLoading = true;
+  isSaving = false;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private adminService: AdminService,
+    private snackBar: MatSnackBar
+  ) {}
+
   ngOnInit() {
-    this.adminService.getConfig().subscribe((data) => {
-      // Generate the form structure
-      this.formGroup = this.generateFormStructure(data);
-      this.isLoading = false;
-      this.detectChanges();
+    this.loadConfig();
+  }
+
+  loadConfig() {
+    this.isLoading = true;
+    this.adminService.getConfig().subscribe({
+      next: (data) => {
+        this.formGroup = this.generateFormStructure(data);
+        this.isLoading = false;
+        this.detectChanges();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error("Config fetch error:", err);
+      },
     });
   }
 
@@ -42,11 +57,9 @@ export class ServerConfigComponent implements OnInit {
 
         if (Array.isArray(value)) {
           const formArray = this.formBuilder.array([]);
-
           value.forEach((arrayItem: any) => {
             formArray.push(this.formBuilder.control(arrayItem));
           });
-
           formGroup.addControl(key, formArray);
         } else if (typeof value === "object" && value !== null) {
           formGroup.addControl(key, this.generateFormStructure(value));
@@ -59,28 +72,6 @@ export class ServerConfigComponent implements OnInit {
       }
     }
     return formGroup;
-  }
-
-  getFormControls(formGroup: FormGroup | any): string[] {
-    return Object.keys(formGroup.controls);
-  }
-
-  getControlType(control: FormControl | FormGroup | any): string {
-    if (control instanceof FormGroup) {
-      return "group";
-    }
-
-    if (control instanceof FormArray) {
-      return "array";
-    }
-
-    return "control";
-  }
-
-  getFormArrayControls(formArray: FormArray | any): string[] {
-    return formArray.controls.map(
-      (control: any, index: { toString: () => any }) => index.toString()
-    );
   }
 
   getValidator(value: any) {
@@ -96,22 +87,18 @@ export class ServerConfigComponent implements OnInit {
   }
 
   detectChanges() {
-    // Fires on each form control value change
     this.formGroup.valueChanges.subscribe(() => {
-      // Variable res holds the current value of the form
       this.modified = true;
       this.isValid =
-        this.findInvalidControlsRecursive(this.formGroup).length == 0;
+        this.findInvalidControlsRecursive(this.formGroup).length === 0;
     });
   }
 
   public findInvalidControlsRecursive(
     formToInvestigate: FormGroup | FormArray
   ): string[] {
-    // eslint-disable-next-line prefer-const
-    let invalidControls: string[] = [];
-    // eslint-disable-next-line prefer-const
-    let recursiveFunc = (form: FormGroup | FormArray) => {
+    const invalidControls: string[] = [];
+    const recursiveFunc = (form: FormGroup | FormArray) => {
       Object.keys(form.controls).forEach((field) => {
         const control = form.get(field);
         if (control?.invalid) invalidControls.push(field);
@@ -127,33 +114,46 @@ export class ServerConfigComponent implements OnInit {
   }
 
   onSubmit() {
-    this.modified = false;
+    this.isSaving = true;
+    const validatedConfig = this.verifyConfig(this.formGroup.value);
 
-    this.adminService
-      .updateConfig(this.verifyConfig(this.formGroup.value))
-      .subscribe(() => {
-        console.log("updated");
-      });
+    this.adminService.updateConfig(validatedConfig).subscribe({
+      next: () => {
+        this.isSaving = false;
+        this.modified = false;
+        this.snackBar.open("Engine config.json updated successfully", "OK", {
+          duration: 3000,
+        });
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.snackBar.open(
+          "Failed to update config: " + (err?.error?.message || err?.message),
+          "OK",
+          { duration: 4000 }
+        );
+      },
+    });
   }
+
   verifyConfig(config: any) {
-    config["team_colors"] = config["team_colors"].map(
-      (teamCol: string | string[] | number[]) => {
-        return typeof teamCol === "string"
-          ? this.getSafeColor(teamCol.split(","))
-          : this.getSafeColor(teamCol);
-      }
-    );
+    if (config["team_colors"] && Array.isArray(config["team_colors"])) {
+      config["team_colors"] = config["team_colors"].map(
+        (teamCol: string | string[] | number[]) => {
+          return typeof teamCol === "string"
+            ? this.getSafeColor(teamCol.split(","))
+            : this.getSafeColor(teamCol);
+        }
+      );
+    }
     return config;
   }
 
   getSafeColor(list: number[] | string[]) {
-    if (list.length != 3) return [1, 1, 1];
-    else {
-      const result = list.map((element) => {
-        const converted = Number(element);
-        return isNaN(converted) ? 1 : converted;
-      });
-      return result;
-    }
+    if (!list || list.length !== 3) return [1, 1, 1];
+    return list.map((element) => {
+      const converted = Number(element);
+      return isNaN(converted) ? 1 : converted;
+    });
   }
 }
