@@ -11,12 +11,12 @@ Broadcast Bombsquad server live stats and leaderboard. Notify players when their
 ## Getting Started
 
 
-## Host your website (use [this](https://imayushsaini.github.io/ballistica-ui/home?host=) website, or host your own)
+## Host your website (use [this](https://bombsquad-community.web.app/server-manager/?host=) website, or host your own)
 ### Option 1 (use this website and add your server)
-- Add your game server IP PORT to the end of [this](https://imayushsaini.github.io/ballistica-ui/home?host=) url after "host=" example:
-   https://imayushsaini.github.io/ballistica-ui/home?host=192.168.0.1:43210.
+- Add your game server IP PORT to the end of [this](https://bombsquad-community.web.app/server-manager/) url after "host=" example:
+   https://bombsquad-community.web.app/server-manager?host=192.168.0.1:43210.
 - You can share this URL with your players or add it to your server stats button.
-- (optional) If you put this link to your server stats button, and add @ip @port like https://imayushsaini.github.io/ballistica-ui/home?host=@ip:@port, then the server will automatically replace @ip with your server IP and port.
+- (optional) If you put this link to your server stats button, and add @ip @port like [https://bombsquad-community.web.app/server-manager/](https://bombsquad-community.web.app/server-manager/)?host=@ip:@port, then the server will automatically replace @ip with your server IP and port.
   
 ### Option 2 (host website with your name/domain.)
 - Fork this repo
@@ -28,14 +28,14 @@ Broadcast Bombsquad server live stats and leaderboard. Notify players when their
 - Now you can share that URL with players or add it to your stats button of the server.
 
 ## Get your proxy (optional)
-- visit https://dash.deno.com/ log in with github, and select new project > Hello World.
-- paste code from this file [proxy.js](https://github.com/imayushsaini/ballistica-ui/blob/main/proxy.js) into your deno,  save and deploy.
+- visit https://dash.deno.com/ log in with github,
+- clone https://github.com/imayushsaini/deno-prxy .
 - now you will get a link to your proxy.
 - Navigate to the change server page and add your proxy URL.
 
 ## How to add multiple servers?
 - from the nav menu navigate to change server and add your server IP PORT
-- add ?host=&lt;IP:PORT&gt; example https://imayushsaini.github.io/ballistica-ui/home?host=192.170.0.1:43210.
+- add ?host=&lt;IP:PORT&gt; example https://bombsquad-community.web.app/server-manager?host=192.170.0.1:43210.
 
 
 ## For Bombsquad Server
