@@ -1,27 +1,407 @@
-.main-container {
-  width: 80%;
-  margin: auto;
-  padding-top: 3rem;
+.quick-tools-page {
+  .tool-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .tool-title-group {
+      h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 4px 0;
+
+        .title-icon {
+          color: #ffb74d;
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      p {
+        font-size: 0.84rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+    }
+
+    .btn-restart-server {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(244, 67, 54, 0.14);
+      border: 1px solid rgba(244, 67, 54, 0.35);
+      color: #ff8a80;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      &:hover {
+        background: #f44336;
+        color: #ffffff;
+        border-color: #f44336;
+      }
+    }
+  }
+}
+
+.quick-tools-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Card Headers
+.card-header-bar {
   display: flex;
-  justify-content: center;
-}
-.quik-button-grp {
-  display: flex;
-  justify-content: flex-end;
-}
-.title {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.roster,
-.chats {
-  padding: 2rem;
-  margin-top: 1rem;
-}
-.send-message {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
-  button {
-    margin-top: 10px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+
+  .header-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .header-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+      color: var(--primary-accent);
+    }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+  }
+
+  .count-pill {
+    background: rgba(0, 230, 118, 0.14);
+    border: 1px solid rgba(0, 230, 118, 0.35);
+    color: #69f0ae;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+
+  .btn-refresh-chat {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.15s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// Roster Content & Items
+.roster-card {
+  display: flex;
+  flex-direction: column;
+
+  .roster-content {
+    padding: 16px;
+    min-height: 280px;
+
+    .roster-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .roster-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        border-color: rgba(92, 107, 192, 0.3);
+      }
+
+      .roster-item-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: rgba(63, 81, 181, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        mat-icon {
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+          color: #9fa8da;
+        }
+      }
+
+      .roster-item-meta {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .name-id-row {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+
+          .player-name {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .client-id-badge {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 0.68rem;
+            font-family: monospace;
+            color: #90a4ae;
+          }
+        }
+
+        .player-pbid {
+          font-size: 0.74rem;
+          color: #78909c;
+          font-family: monospace;
+        }
+
+        .player-device-str {
+          font-size: 0.7rem;
+          color: #546e7a;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+
+      .roster-quick-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .btn-roster-action {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          border: none;
+          padding: 5px 8px;
+          border-radius: 6px;
+          font-size: 0.72rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.15s ease;
+
+          mat-icon {
+            font-size: 14px;
+            width: 14px;
+            height: 14px;
+          }
+
+          &.btn-kick {
+            background: rgba(255, 152, 0, 0.15);
+            color: #ffb74d;
+
+            &:hover {
+              background: #ff9800;
+              color: #000000;
+            }
+          }
+
+          &.btn-mute {
+            background: rgba(156, 39, 176, 0.15);
+            color: #ce93d8;
+
+            &:hover {
+              background: #ab47bc;
+              color: #ffffff;
+            }
+          }
+
+          &.btn-ban {
+            background: rgba(244, 67, 54, 0.15);
+            color: #ff8a80;
+
+            &:hover {
+              background: #f44336;
+              color: #ffffff;
+            }
+          }
+        }
+      }
+    }
+
+    .empty-roster {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--text-muted);
+
+      mat-icon {
+        font-size: 40px;
+        width: 40px;
+        height: 40px;
+        color: #607d8b;
+        margin-bottom: 8px;
+      }
+
+      h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #cfd8dc;
+        margin: 0 0 4px 0;
+      }
+
+      p {
+        font-size: 0.8rem;
+        margin: 0;
+      }
+    }
+  }
+}
+
+// Chat Card
+.chat-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .chat-messages-viewport {
+    flex: 1;
+    padding: 16px;
+    min-height: 240px;
+    max-height: 380px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.2);
+
+    .chat-log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-msg-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.84rem;
+      line-height: 1.4;
+
+      .msg-bubble-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        color: var(--primary-accent);
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+
+      .chat-msg-text {
+        color: #e0e6ed;
+        word-break: break-all;
+      }
+    }
+
+    .empty-chat {
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--text-muted);
+
+      mat-icon {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        color: #607d8b;
+        margin-bottom: 8px;
+      }
+
+      p {
+        font-size: 0.82rem;
+        margin: 0;
+      }
+    }
+  }
+
+  .chat-input-bar {
+    padding: 12px 16px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    .chat-field {
+      flex: 1;
+      margin: 0;
+
+      .chat-field-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #78909c;
+        margin-right: 6px;
+      }
+
+      .mat-mdc-form-field-subscript-wrapper {
+        display: none;
+      }
+    }
+
+    .btn-send-broadcast {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px !important;
+    }
   }
 }

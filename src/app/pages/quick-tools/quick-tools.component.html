@@ -1,27 +1,138 @@
-<div class="main-container">
-  <div class="quick-tools">
-    <div class="quik-button-grp">
-      <button mat-raised-button color="primary" (click)="doAction('quit')">Restart Server</button>
+<div class="admin-tool-page quick-tools-page">
+  <!-- Top Action Bar -->
+  <div class="tool-top-bar">
+    <div class="tool-title-group">
+      <h2><mat-icon class="title-icon">flash_on</mat-icon> Quick In-Game Controls</h2>
+      <p>Broadcast live chat messages, supervise active connected clients, and perform fast kicks/mutes.</p>
     </div>
-    <div class="live">
-      <div class="roster foreground">
-        <div class="title"> Live Players</div>
-        <div class="player" *ngFor="let player of roster | keyvalue">
-          {{player.key}} > {{player.value.device_id}} {{player.value.name}} {{player.value.client_id}}
+
+    <button type="button" class="btn-restart-server" (click)="onRestartServer()">
+      <mat-icon>restart_alt</mat-icon>
+      <span>Restart Server Process</span>
+    </button>
+  </div>
+
+  <!-- Live Grid Layout: Live Connected Roster (Left) & Live Chat Stream (Right) -->
+  <div class="quick-tools-grid">
+    <!-- Left: Live Connected Clients Roster -->
+    <div class="glass-card roster-card">
+      <div class="card-header-bar">
+        <div class="header-title-wrap">
+          <mat-icon class="header-icon">groups</mat-icon>
+          <h3>Connected Players</h3>
+        </div>
+        <span class="count-pill">{{ (roster | keyvalue)?.length || 0 }} Online</span>
+      </div>
+
+      <div class="roster-content">
+        <div class="roster-list" *ngIf="roster && (roster | keyvalue).length > 0">
+          <div *ngFor="let player of roster | keyvalue" class="roster-item">
+            <div class="roster-item-avatar">
+              <mat-icon>person</mat-icon>
+            </div>
+
+            <div class="roster-item-meta">
+              <div class="name-id-row">
+                <span class="player-name">{{ player.value.name }}</span>
+                <span class="client-id-badge">Client #{{ player.value.client_id }}</span>
+              </div>
+              <span class="player-pbid">{{ player.key }}</span>
+              <span class="player-device-str" *ngIf="player.value.device_id">{{ player.value.device_id }}</span>
+            </div>
+
+            <div class="roster-quick-actions">
+              <button
+                type="button"
+                class="btn-roster-action btn-kick"
+                (click)="onQuickKick(player.value.client_id, player.value.name)"
+                title="Kick from current match"
+              >
+                <mat-icon>logout</mat-icon>
+                <span>Kick</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn-roster-action btn-mute"
+                (click)="onQuickMute(player.key, player.value.name)"
+                title="Mute for 1 day"
+              >
+                <mat-icon>volume_off</mat-icon>
+                <span>Mute</span>
+              </button>
+
+              <button
+                type="button"
+                class="btn-roster-action btn-ban"
+                (click)="onQuickBan(player.key, player.value.name)"
+                title="Ban player for 7 days"
+              >
+                <mat-icon>block</mat-icon>
+                <span>Ban</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-roster" *ngIf="!roster || (roster | keyvalue).length === 0">
+          <mat-icon>person_off</mat-icon>
+          <h4>No Players Connected</h4>
+          <p>Clients currently connected to the game server will appear here in real-time.</p>
         </div>
       </div>
-      <div class="chats foreground">
-        <div class="title">Live Chats</div>
-        <div class="message" *ngFor="let message of liveChats">
-          {{message}}
+    </div>
+
+    <!-- Right: Live Chat Stream & Broadcast Box -->
+    <div class="glass-card chat-card">
+      <div class="card-header-bar">
+        <div class="header-title-wrap">
+          <mat-icon class="header-icon">chat</mat-icon>
+          <h3>In-Game Chat Feed</h3>
+        </div>
+        <button type="button" class="btn-refresh-chat" (click)="refreshData()" title="Refresh chat stream">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      <!-- Messages Stream -->
+      <div class="chat-messages-viewport">
+        <div *ngIf="liveChats && liveChats.length > 0" class="chat-log-list">
+          <div *ngFor="let msg of liveChats" class="chat-msg-row">
+            <mat-icon class="msg-bubble-icon">chat_bubble_outline</mat-icon>
+            <span class="chat-msg-text">{{ msg }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="!liveChats || liveChats.length === 0" class="empty-chat">
+          <mat-icon>speaker_notes_off</mat-icon>
+          <p>No recent in-game chat messages recorded.</p>
         </div>
       </div>
-      <div class="send-message">
-        <mat-form-field class="full-width">
-          <mat-label>chat here..</mat-label>
-          <input matInput type="text" [(ngModel)]="message">
+
+      <!-- Send Broadcast Form -->
+      <div class="chat-input-bar">
+        <mat-form-field appearance="fill" class="chat-field">
+          <mat-label>Send broadcast to in-game chat...</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="message"
+            (keyup.enter)="sendMessage()"
+            placeholder="Type message and press Enter..."
+          />
+          <mat-icon matPrefix class="chat-field-icon">campaign</mat-icon>
         </mat-form-field>
-        <button mat-raised-button color="primary" (click)="doAction('message')">Send</button>
+
+        <button
+          type="button"
+          class="btn-primary-glow btn-send-broadcast"
+          (click)="sendMessage()"
+          [disabled]="isSending || !message.trim()"
+        >
+          <mat-icon>{{ isSending ? 'sync' : 'send' }}</mat-icon>
+          <span>Broadcast</span>
+        </button>
       </div>
     </div>
   </div>

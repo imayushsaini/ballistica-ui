@@ -12,7 +12,7 @@ export class NotificationService {
   ) {}
   subscribe(subscription: any) {
     return this.http.post(
-      `${this.hostManager.getProxyUrl()}/api/subscribe`,
+      `${this.hostManager.getHostUrl()}/api/subscribe`,
       subscription
     );
   }

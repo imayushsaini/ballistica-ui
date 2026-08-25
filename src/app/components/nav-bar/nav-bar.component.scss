@@ -1,121 +1,315 @@
-nav {
-  .nav-main {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 2rem;
-    justify-content: space-between;
-  }
+.app-navbar {
+  background-color: #0b0c10;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
 }
 
-.discord {
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
-  cursor: pointer;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.menu {
-  height: 100vh;
-  width: 30%;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  background-color: rgba(64, 67, 74, 0.4);
-  backdrop-filter: blur(2px);
-  position: absolute;
-  transition: transform 0.5s ease;
+// Brand Logo & Text
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #ffffff;
+  flex-shrink: 0;
 
-  ul {
-    list-style-type: none;
-    margin-top: 6rem;
+  .brand-logo {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .brand-text-block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .brand-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #ffffff;
+    }
+
+    .brand-badge {
+      background: rgba(63, 81, 181, 0.25);
+      border: 1px solid rgba(63, 81, 181, 0.45);
+      color: #9fa8da;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &:hover .brand-name {
+    color: #9fa8da;
+  }
+}
+
+// Navbar Content Wrapper
+.navbar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 16px;
+
+  @media (max-width: 860px) {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #12141a;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.6);
+
+    &.show {
+      display: flex;
+    }
+  }
+}
+
+// Nav Links
+.nav-links {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 4px;
+
+  @media (max-width: 860px) {
+    flex-direction: column;
     width: 100%;
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 200;
-    padding-left: 0;
-    li {
-      padding: 20px;
-      border-bottom: rgba(245, 245, 245, 0.449) solid 0.2px;
+    gap: 8px;
+  }
 
-      cursor: pointer;
-      &:hover {
-        background-color: rgba(155, 155, 155, 0.401);
+  .nav-item {
+    @media (max-width: 860px) {
+      width: 100%;
+    }
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #8c9ba5;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 7px 12px;
+    border-radius: 8px;
+    transition: all 0.15s ease;
+
+    @media (max-width: 860px) {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 0.95rem;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+      color: #607d8b;
+      transition: color 0.15s ease;
+
+      &.locked-icon {
+        color: #ffb74d;
       }
-      &:active {
-        background-color: rgba(245, 245, 248, 0.833);
+    }
+
+    &:hover {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.05);
+
+      .nav-icon {
+        color: #9fa8da;
+      }
+    }
+
+    &.active {
+      color: #ffffff;
+      background: rgba(63, 81, 181, 0.2);
+      font-weight: 600;
+
+      .nav-icon {
+        color: #7986cb;
       }
     }
   }
 }
 
-.hide {
-  transform: translateX(-100%);
+// Actions: Active Server & Discord
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  @media (max-width: 860px) {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
-$burgerWidth: 24px;
-$burgerBarHeight: 1px;
-$burgerBarColor: #dbdada;
-
-.burger-menu {
-  width: $burgerWidth;
-  height: $burgerWidth;
+// Active Server Badge Pill
+.active-server-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  text-decoration: none;
   cursor: pointer;
-  z-index: 3;
-  .burger-container {
-    position: relative;
+  transition: all 0.15s ease;
 
-    .burger-inner {
-      position: absolute;
-      width: $burgerWidth - 2 * $burgerBarHeight;
-      left: 0px;
-      top: 11px;
-      border: $burgerBarHeight solid $burgerBarColor;
-      transition: border-color 0.2s ease-in 0.2s;
+  @media (max-width: 860px) {
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 14px;
+  }
 
-      &::before {
-        position: absolute;
-        content: "";
-        top: -6px;
-        left: -$burgerBarHeight;
-        width: $burgerWidth - 2 * $burgerBarHeight;
-        border: $burgerBarHeight solid $burgerBarColor;
-        transition: top 0.2s ease-in 0.3s, transform ease-in 0.2s;
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00e676;
+    box-shadow: 0 0 6px #00e676;
+    flex-shrink: 0;
+  }
+
+  .server-pill-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1.2;
+
+    .server-pill-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #ffffff;
+      max-width: 130px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      @media (max-width: 860px) {
+        max-width: 220px;
       }
+    }
 
-      &::after {
-        position: absolute;
-        content: "";
-        top: 4px;
-        left: -$burgerBarHeight;
-        width: $burgerWidth - 2 * $burgerBarHeight;
-        border: $burgerBarHeight solid $burgerBarColor;
-        transition: top 0.2s ease-in 0.3s, transform ease-in 0.2s;
-      }
+    .server-pill-host {
+      font-size: 0.7rem;
+      color: #8c9ba5;
     }
   }
 
-  &.active .burger-container .burger-inner {
-    border-color: transparent;
-    transition: border-color ease-in 0.1s;
+  .pill-arrow {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #607d8b;
+    transition: transform 0.15s ease, color 0.15s ease;
   }
 
-  &.active .burger-container .burger-inner::before {
-    top: -$burgerBarHeight;
-    transform: rotate(-45deg);
-    transition: top ease-out 0.2s, transform 0.2s ease-out 0.3s;
-  }
+  &:hover {
+    background: rgba(63, 81, 181, 0.2);
+    border-color: rgba(63, 81, 181, 0.4);
 
-  &.active .burger-container .burger-inner::after {
-    top: -$burgerBarHeight;
-    transform: rotate(45deg);
-    transition: top ease-out 0.2s, transform 0.2s ease-out 0.3s;
+    .pill-arrow {
+      color: #9fa8da;
+      transform: rotate(180deg);
+    }
   }
 }
 
-.current {
-  text-align: center;
+// Discord Button
+.btn-discord {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #5865f2;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  @media (max-width: 860px) {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .discord-svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: #4752c4;
+    box-shadow: 0 4px 12px rgba(88, 101, 242, 0.4);
+  }
 }
-@media only screen and (max-width: 768px) {
-  .menu {
-    width: 80%;
+
+// Mobile Toggle Button
+.mobile-toggle-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  flex-direction: column;
+  gap: 4px;
+
+  @media (max-width: 860px) {
+    display: flex;
+  }
+
+  .toggle-bar {
+    width: 18px;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 1px;
+    transition: all 0.2s ease;
+  }
+
+  &.active {
+    .toggle-bar:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+    .toggle-bar:nth-child(2) {
+      opacity: 0;
+    }
+    .toggle-bar:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
   }
 }

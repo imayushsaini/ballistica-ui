@@ -6,6 +6,7 @@ import { HostManagerService } from 'src/app/services/host-manager.service';
   selector: 'app-admin-options',
   templateUrl: './admin-options.component.html',
   styleUrls: ['./admin-options.component.scss'],
+  standalone: false,
 })
 export class AdminOptionsComponent implements OnInit {
   constructor(

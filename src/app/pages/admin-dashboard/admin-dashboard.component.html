@@ -1,9 +1,78 @@
-<div class="headline">
-  <div class="server-name">
-    {{serverName}}
-  </div>
-  <div class="ip-port">
-    {{ipPort}}
-  </div>
+<div class="admin-shell">
+  <!-- Admin Top Subheader -->
+  <header class="admin-subnav-bar">
+    <div class="admin-subnav-container">
+      <!-- Left: Server Badge Info -->
+      <div class="admin-server-meta">
+        <div class="server-badge-chip">
+          <span class="status-dot"></span>
+          <span class="server-name-label">{{ serverName || 'Ballistica Server' }}</span>
+          <span class="server-host-label">({{ activeHost }})</span>
+        </div>
+      </div>
+
+      <!-- Right: Sign Out Action -->
+      <div class="admin-top-actions">
+        <button type="button" class="btn-admin-signout" (click)="onSignOut()" title="Sign out of server admin session">
+          <mat-icon>logout</mat-icon>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Admin Navigation Tabs Menu -->
+    <div class="admin-tabs-scroll">
+      <nav class="admin-tabs-nav">
+        <a routerLink="/admin/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="admin-tab-link">
+          <mat-icon>grid_view</mat-icon>
+          <span>Overview</span>
+        </a>
+
+        <a routerLink="/admin/quick" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>flash_on</mat-icon>
+          <span>Quick Tools</span>
+        </a>
+
+        <a routerLink="/admin/players" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>badge</mat-icon>
+          <span>Player Profiles (V2)</span>
+        </a>
+
+        <a routerLink="/admin/economy" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>payments</mat-icon>
+          <span>Economy &amp; Shop</span>
+        </a>
+
+        <a routerLink="/admin/roles" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>verified_user</mat-icon>
+          <span>Roles &amp; Perms</span>
+        </a>
+
+        <a routerLink="/admin/perks" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>auto_awesome</mat-icon>
+          <span>Perks &amp; Effects</span>
+        </a>
+
+        <a routerLink="/admin/settings" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>tune</mat-icon>
+          <span>Server Settings</span>
+        </a>
+
+        <a routerLink="/admin/config" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>settings_applications</mat-icon>
+          <span>Engine Config</span>
+        </a>
+
+        <a routerLink="/admin/server-logs" routerLinkActive="active" class="admin-tab-link">
+          <mat-icon>terminal</mat-icon>
+          <span>Logs Viewer</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Router Outlet Container -->
+  <main class="admin-main-viewport">
+    <router-outlet></router-outlet>
+  </main>
 </div>
-<router-outlet></router-outlet>

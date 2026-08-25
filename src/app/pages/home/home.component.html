@@ -1,93 +1,325 @@
-<div class="main-container">
-  <div class="row">
-    <div class=" col sub-container1">
-      <div class="row">
-        <div class="sc11">
-          <div class="live-card">
-            <div class="text">
-              Current Map : {{playlist.current}}
-            </div>
+<div class="page-wrapper home-page">
+  <div class="content-container">
+    <!-- Hero Header -->
+    <div class="hero-header">
+      <div class="hero-pill" [class.offline-pill]="isOffline">
+        <span class="status-dot" [class.offline]="isOffline"></span>
+        <span>{{ isOffline ? 'Server Offline' : 'Live Game Server' }}</span>
+      </div>
+      <h1 class="hero-main-title">{{ serverName || 'Ballistica Server' }}</h1>
+      <p class="hero-description">
+        {{ isOffline ? 'The server instance is currently not responding to live stat requests.' : 'Real-time match status, live player roster, current game playlist, and top leaderboard rankings.' }}
+      </p>
 
+      <div class="hero-actions-row">
+        <span class="server-host-tag">
+          <mat-icon>dns</mat-icon>
+          <span>{{ hostManager.getSelectedHost() }}</span>
+        </span>
+
+        <button type="button" class="btn-hero-action" (click)="refreshData()" [disabled]="isLoadingStats" title="Refresh live status">
+          <mat-icon [class.spinning]="isLoadingStats">refresh</mat-icon>
+          <span>{{ isLoadingStats ? 'Checking...' : 'Refresh' }}</span>
+        </button>
+
+        <a class="btn-hero-action btn-hero-switch" routerLink="/switch-server">
+          <mat-icon>sync_alt</mat-icon>
+          <span>Switch Server</span>
+        </a>
+
+        <button type="button" class="btn-hero-action" (click)="openProxyDialog()" title="Manage API proxy gateways">
+          <mat-icon>vpn_lock</mat-icon>
+          <span>Manage Proxy</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== OFFLINE / CONNECTION ERROR STATE ==================== -->
+    <div class="server-offline-container" *ngIf="isOffline">
+      <div class="glass-card offline-card">
+        <!-- Proxy Failure Notice -->
+        <div class="offline-diagnostic-content" *ngIf="isProxyFailure">
+          <div class="offline-icon-wrap danger-icon">
+            <mat-icon>cloud_off</mat-icon>
           </div>
-          <div class="live-card">
-            <div class="text">
-              Next Map : {{playlist.next}}
+          <div class="offline-text-block">
+            <div class="offline-status-badge danger-badge">Proxy Gateway Unreachable</div>
+            <h2>Cannot Connect Through API Proxy</h2>
+            <p class="offline-explanation">
+              The remote proxy gateway <code>{{ hostManager.getProxyUrl() }}</code> configured to route traffic to server <strong>{{ hostManager.getSelectedHost() }}</strong> is offline or not responding.
+            </p>
+
+            <div class="offline-troubleshoot-list">
+              <div class="troubleshoot-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>Switch to a backup proxy or add a new working proxy gateway.</span>
+              </div>
+              <div class="troubleshoot-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>If connecting to a local server or LAN, make sure the host IP is a private/local IP to bypass the proxy.</span>
+              </div>
             </div>
 
+            <div class="offline-actions-group">
+              <button type="button" class="btn-primary-glow btn-proxy-cfg" (click)="openProxyDialog()">
+                <mat-icon>vpn_lock</mat-icon>
+                <span>Configure Proxy Gateway</span>
+              </button>
+
+              <a class="btn-secondary-action" routerLink="/switch-server">
+                <mat-icon>dns</mat-icon>
+                <span>Switch Server</span>
+              </a>
+
+              <button type="button" class="btn-secondary-action" (click)="refreshData()">
+                <mat-icon>refresh</mat-icon>
+                <span>Retry</span>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="leaderboard">
-          <div class="heading">
-            <h3>Leaderboard</h3>
-          </div>
-          <table mat-table [dataSource]="dataSource" class=" demo-table">
-            <ng-container *ngFor="let column of columns" [matColumnDef]="column.columnDef">
-              <th mat-header-cell *matHeaderCellDef>
-                {{column.header}}
-              </th>
-              <td mat-cell *matCellDef="let row">
-                {{column.cell(row)}}
-              </td>
-            </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+        <!-- Direct Host Failure Notice -->
+        <div class="offline-diagnostic-content" *ngIf="!isProxyFailure">
+          <div class="offline-icon-wrap warning-icon">
+            <mat-icon>dns</mat-icon>
+          </div>
+          <div class="offline-text-block">
+            <div class="offline-status-badge warning-badge">Server Unreachable</div>
+            <h2>Server Process Not Responding</h2>
+            <p class="offline-explanation">
+              Could not establish a connection with the BombSquad server instance at <code>{{ hostManager.getSelectedHost() }}</code>.
+            </p>
+
+            <div class="offline-troubleshoot-list">
+              <div class="troubleshoot-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>Check that the BombSquad dedicated server process is running on your machine.</span>
+              </div>
+              <div class="troubleshoot-item">
+                <mat-icon>check_circle</mat-icon>
+                <span>Verify that the web management plugin and HTTP API port (default: 43210) are active.</span>
+              </div>
+              <div class="troubleshoot-item" *ngIf="!hostManager.isLocalIp()">
+                <mat-icon>check_circle</mat-icon>
+                <span>If the server is behind a firewall or NAT, verify port forwarding.</span>
+              </div>
+            </div>
+
+            <div class="offline-actions-group">
+              <button type="button" class="btn-primary-glow" (click)="refreshData()">
+                <mat-icon>refresh</mat-icon>
+                <span>Retry Connection</span>
+              </button>
+
+              <a class="btn-secondary-action" routerLink="/switch-server">
+                <mat-icon>sync_alt</mat-icon>
+                <span>Switch to Another Server</span>
+              </a>
+
+              <button type="button" class="btn-secondary-action" (click)="openProxyDialog()">
+                <mat-icon>vpn_lock</mat-icon>
+                <span>Proxy Settings</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class=" col sub-container2">
-      <div class="live-players">
-        <div class="server-name">
-          {{serverName}} <br> <br>
-          <span class="sessionType"> {{sessionType}}</span>
-        </div>
 
-        <div class="justify-content-center pt-5 scoreboard" *ngIf="isDualTeam()">
-          <div class="teamA">
-            <div class="header" *ngIf="teamData">
-              <div class="name">{{teamData["0"].name}}</div>
-              <div class="score">{{teamData["0"].score}}</div>
-            </div>
-            <div class="players">
-              <ul *ngIf="teamData">
-                <li *ngFor="let player of teamData['0'].players" (click)="openDialog(player)">{{player.device_id}}
-                  <br><span>{{player.name}}</span>
-                </li>
-
-              </ul>
-            </div>
+    <!-- ==================== ONLINE LIVE STATS & ARENA ==================== -->
+    <ng-container *ngIf="!isOffline">
+      <!-- Quick Info Cards Grid (Current Map, Next Map, Session Mode) -->
+      <div class="info-cards-grid">
+        <!-- Current Map Card -->
+        <div class="glass-card info-card">
+          <div class="info-icon-wrap current-map-icon">
+            <mat-icon>sports_esports</mat-icon>
           </div>
-          <div class="teamB">
-            <div class="header" *ngIf="teamData">
-              <div class="name">{{teamData["1"].name}}</div>
-              <div class="score">{{teamData["1"].score}}</div>
-            </div>
-            <div class="players">
-              <ul *ngIf="teamData">
-                <li *ngFor="let player of teamData['1'].players" (click)="openDialog(player)">{{player.device_id}}
-                  <br><span>{{player.name}}</span>
-                </li>
-
-              </ul>
-            </div>
+          <div class="info-content">
+            <span class="info-label">Current Map</span>
+            <span class="info-value">{{ playlist.current || 'In Lobby / Waiting' }}</span>
+            <span class="info-sub">Active Match</span>
           </div>
         </div>
-        <div class="free-for-all scoreboard" *ngIf="!isDualTeam()">
-          <ul *ngIf="teamData">
-            <li *ngFor="let player of getAllPlayers()" (click)="openDialog(player)" class="players ffa-player">
-              {{player.device_id}} >
-              <span>{{player.name}}</span>
-            </li>
-          </ul>
+
+        <!-- Next Map Card -->
+        <div class="glass-card info-card">
+          <div class="info-icon-wrap next-map-icon">
+            <mat-icon>fast_forward</mat-icon>
+          </div>
+          <div class="info-content">
+            <span class="info-label">Next Up</span>
+            <span class="info-value">{{ playlist.next || 'Playlist Queued' }}</span>
+            <span class="info-sub">Upcoming Map</span>
+          </div>
+        </div>
+
+        <!-- Session Type Card -->
+        <div class="glass-card info-card">
+          <div class="info-icon-wrap session-icon">
+            <mat-icon>groups</mat-icon>
+          </div>
+          <div class="info-content">
+            <span class="info-label">Session Mode</span>
+            <span class="info-value">{{ sessionType || 'Free For All' }}</span>
+            <span class="info-sub">{{ getAllPlayers().length }} Player(s) Online</span>
+          </div>
         </div>
       </div>
-    </div>
+
+      <!-- Main Content Split: Live Match Arena (Left/Main) & Top Players Leaderboard (Right) -->
+      <div class="home-grid">
+        <!-- Live Match Arena Section -->
+        <div class="arena-section">
+          <div class="glass-card arena-card">
+            <div class="card-header-bar">
+              <div class="header-title-wrap">
+                <mat-icon class="header-icon">videogame_asset</mat-icon>
+                <h2>Live Match Arena</h2>
+              </div>
+              <span class="session-badge">{{ sessionType || 'Standard' }}</span>
+            </div>
+
+            <!-- Dual Team Session Scoreboard -->
+            <div class="scoreboard-dual" *ngIf="isDualTeam()">
+              <!-- Team 1 / Blue -->
+              <div class="team-block team-blue">
+                <div class="team-header">
+                  <div class="team-info">
+                    <span class="team-badge">Team 1</span>
+                    <h3 class="team-name">{{ teamData['0'].name || 'Blue Team' }}</h3>
+                  </div>
+                  <div class="team-score">{{ teamData['0'].score || 0 }}</div>
+                </div>
+                <div class="team-players-list">
+                  <div
+                    *ngFor="let player of teamData['0'].players"
+                    class="player-item"
+                    (click)="openDialog(player)"
+                    title="Click to view player & subscribe"
+                  >
+                    <div class="player-avatar">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <div class="player-meta">
+                      <span class="player-name">{{ player.name }}</span>
+                      <span class="player-device">{{ player.device_id }}</span>
+                    </div>
+                    <span class="player-tag" *ngIf="player.character">{{ player.character }}</span>
+                  </div>
+                  <div class="no-players" *ngIf="!teamData['0'].players?.length">
+                    No active players in this team
+                  </div>
+                </div>
+              </div>
+
+              <!-- Team 2 / Red -->
+              <div class="team-block team-red">
+                <div class="team-header">
+                  <div class="team-info">
+                    <span class="team-badge">Team 2</span>
+                    <h3 class="team-name">{{ teamData['1'].name || 'Red Team' }}</h3>
+                  </div>
+                  <div class="team-score">{{ teamData['1'].score || 0 }}</div>
+                </div>
+                <div class="team-players-list">
+                  <div
+                    *ngFor="let player of teamData['1'].players"
+                    class="player-item"
+                    (click)="openDialog(player)"
+                    title="Click to view player & subscribe"
+                  >
+                    <div class="player-avatar">
+                      <mat-icon>person</mat-icon>
+                    </div>
+                    <div class="player-meta">
+                      <span class="player-name">{{ player.name }}</span>
+                      <span class="player-device">{{ player.device_id }}</span>
+                    </div>
+                    <span class="player-tag" *ngIf="player.character">{{ player.character }}</span>
+                  </div>
+                  <div class="no-players" *ngIf="!teamData['1'].players?.length">
+                    No active players in this team
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Free For All / Solo Session Roster -->
+            <div class="scoreboard-ffa" *ngIf="!isDualTeam()">
+              <div class="ffa-players-grid" *ngIf="getAllPlayers().length > 0">
+                <div
+                  *ngFor="let player of getAllPlayers()"
+                  class="player-item ffa-player-item"
+                  (click)="openDialog(player)"
+                  title="Click to view player & subscribe"
+                >
+                  <div class="player-avatar ffa-avatar">
+                    <mat-icon>sports_kabaddi</mat-icon>
+                  </div>
+                  <div class="player-meta">
+                    <span class="player-name">{{ player.name }}</span>
+                    <span class="player-device">{{ player.device_id }}</span>
+                  </div>
+                  <span class="player-tag" *ngIf="player.character">{{ player.character }}</span>
+                </div>
+              </div>
+
+              <!-- Empty State when no players are in FFA -->
+              <div class="empty-roster-state" *ngIf="getAllPlayers().length === 0">
+                <mat-icon class="empty-icon">person_off</mat-icon>
+                <h4>No Players In Match</h4>
+                <p>The server is currently running and waiting for players to join the lobby.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top Leaderboard Rankings (Right Column) -->
+        <div class="leaderboard-section">
+          <div class="glass-card leaderboard-card">
+            <div class="card-header-bar">
+              <div class="header-title-wrap">
+                <mat-icon class="header-icon">military_tech</mat-icon>
+                <h2>Top Players</h2>
+              </div>
+              <a class="view-all-link" routerLink="/leaderboard">View All &rarr;</a>
+            </div>
+
+            <!-- Top 5 Rankings Table -->
+            <div class="table-responsive" *ngIf="topPlayers && topPlayers.length > 0">
+              <table class="modern-rankings-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th class="text-right">Score</th>
+                    <th class="text-right">Kills</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let player of topPlayers; let i = index">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-{{ player.rank }}">#{{ player.rank }}</span>
+                    </td>
+                    <td class="name-col">
+                      <span class="player-table-name">{{ player.name }}</span>
+                    </td>
+                    <td class="score-col text-right">{{ player.scores | number }}</td>
+                    <td class="kills-col text-right">{{ player.kills | number }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="empty-table-state" *ngIf="!topPlayers || topPlayers.length === 0">
+              <mat-icon>leaderboard</mat-icon>
+              <p>Leaderboard records loading or empty...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>
-
-<!-- <div class="popup-container">
-  Hi i am player
-</div> -->

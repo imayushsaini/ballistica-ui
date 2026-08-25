@@ -1,94 +1,109 @@
-.main-container {
-  margin: auto;
-  padding-top: 3rem;
+.settings-page {
+  padding-bottom: 80px;
+
+  .tool-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    .tool-title-group {
+      h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 4px 0;
+
+        .title-icon {
+          color: var(--primary-accent);
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      p {
+        font-size: 0.84rem;
+        color: var(--text-muted);
+        margin: 0;
+      }
+    }
+
+    .btn-save-settings {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 18px !important;
+
+      mat-icon.spinning {
+        animation: spin 1s linear infinite;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.settings-form-card {
+  padding: 24px;
+
+  @media (max-width: 600px) {
+    padding: 14px;
+  }
+}
+
+.sticky-save-banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #16181f;
+  border: 1px solid rgba(0, 230, 118, 0.4);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 230, 118, 0.2);
+  padding: 12px 24px;
+  border-radius: 30px;
   display: flex;
-  min-height: 75vh;
-  justify-content: center;
-}
+  align-items: center;
+  gap: 18px;
+  z-index: 1000;
 
-.settings-main {
-  padding: 2rem 5px;
-  width: 80%;
-  margin-bottom: 5rem;
-}
-.btn {
-  background-color: rgba(0, 198, 109, 0.729);
-  padding: 10px;
-  cursor: pointer;
-  &:hover {
-    background-color: rgba(126, 248, 207, 0.75);
-  }
-}
-#snackbar {
-  visibility: hidden; /* Hidden by default. Visible on click */
-  min-width: 250px; /* Set a default minimum width */
-  margin-left: -125px; /* Divide value of min-width by 2 */
-  background-color: #333; /* Black background color */
-  color: #fff; /* White text color */
-  text-align: center; /* Centered text */
-  border-radius: 2px; /* Rounded borders */
-  padding: 16px; /* Padding */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 1; /* Add a z-index if needed */
-  left: 50%; /* Center the snackbar */
-  bottom: 30px; /* 30px from the bottom */
-}
+  .save-banner-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #e0e6ed;
 
-#snackbar.show {
-  visibility: visible; /* Show the snackbar */
-  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
-  However, delay the fade out process for 2.5 seconds */
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s;
-}
+    .alert-icon {
+      color: #00e676;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
 
-/* Animations to fade the snackbar in and out */
-@-webkit-keyframes fadein {
-  from {
-    bottom: 0;
-    opacity: 0;
-  }
-  to {
-    bottom: 30px;
-    opacity: 1;
-  }
-}
-
-@keyframes fadein {
-  from {
-    bottom: 0;
-    opacity: 0;
-  }
-  to {
-    bottom: 30px;
-    opacity: 1;
-  }
-}
-
-@-webkit-keyframes fadeout {
-  from {
-    bottom: 30px;
-    opacity: 1;
-  }
-  to {
-    bottom: 0;
-    opacity: 0;
-  }
-}
-
-@keyframes fadeout {
-  from {
-    bottom: 30px;
-    opacity: 1;
-  }
-  to {
-    bottom: 0;
-    opacity: 0;
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  .settings-main {
-    width: 90%;
+  .btn-save-banner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #00c853, #00e676) !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    padding: 8px 18px !important;
   }
 }

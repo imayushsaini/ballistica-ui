@@ -1,27 +1,62 @@
-<div class="player">
-  <a class="close-btn" (click)="onClose()">X</a>
-  <div class="heading" *ngIf="player">
-    {{player.name}}
+<div class="glass-card player-profile-inspector" *ngIf="player">
+  <!-- Profile Header -->
+  <div class="inspector-header">
+    <div class="avatar-badge-wrap">
+      <div class="player-avatar">
+        <mat-icon>person</mat-icon>
+      </div>
+      <span class="rank-pill">#{{ player.rank || '?' }}</span>
+    </div>
+
+    <button type="button" class="btn-close-inspector" (click)="onClose()" title="Close profile">
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
-  <div class="players" *ngIf="player && player!=={}">
-    <ul>
-      <li>
-        Id: {{player.id}}
-      </li>
 
+  <div class="inspector-name-block">
+    <h3 class="player-name">{{ player.name }}</h3>
+    <span class="player-id-tag">{{ player.id || player.aid || 'Account: Unknown' }}</span>
+  </div>
 
-      <li>Name:{{player.name}}</li>
-      <li>Rank: #{{player.rank}}</li>
-      <li>Score : {{player.scores}}</li>
-      <li>Kills: {{player.kills}}</li>
-      <li>Death: {{player.deaths}}</li>
-      <li>K/D: {{ getKD(player.kills,player.deaths)}}</li>
-      <li>Last Seen: {{parseTime(player.last_seen)}}</li>
-      <li>
-        <button mat-raised-button color="primary" (click)="subscribe(player.id,player.name)" class="notify-btn">Notify
-          Me</button>
-        <p style="color:#f03737">*Get notification when he play again</p>
-      </li>
-    </ul>
+  <!-- Stats Grid -->
+  <div class="inspector-stats-grid">
+    <div class="stat-box">
+      <span class="stat-label">Total Score</span>
+      <span class="stat-val score-highlight">{{ (player.scores || 0) | number }}</span>
+    </div>
+
+    <div class="stat-box">
+      <span class="stat-label">K/D Ratio</span>
+      <span class="stat-val kd-highlight">{{ getKD(player.kills, player.deaths) }}</span>
+    </div>
+
+    <div class="stat-box">
+      <span class="stat-label">Total Kills</span>
+      <span class="stat-val">{{ (player.kills || 0) | number }}</span>
+    </div>
+
+    <div class="stat-box">
+      <span class="stat-label">Total Deaths</span>
+      <span class="stat-val">{{ (player.deaths || 0) | number }}</span>
+    </div>
+  </div>
+
+  <!-- Last Seen Meta -->
+  <div class="inspector-meta" *ngIf="player.last_seen">
+    <mat-icon>schedule</mat-icon>
+    <span>Last seen: {{ parseTime(player.last_seen) | date:'medium' }}</span>
+  </div>
+
+  <!-- Notification Subscription Button -->
+  <div class="subscribe-action-wrap">
+    <button
+      type="button"
+      class="btn-primary-glow btn-subscribe-player"
+      (click)="subscribe(player.id || player.aid, player.name)"
+    >
+      <mat-icon>notifications_active</mat-icon>
+      <span>Notify When Online</span>
+    </button>
+    <span class="subscribe-note">Get instant WebPush alert when {{ player.name }} joins the server.</span>
   </div>
 </div>

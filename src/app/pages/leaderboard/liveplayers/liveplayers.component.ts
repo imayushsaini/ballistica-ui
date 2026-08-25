@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-liveplayers',
   templateUrl: './liveplayers.component.html',
   styleUrls: ['./liveplayers.component.scss'],
+  standalone: false,
 })
 export class LiveplayersComponent implements OnInit {
   constructor() {}

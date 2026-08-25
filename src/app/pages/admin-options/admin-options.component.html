@@ -1,33 +1,152 @@
-<div class="main-container">
-  <div class="tools">
-    <div class="row">
-      <div class="option quick-tools foreground" routerLink='/admin/quick'>
-        Quick Tools
-      </div>
+<div class="admin-overview-container">
+  <!-- Hub Hero -->
+  <div class="hero-header">
+    <div class="hero-pill">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Server Control Center</span>
     </div>
-    <div class="row">
-      <div class="server-settings option col foreground" routerLink='/admin/settings'>
-        Settings
+    <h1 class="hero-main-title">Administrative Tools Suite</h1>
+    <p class="hero-description">
+      Manage your Ballistica server instance in real-time. Configure settings, supervise connected players, modify roles and perks, or inspect logs.
+    </p>
+  </div>
+
+  <!-- Admin Hub Grid of Cards -->
+  <div class="admin-tools-grid">
+    <!-- Quick Tools Card -->
+    <a routerLink="/admin/quick" class="glass-card tool-card card-quick">
+      <div class="tool-icon-wrap icon-quick">
+        <mat-icon>flash_on</mat-icon>
       </div>
-      <div class="roles-management option col foreground" routerLink="/admin/roles">
-        Manage Roles
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Quick In-Game Tools</h3>
+          <span class="tool-tag tag-live">Live</span>
+        </div>
+        <p>Broadcast messages to the in-game chat box, view connected players, and execute quick kicks, bans, or mutes.</p>
       </div>
-    </div>
-    <div class="row">
-      <div class="player-profiles option col foreground" routerLink="/admin/players">
-        Player Profiles
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
       </div>
-      <div class="server-logs option col foreground" routerLink="/admin/server-logs">
-        Server Logs
+    </a>
+
+    <!-- Player Profiles (V2) Card -->
+    <a routerLink="/admin/players" class="glass-card tool-card card-players">
+      <div class="tool-icon-wrap icon-players">
+        <mat-icon>badge</mat-icon>
       </div>
-    </div>
-    <div class="row">
-      <div class="player-profiles option col foreground" routerLink="/admin/perks">
-        Manage Perks
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Player Profiles (V2)</h3>
+          <span class="tool-tag tag-v2">SQLite V2</span>
+        </div>
+        <p>Explore the complete SQLite player database with server-side pagination, search by name/IP/UUID, and edit player profiles.</p>
       </div>
-      <div class="server-logs option col foreground" routerLink="/admin/config">
-        Server Config
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
       </div>
-    </div>
+    </a>
+
+    <!-- Economy & Shop Card -->
+    <a routerLink="/admin/economy" class="glass-card tool-card card-economy">
+      <div class="tool-icon-wrap icon-economy">
+        <mat-icon>payments</mat-icon>
+      </div>
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Economy &amp; Shop</h3>
+          <span class="tool-tag tag-v2">V2 Shop</span>
+        </div>
+        <p>Manage player ticket balances, grant or revoke commands and particle effects, and audit server transaction logs.</p>
+      </div>
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </a>
+
+    <!-- Roles Management Card -->
+    <a routerLink="/admin/roles" class="glass-card tool-card card-roles">
+      <div class="tool-icon-wrap icon-roles">
+        <mat-icon>verified_user</mat-icon>
+      </div>
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Roles &amp; Permissions</h3>
+          <span class="tool-tag">Security</span>
+        </div>
+        <p>Define custom roles (Admin, Moderator, VIP), assign RGB tag colors, configure allowed commands, and assign account IDs.</p>
+      </div>
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </a>
+
+    <!-- Manage Perks Card -->
+    <a routerLink="/admin/perks" class="glass-card tool-card card-perks">
+      <div class="tool-icon-wrap icon-perks">
+        <mat-icon>auto_awesome</mat-icon>
+      </div>
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Perks &amp; Visual Effects</h3>
+          <span class="tool-tag">VIP</span>
+        </div>
+        <p>Assign custom tags and special character visual effects (spark, glow, fairydust, sweat, etc.) to reward players.</p>
+      </div>
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </a>
+
+    <!-- Server Settings Card -->
+    <a routerLink="/admin/settings" class="glass-card tool-card card-settings">
+      <div class="tool-icon-wrap icon-settings">
+        <mat-icon>tune</mat-icon>
+      </div>
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Server Settings</h3>
+          <span class="tool-tag">Rules</span>
+        </div>
+        <p>Configure gameplay settings, AFK remover timers, night mode, Discord webhook alerts, custom powerups, and announcements.</p>
+      </div>
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </a>
+
+    <!-- Server Config Card -->
+    <a routerLink="/admin/config" class="glass-card tool-card card-config">
+      <div class="tool-icon-wrap icon-config">
+        <mat-icon>settings_applications</mat-icon>
+      </div>
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Engine Configuration</h3>
+          <span class="tool-tag">Core</span>
+        </div>
+        <p>Directly modify core <code>config.json</code> parameters: party name, port, session type, max players, queue status, and auto-balance.</p>
+      </div>
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </a>
+
+    <!-- Logs Viewer Card -->
+    <a routerLink="/admin/server-logs" class="glass-card tool-card card-logs">
+      <div class="tool-icon-wrap icon-logs">
+        <mat-icon>terminal</mat-icon>
+      </div>
+      <div class="tool-card-content">
+        <div class="tool-title-row">
+          <h3>Server &amp; Chat Logs</h3>
+          <span class="tool-tag">Diagnostics</span>
+        </div>
+        <p>Search and inspect live server log files: <code>chatlogs.log</code>, <code>joining.log</code>, and <code>system.log</code> with keyword filters.</p>
+      </div>
+      <div class="tool-card-arrow">
+        <mat-icon>arrow_forward</mat-icon>
+      </div>
+    </a>
   </div>
 </div>

@@ -1,11 +1,48 @@
-<div class="main-container">
-  <form class="settings-main foreground">
-    <div class="spinner-block" *ngIf="isLoading">
-      <mat-spinner class="spinner"></mat-spinner>
+<div class="admin-tool-page config-page">
+  <!-- Top Bar -->
+  <div class="tool-top-bar">
+    <div class="tool-title-group">
+      <h2><mat-icon class="title-icon">settings_applications</mat-icon> Core Engine Configuration</h2>
+      <p>Configure primary engine parameters: party name, port, session playlist, max party size, telnet, and UDP ports.</p>
     </div>
-    <app-reactive-form [formGroup]=formGroup></app-reactive-form>
-  </form>
-</div>
 
-<div id="snackbar" [ngClass]="{'show': modified }">Save changes ? <span class="btn save" (click)="onSubmit()"
-    [ngClass]="{'invalid': isValid}">Save</span></div>
+    <button
+      type="button"
+      class="btn-primary-glow btn-save-config"
+      (click)="onSubmit()"
+      [disabled]="isSaving || !modified || !isValid"
+    >
+      <mat-icon [class.spinning]="isSaving">save</mat-icon>
+      <span>{{ isSaving ? 'Saving...' : 'Save Engine Config' }}</span>
+    </button>
+  </div>
+
+  <div class="table-loading-state" *ngIf="isLoading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Loading core config.json properties...</p>
+  </div>
+
+  <!-- Config Form Container -->
+  <div class="glass-card config-form-card" *ngIf="!isLoading">
+    <form class="dynamic-config-form">
+      <app-reactive-form [formGroup]="formGroup"></app-reactive-form>
+    </form>
+  </div>
+
+  <!-- Sticky Save Banner when modified -->
+  <div class="sticky-save-banner glass-card" *ngIf="modified">
+    <div class="save-banner-info">
+      <mat-icon class="alert-icon">info</mat-icon>
+      <span>{{ isValid ? 'Engine config modified. Click save to apply.' : 'Please correct invalid values.' }}</span>
+    </div>
+    <button
+      type="button"
+      class="btn-primary-glow btn-save-banner"
+      (click)="onSubmit()"
+      [disabled]="isSaving || !isValid"
+    >
+      <mat-icon [class.spinning]="isSaving">save</mat-icon>
+      <span>{{ isSaving ? 'Saving...' : 'Save Engine Config' }}</span>
+    </button>
+  </div>
+</div>

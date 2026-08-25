@@ -4,6 +4,7 @@ import { HomeComponent } from "./pages/home/home.component";
 import { LeaderboardComponent } from "./pages/leaderboard/leaderboard.component";
 import { LoginComponent } from "./pages/login/login.component";
 import { SelectServerComponent } from "./pages/select-server/select-server.component";
+import { AdminGuard } from "./guards/admin.guard";
 
 const routes: Routes = [
   { path: "", component: HomeComponent },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: "login", component: LoginComponent },
   {
     path: "admin",
+    canActivate: [AdminGuard],
     loadChildren: () => import("./admin.module").then((m) => m.AdminModule),
   },
   { path: "**", redirectTo: "" },

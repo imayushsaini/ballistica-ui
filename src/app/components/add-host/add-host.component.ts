@@ -11,13 +11,13 @@ import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
-  MatDialogClose,
   MatDialogContent,
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { environment } from 'src/environments/environment';
 
 export interface DialogData {
@@ -38,7 +38,7 @@ export interface DialogData {
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
-    MatDialogClose,
+    MatIconModule,
   ],
   templateUrl: './add-host.component.html',
   styleUrl: './add-host.component.scss',
@@ -49,6 +49,7 @@ export class AddHostComponent implements OnInit {
   ip: string | undefined;
   port: string | undefined;
   readonly mode = inject<string>(MAT_DIALOG_DATA);
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<AddHostComponent>
@@ -58,31 +59,42 @@ export class AddHostComponent implements OnInit {
     this.addHostForm = this.fb.group({
       ip: [
         '',
-        [Validators.required, Validators.pattern(/^(\d{1,3}\.){3}\d{1,3}$/)],
+        [
+          Validators.required,
+          Validators.pattern(
+            /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$|^(\d{1,3}\.){3}\d{1,3}$|^localhost$/
+          ),
+        ],
       ],
-      port: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      port: ['43210', [Validators.required, Validators.pattern(/^\d+$/)]],
     });
+
     this.addProxyForm = this.fb.group({
       proxy: [
         environment.API_PROXY,
         [
           Validators.required,
           Validators.pattern(
-            /^https:\/\/[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(\/[^\s]*)?$/
+            /^https?:\/\/[a-zA-Z0-9-.]+(:\d+)?(\/[^\s]*)?$/
           ),
         ],
       ],
     });
   }
 
+  setPreset(ip: string, port: string): void {
+    this.addHostForm.patchValue({ ip, port });
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
+
   onSubmit(): void {
-    if (this.mode == 'host' && this.addHostForm.valid) {
+    if (this.mode === 'host' && this.addHostForm.valid) {
       this.dialogRef.close(this.addHostForm.value);
     }
-    if (this.mode == 'proxy' && this.addProxyForm.valid) {
+    if (this.mode === 'proxy' && this.addProxyForm.valid) {
       this.dialogRef.close(this.addProxyForm.value.proxy);
     }
   }

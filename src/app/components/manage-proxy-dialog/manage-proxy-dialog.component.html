@@ -1,0 +1,127 @@
+<div class="manage-proxy-dialog">
+  <!-- Dialog Header -->
+  <div class="dialog-header">
+    <div class="header-icon-wrap">
+      <mat-icon>vpn_lock</mat-icon>
+    </div>
+    <div class="header-text">
+      <h2 class="dialog-title">API Proxy Gateways</h2>
+      <span class="dialog-sub">Manage and test forwarding proxies used when connecting to remote/public servers.</span>
+    </div>
+    <button type="button" class="btn-close-dialog" (click)="close()" title="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-body">
+    <!-- Local IP Direct Hint -->
+    <div class="local-hint-banner">
+      <mat-icon>info_outline</mat-icon>
+      <span>Localhost and LAN IPs (127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x) always connect directly and bypass the proxy.</span>
+    </div>
+
+    <!-- Add New Proxy Row -->
+    <div class="add-proxy-card">
+      <mat-form-field appearance="fill" class="proxy-input-field">
+        <mat-label>Add New Proxy Gateway URL</mat-label>
+        <input
+          matInput
+          [(ngModel)]="newProxyUrl"
+          placeholder="https://my-custom-proxy.deno.net"
+          (keyup.enter)="onAddProxy()"
+        />
+        <mat-icon matPrefix class="field-icon">add_link</mat-icon>
+      </mat-form-field>
+      <button
+        type="button"
+        class="btn-primary-glow btn-add-proxy"
+        (click)="onAddProxy()"
+        [disabled]="!newProxyUrl.trim()"
+      >
+        <mat-icon>add</mat-icon>
+        <span>Add</span>
+      </button>
+    </div>
+
+    <!-- Saved Proxies List -->
+    <div class="proxies-list-section">
+      <div class="list-title-row">
+        <h3>Saved Proxies ({{ proxyList.length }})</h3>
+        <button type="button" class="btn-test-all" (click)="testAllProxies()">
+          <mat-icon>sync</mat-icon>
+          <span>Test All</span>
+        </button>
+      </div>
+
+      <div class="proxies-items-list">
+        <div
+          *ngFor="let url of proxyList"
+          class="proxy-item"
+          [class.active-proxy-item]="url === activeProxy"
+          (click)="selectProxy(url)"
+        >
+          <div class="proxy-radio-wrap">
+            <span class="custom-radio" [class.checked]="url === activeProxy"></span>
+          </div>
+
+          <div class="proxy-meta">
+            <div class="proxy-url-row">
+              <span class="proxy-url-text">{{ url }}</span>
+              <span class="active-badge" *ngIf="url === activeProxy">Active</span>
+            </div>
+
+            <!-- Health Status & Latency -->
+            <div class="proxy-status-row">
+              <ng-container *ngIf="proxyStatusMap[url]?.status === 'testing'">
+                <mat-spinner diameter="12"></mat-spinner>
+                <span class="status-msg testing">Testing connection...</span>
+              </ng-container>
+
+              <ng-container *ngIf="proxyStatusMap[url]?.status === 'healthy'">
+                <span class="status-dot online"></span>
+                <span class="status-msg healthy">Online &bull; {{ proxyStatusMap[url].latency }}ms</span>
+              </ng-container>
+
+              <ng-container *ngIf="proxyStatusMap[url]?.status === 'error'">
+                <span class="status-dot offline"></span>
+                <span class="status-msg error">Unreachable / Offline</span>
+              </ng-container>
+
+              <ng-container *ngIf="!proxyStatusMap[url] || proxyStatusMap[url]?.status === 'idle'">
+                <span class="status-msg idle">Not tested</span>
+              </ng-container>
+            </div>
+          </div>
+
+          <div class="proxy-actions">
+            <button
+              type="button"
+              class="btn-proxy-action btn-ping"
+              (click)="testProxy(url); $event.stopPropagation()"
+              title="Test this proxy"
+            >
+              <mat-icon>network_ping</mat-icon>
+            </button>
+
+            <button
+              type="button"
+              class="btn-proxy-action btn-delete-p"
+              *ngIf="proxyList.length > 1"
+              (click)="onDeleteProxy(url, $event)"
+              title="Delete proxy"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <button type="button" class="btn-primary-glow btn-done" (click)="close()">
+      <mat-icon>check</mat-icon>
+      <span>Done</span>
+    </button>
+  </mat-dialog-actions>
+</div>

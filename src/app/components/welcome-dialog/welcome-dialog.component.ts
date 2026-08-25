@@ -5,7 +5,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-welcome-dialog',
   templateUrl: './welcome-dialog.component.html',
-  styleUrl: './welcome-dialog.component.scss'
+  styleUrl: './welcome-dialog.component.scss',
+  standalone: false,
 })
 export class WelcomeDialogComponent {
 

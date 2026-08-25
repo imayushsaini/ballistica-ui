@@ -1,26 +1,95 @@
-<div class="main-container">
-  <div class="logs-section">
-    <div class="search">
-      <mat-form-field class="full-width">
-        <mat-label>Search</mat-label>
-        <input type="email" matInput placeholder="pb-th347Wer== or Android243" [formControl]="searchKeyControl"
-          (keyup.enter)="onSearch($event)" (focusout)="onSearch($event)">
-        <mat-hint>Press enter after typing</mat-hint>
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label>Select database</mat-label>
+<div class="admin-tool-page logs-page">
+  <!-- Top Bar -->
+  <div class="tool-top-bar">
+    <div class="tool-title-group">
+      <h2><mat-icon class="title-icon">terminal</mat-icon> Live Server Logs Viewer</h2>
+      <p>Inspect server log streams (chatlogs, player joins, engine system diagnostics) in real-time.</p>
+    </div>
+
+    <button type="button" class="btn-primary-glow btn-refresh-logs" (click)="fetchLogs()" [disabled]="isLoading">
+      <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+      <span>Refresh Logs</span>
+    </button>
+  </div>
+
+  <!-- Search & File Selection Card -->
+  <div class="glass-card logs-toolbar-card">
+    <div class="toolbar-flex-row">
+      <mat-form-field appearance="fill" class="log-file-select">
+        <mat-label>Select Log File</mat-label>
         <mat-select [formControl]="selectDBControl">
           <mat-option *ngFor="let db of DBS" [value]="db">
-            {{db}}
+            {{ db }}
           </mat-option>
         </mat-select>
+        <mat-icon matPrefix class="field-icon">description</mat-icon>
       </mat-form-field>
-    </div>
-    <div class="log-viewer foreground">
-      <p>
-        <span *ngFor="let log of LOGS">{{log}}<br></span>
-      </p>
+
+      <mat-form-field appearance="fill" class="log-search-field">
+        <mat-label>Filter log entries by keyword or account ID...</mat-label>
+        <input
+          matInput
+          placeholder="e.g. Smoothy or pb-IF4VAk4a or error"
+          [formControl]="searchKeyControl"
+          (keyup.enter)="onSearch($event)"
+        />
+        <mat-icon matPrefix class="field-icon">filter_list</mat-icon>
+        <button
+          *ngIf="searchKeyControl.value"
+          mat-icon-button
+          matSuffix
+          (click)="clearSearch()"
+          class="btn-clear-filter"
+          title="Clear search"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button type="button" class="btn-primary-glow btn-apply-filter" (click)="onSearch()">
+        <mat-icon>search</mat-icon>
+        <span>Search</span>
+      </button>
     </div>
   </div>
 
+  <!-- Terminal Console Card -->
+  <div class="glass-card terminal-card">
+    <div class="terminal-header">
+      <div class="window-dots">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <div class="terminal-title">
+        <mat-icon>terminal</mat-icon>
+        <span>{{ selectDBControl.value }} &bull; {{ logLines.length }} lines</span>
+      </div>
+      <div class="terminal-actions">
+        <button type="button" class="btn-term-action" (click)="fetchLogs()" title="Refresh log">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Terminal Content Stream -->
+    <div class="terminal-viewport">
+      <div class="terminal-lines" *ngIf="!isLoading && logLines.length > 0">
+        <div *ngFor="let line of logLines; let i = index" class="log-row">
+          <span class="line-num">{{ i + 1 }}</span>
+          <span class="line-text">{{ line }}</span>
+        </div>
+      </div>
+
+      <div class="terminal-loading" *ngIf="isLoading">
+        <mat-spinner diameter="32"></mat-spinner>
+        <span>Reading log file stream...</span>
+      </div>
+
+      <div class="terminal-empty" *ngIf="!isLoading && logLines.length === 0">
+        <mat-icon>code_off</mat-icon>
+        <p>No log records matching your search query.</p>
+      </div>
+    </div>
+  </div>
 </div>

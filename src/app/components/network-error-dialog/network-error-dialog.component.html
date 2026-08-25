@@ -1,19 +1,30 @@
-<h2 mat-dialog-title>Connection Error</h2>
-<mat-dialog-content>
-  <p>Failed to connect to the server. Possible reasons:</p>
-  <ul>
-    <li>The selected server is offline.</li>
-    <li>The proxy is not responding.</li>
-  </ul>
-  <p>You can:</p>
-  <ul>
-    <li>Wait and retry after a few minutes.</li>
-    <li>Ensure the server is online by visiting <code>http://serverIP:PORT</code>.</li>
-    <li>Navigate to <code> <a href="/switch-server">Switch server</a></code> and select another server.</li>
-    <li>Check the console for more details.</li>
-    <li>Change the proxy if necessary (add your own if you feel so).</li>
-  </ul>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Close</button>
-</mat-dialog-actions>
+<div class="error-dialog-wrap">
+  <div class="dialog-header">
+    <div class="error-icon-wrap">
+      <mat-icon>wifi_off</mat-icon>
+    </div>
+    <div>
+      <h2 class="dialog-title">Connection Unreachable</h2>
+      <span class="dialog-sub">Could not communicate with the target server host</span>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-body">
+    <div class="troubleshoot-box">
+      <h4><mat-icon>help_outline</mat-icon> Possible Causes &amp; Fixes:</h4>
+      <ul>
+        <li><strong>Server Offline:</strong> Ensure your BallisticaKit server is launched and listening on the specified port.</li>
+        <li><strong>Local IP Detection:</strong> Local / private LAN addresses (e.g. <code>127.0.0.1</code>, <code>172.x.x.x</code>, <code>192.168.x.x</code>) bypass the proxy and require local network access.</li>
+        <li><strong>Proxy Unresponsive:</strong> If you are connecting to a remote public server, the HTTPS proxy might be experiencing downtime.</li>
+      </ul>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <button type="button" class="btn-dialog-secondary" mat-dialog-close>Dismiss</button>
+    <a routerLink="/switch-server" mat-dialog-close class="btn-primary-glow btn-switch-link">
+      <mat-icon>sync_alt</mat-icon>
+      <span>Switch Server</span>
+    </a>
+  </mat-dialog-actions>
+</div>

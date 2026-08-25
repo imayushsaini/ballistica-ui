@@ -29,6 +29,7 @@ import { authInterceptorProvider } from './helpers/auth.interceptor';
 import { SelectServerComponent } from './pages/select-server/select-server.component';
 import { errorInterceptorProvider } from './helpers/error.interceptor';
 import { WelcomeDialogComponent } from './components/welcome-dialog/welcome-dialog.component';
+import { ManageProxyDialogComponent } from './components/manage-proxy-dialog/manage-proxy-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,6 @@ import { WelcomeDialogComponent } from './components/welcome-dialog/welcome-dial
     HomeComponent,
     NavBarComponent,
     LeaderboardComponent,
-    
     WelcomeDialogComponent,
     PlayerprofileComponent,
     LiveplayersComponent,
@@ -60,6 +60,7 @@ import { WelcomeDialogComponent } from './components/welcome-dialog/welcome-dial
     MatIconModule,
     MatDialogModule,
     MatSnackBarModule,
+    ManageProxyDialogComponent,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: true,
       // Register the ServiceWorker as soon as the app is stable

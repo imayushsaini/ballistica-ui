@@ -1,23 +1,66 @@
-<h2 mat-dialog-title>Welcome to BCS Server Manager</h2>
-<mat-dialog-content class="mat-typography">
-  <h3>Manage/Visualize Your BombSquad Server Efficiently</h3>
-  <p>Your one-stop solution for managing your BombSquad server. Here you can:</p>
-  <ul>
-    <li>View live status of the server, including current players, scores, and the map running on the server.</li>
-    <li>Check the leaderboard and subscribe to notifications for specific players to get web push notifications when
-      they
-      come online.</li>
-    <li>Access server management tools to configure server settings, manage roles and permissions, and view all server
-      logs in one place.</li>
-  </ul>
-  <h3>Let's get started by adding your server details</h3>
-  <ul>
-    <li>Navigate to switch server page.</li>
-    <li>Click add host and enter game server IP PORT.</li>
-    <li>Thats it, this IP PORT will be saved in your browser, to let you navigate across servers.</li>
-    <li>If you are admin of server, navigate to Admin Tools and login with password.</li>
-  </ul>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Add host</button>
-</mat-dialog-actions>
+<div class="welcome-dialog-wrap">
+  <div class="dialog-header">
+    <div class="header-badge">
+      <mat-icon>rocket_launch</mat-icon>
+      <span>Welcome to Ballistica Server Manager</span>
+    </div>
+    <h2 class="dialog-title">Connect &amp; Manage Your BombSquad Server</h2>
+  </div>
+
+  <mat-dialog-content class="dialog-body">
+    <p class="intro-p">
+      The complete real-time management hub for BallisticaKit and BombSquad server hosts.
+    </p>
+
+    <!-- Feature Grid -->
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon feature-live">
+          <mat-icon>stream</mat-icon>
+        </div>
+        <div class="feature-text">
+          <h4>Live Match &amp; Roster</h4>
+          <p>Real-time game playlist, player stats, health, and team scoreboard.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon feature-leaderboard">
+          <mat-icon>leaderboard</mat-icon>
+        </div>
+        <div class="feature-text">
+          <h4>Leaderboard &amp; Push Alerts</h4>
+          <p>Top 200 rankings, K/D stats, and push alerts when players join.</p>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-icon feature-admin">
+          <mat-icon>admin_panel_settings</mat-icon>
+        </div>
+        <div class="feature-text">
+          <h4>Admin Suite &amp; SQLite V2</h4>
+          <p>Roles, perks, blacklist/whitelist, live terminal logs, and fast search.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Steps -->
+    <div class="getting-started-box">
+      <h4><mat-icon>dns</mat-icon> Quick Setup Steps</h4>
+      <ol>
+        <li>Click <strong>"Connect Server"</strong> below to open the server setup dialog.</li>
+        <li>Enter your server's IP address and Port (e.g. <code>172.30.209.34:43210</code> or <code>127.0.0.1:43210</code>).</li>
+        <li>Your server address is saved in your browser for seamless switching anytime.</li>
+      </ol>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions" align="end">
+    <button type="button" class="btn-dialog-secondary" [mat-dialog-close]="false">Explore Later</button>
+    <button type="button" class="btn-primary-glow btn-connect-now" [mat-dialog-close]="true" cdkFocusInitial>
+      <mat-icon>add_circle</mat-icon>
+      <span>Connect Server Now</span>
+    </button>
+  </mat-dialog-actions>
+</div>

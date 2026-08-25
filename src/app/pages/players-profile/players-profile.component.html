@@ -1,67 +1,530 @@
-<div class="main-container">
-  <div class="players-section">
-    <div class="search">
-      <mat-form-field class="full-width">
-        <mat-label>Search</mat-label>
-        <input type="email" matInput placeholder="pb-th347Wer== or Android243" [formControl]="searchKeyControl"
-          (keyup.enter)="onSearch($event)" (focusout)="onSearch($event)">
-        <mat-hint>Press Enter after typing</mat-hint>
-      </mat-form-field>
-      <mat-form-field class="full-width">
-        <mat-label>Select database</mat-label>
-        <mat-select [formControl]="selectDBControl">
-          <mat-option *ngFor="let db of DBS" [value]="db">
-            {{db}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+<div class="admin-tool-page players-profile-page">
+  <!-- Top Bar -->
+  <div class="tool-top-bar">
+    <div class="tool-title-group">
+      <h2><mat-icon class="title-icon">badge</mat-icon> Player Profiles &amp; Database</h2>
+      <p>Supervise players, query SQLite records, inspect profiles, configure whitelist, and view blacklist restrictions.</p>
     </div>
-    <div class="results">
-      <div class="result" *ngFor="let profile of getObjectKeys(PROFILES)">
-        <mat-expansion-panel (opened)="onOpen(profile)">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              Name: {{ PROFILES[profile].name}}
-            </mat-panel-title>
-            <mat-panel-description>
-              account_id {{ profile }}
-            </mat-panel-description>
-          </mat-expansion-panel-header>
-          <ul>
-            <li>Linked Accounts: {{ PROFILES[profile].display_string}}</li>
-            <li *ngIf="getRestrictionInfo(profile)">isBanned: {{getRestrictionInfo(profile).isBan }}</li>
-            <li *ngIf="getRestrictionInfo(profile)">isMuted: {{getRestrictionInfo(profile).isMuted }}</li>
-            <li>Account Created On: {{PROFILES[profile].accountAge }}</li>
-            <li>RegisteredOn: {{ getDateTime(PROFILES[profile].registerOn) }}</li>
-            <li>CanStartKickVote: {{PROFILES[profile].canStartKickVote }}</li>
-            <li>Active SpamCount: {{PROFILES[profile].spamCount}}</li>
-            <li>LastSpam: {{ getDateTime(PROFILES[profile].lastSpam) }}</li>
-            <li>WarnCount: {{PROFILES[profile].warnCount }}</li>
-            <li>LastWarned: {{ getDateTime(PROFILES[profile].lastWarned) }}</li>
-            <li>Verified:{{PROFILES[profile].verified }}</li>
-            <li>LastJoin: {{ getDateTime(PROFILES[profile].lastJoin) }}</li>
-            <li>LastIP: {{PROFILES[profile].lastIP }}</li>
-            <li>DeviceUUID: {{PROFILES[profile].deviceUUID}}</li>
-            <li>LastMsgTime: {{ getDateTime(PROFILES[profile].lastMsgTime)}}</li>
-            <li>LastMsg: {{PROFILES[profile].lastMsg}}</li>
-            <li *ngIf="getRestrictionInfo(profile)">Extra: {{getRestrictionInfo(profile).extra}}</li>
-          </ul>
-          <div class="options" *ngIf="getRestrictionInfo(profile)">
-            <button mat-raised-button [color]="getRestrictionInfo(profile).isBan ? 'accent' : 'warn'"
-              (click)="onBanClick(profile)">{{getRestrictionInfo(profile).isBan ? 'Unban':
-              'Ban'}}</button>
-            <button mat-flat-button [color]="getRestrictionInfo(profile).isMuted ? 'accent' : 'warn'"
-              (click)="onUnmuteClick(profile)">{{getRestrictionInfo(profile).isMuted ?
-              'UnMute': 'Mute'}}</button>
-            <button mat-flat-button [color]="getRestrictionInfo(profile).isKickVoteDisabled ? 'accent' : 'warn'"
-              (click)="onKickVoteClick(profile)">
-              {{getRestrictionInfo(profile).isKickVoteDisabled ? 'enable kick votes': 'disable kick votes'}}</button>
-          </div>
-          <span *ngIf="updateInQueue.includes(profile) ">....processing...</span>
-        </mat-expansion-panel>
+  </div>
 
+  <!-- Material Tabs for V2 Database, Security Center, and Legacy Archives -->
+  <mat-tab-group class="modern-tab-group" [(selectedIndex)]="activeTabIndex" animationDuration="150ms">
+    <!-- TAB 1: SQLite V2 Database -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-label-icon">storage</mat-icon>
+        <span>Player Database (V2)</span>
+      </ng-template>
+
+      <div class="tab-content-wrap">
+        <!-- Search & Control Toolbar -->
+        <div class="glass-card toolbar-card">
+          <div class="search-row">
+            <mat-form-field appearance="fill" class="search-input-field">
+              <mat-icon matPrefix class="field-icon">search</mat-icon>
+              <mat-label>Search by Name, Account ID, Last IP, or Device UUID...</mat-label>
+              <input
+                matInput
+                [value]="searchQueryV2"
+                (input)="onSearchV2($event)"
+                (keyup.enter)="loadPlayersV2()"
+                placeholder="e.g. Smoothy or pb-IF4VAk4a or 127.0.0.1"
+              />
+              <button
+                *ngIf="searchQueryV2"
+                mat-icon-button
+                matSuffix
+                (click)="searchQueryV2 = ''; loadPlayersV2()"
+                class="btn-clear-search"
+                title="Clear"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+
+            <button type="button" class="btn-primary-glow btn-refresh-db" (click)="loadPlayersV2()" [disabled]="isLoadingV2">
+              <mat-icon [class.spinning]="isLoadingV2">refresh</mat-icon>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- V2 Players Table Card -->
+        <div class="glass-card table-wrapper-card">
+          <div class="table-meta-bar">
+            <span class="results-count-text">
+              Showing <strong>{{ playersV2.length }}</strong> of <strong>{{ totalPlayersV2 }}</strong> total player records
+            </span>
+            <span class="sort-info-text">
+              Sorted by: <code>{{ sortByV2 }} ({{ sortOrderV2 }})</code>
+            </span>
+          </div>
+
+          <div class="table-responsive" *ngIf="!isLoadingV2 && playersV2.length > 0">
+            <table class="modern-data-table">
+              <thead>
+                <tr>
+                  <th (click)="onSortV2('id')" class="sortable-th">
+                    <span>ID</span>
+                    <mat-icon class="sort-icon">{{ sortByV2 === 'id' ? (sortOrderV2 === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}</mat-icon>
+                  </th>
+                  <th (click)="onSortV2('name')" class="sortable-th">
+                    <span>Player Name</span>
+                    <mat-icon class="sort-icon">{{ sortByV2 === 'name' ? (sortOrderV2 === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}</mat-icon>
+                  </th>
+                  <th>Account ID</th>
+                  <th>Status</th>
+                  <th (click)="onSortV2('rejoincount')" class="sortable-th text-center">
+                    <span>Joins</span>
+                    <mat-icon class="sort-icon">{{ sortByV2 === 'rejoincount' ? (sortOrderV2 === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}</mat-icon>
+                  </th>
+                  <th>Last IP</th>
+                  <th (click)="onSortV2('lastJoin')" class="sortable-th">
+                    <span>Last Active</span>
+                    <mat-icon class="sort-icon">{{ sortByV2 === 'lastJoin' ? (sortOrderV2 === 'asc' ? 'arrow_upward' : 'arrow_downward') : 'unfold_more' }}</mat-icon>
+                  </th>
+                  <th class="text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of playersV2" (click)="inspectPlayerV2(p)">
+                  <td class="id-col">#{{ p.id }}</td>
+                  <td class="name-col">
+                    <div class="player-name-cell">
+                      <span class="player-title">{{ p.name }}</span>
+                      <span class="verified-icon" *ngIf="p.verified" title="Verified Account">
+                        <mat-icon>verified</mat-icon>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="account-col">
+                    <code>{{ p.account_id || p.v2Tag }}</code>
+                  </td>
+                  <td class="status-col">
+                    <span class="badge-tag danger" *ngIf="p.isBan">Banned</span>
+                    <span class="badge-tag warning" *ngIf="p.isMuted">Muted</span>
+                    <span class="badge-tag success" *ngIf="!p.isBan && !p.isMuted">Good</span>
+                  </td>
+                  <td class="joins-col text-center">{{ p.rejoincount || 1 }}</td>
+                  <td class="ip-col">{{ p.lastIP || '-' }}</td>
+                  <td class="date-col">{{ getDateTime(p.lastJoin) }}</td>
+                  <td class="actions-col text-right">
+                    <button type="button" class="btn-inspect-row" (click)="inspectPlayerV2(p); $event.stopPropagation()">
+                      <mat-icon>visibility</mat-icon>
+                      <span>Inspect</span>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Loading State -->
+          <div class="table-loading-state" *ngIf="isLoadingV2">
+            <mat-spinner diameter="36"></mat-spinner>
+            <p>Loading database player profiles...</p>
+          </div>
+
+          <!-- Empty State -->
+          <div class="table-empty-state" *ngIf="!isLoadingV2 && playersV2.length === 0">
+            <mat-icon>person_search</mat-icon>
+            <h4>No Player Profiles Found</h4>
+            <p>Try modifying your search filter or clear the query.</p>
+          </div>
+
+          <!-- Custom Pagination Controls -->
+          <div class="pagination-bar" *ngIf="totalPlayersV2 > 0">
+            <span class="page-status-text">
+              Page {{ currentPageV2 }} of {{ getTotalPagesV2() }}
+            </span>
+            <div class="page-buttons-group">
+              <button
+                type="button"
+                class="btn-page"
+                (click)="onPageChangeV2(currentPageV2 - 1)"
+                [disabled]="currentPageV2 <= 1"
+              >
+                <mat-icon>chevron_left</mat-icon>
+                <span>Prev</span>
+              </button>
+              <button
+                type="button"
+                class="btn-page"
+                (click)="onPageChangeV2(currentPageV2 + 1)"
+                [disabled]="currentPageV2 >= getTotalPagesV2()"
+              >
+                <span>Next</span>
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- TAB 2: Whitelist & Blacklist Security Center -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-label-icon">security</mat-icon>
+        <span>Security Center (V2)</span>
+      </ng-template>
+
+      <div class="tab-content-wrap security-center-grid">
+        <!-- Whitelist Column -->
+        <div class="glass-card security-card">
+          <div class="card-header-bar">
+            <div class="header-title-wrap">
+              <mat-icon class="header-icon text-success">verified_user</mat-icon>
+              <h3>Server Whitelist</h3>
+            </div>
+            <span class="count-badge">{{ whitelist.length }} Allowed</span>
+          </div>
+
+          <div class="security-card-body">
+            <p class="sec-desc">
+              When whitelist mode is active in server settings, only players listed here can enter the game.
+            </p>
+
+            <!-- Add Whitelist Input -->
+            <div class="add-whitelist-row">
+              <mat-form-field appearance="fill" class="whitelist-input-field">
+                <mat-label>Account ID to Whitelist</mat-label>
+                <input matInput [(ngModel)]="newWhitelistId" placeholder="e.g. pb-IF4VAk4a" />
+                <mat-icon matPrefix class="field-icon">person_add</mat-icon>
+              </mat-form-field>
+              <button
+                type="button"
+                class="btn-primary-glow btn-add-wl"
+                (click)="addWhitelist()"
+                [disabled]="!newWhitelistId.trim()"
+              >
+                <span>Add</span>
+              </button>
+            </div>
+
+            <!-- Whitelist Accounts List -->
+            <div class="whitelist-items-list" *ngIf="whitelist.length > 0">
+              <div *ngFor="let item of whitelist" class="whitelist-item">
+                <div class="item-left">
+                  <mat-icon class="wl-check">check_circle</mat-icon>
+                  <code class="wl-account-id">{{ item }}</code>
+                </div>
+                <button type="button" class="btn-remove-wl" (click)="removeWhitelist(item)" title="Remove from whitelist">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+
+            <div class="empty-sec-state" *ngIf="whitelist.length === 0">
+              <mat-icon>group_add</mat-icon>
+              <p>Whitelist is currently empty.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Blacklist & Restrictions Column -->
+        <div class="glass-card security-card">
+          <div class="card-header-bar">
+            <div class="header-title-wrap">
+              <mat-icon class="header-icon text-danger">block</mat-icon>
+              <h3>Active Blacklist &amp; Restrictions</h3>
+            </div>
+            <button type="button" class="btn-refresh-sec" (click)="loadSecurityData()">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
+
+          <div class="security-card-body">
+            <!-- Banned Account IDs Section -->
+            <div class="sec-subsection">
+              <h4 class="sub-title"><mat-icon>person_off</mat-icon> Banned Account IDs</h4>
+              <div class="restriction-list" *ngIf="getBannedIds().length > 0">
+                <div *ngFor="let ban of getBannedIds()" class="restriction-item danger-item">
+                  <div class="item-details">
+                    <span class="ban-target">{{ ban.id }}</span>
+                    <span class="ban-meta">Reason: {{ ban.reason }} &bull; Till: {{ ban.till }}</span>
+                  </div>
+                  <button type="button" class="btn-unban-small" (click)="onBanClick(ban.id, true)">
+                    Unban
+                  </button>
+                </div>
+              </div>
+              <p class="empty-sub" *ngIf="getBannedIds().length === 0">
+                No account IDs currently banned.
+              </p>
+            </div>
+
+            <!-- Muted Accounts Section -->
+            <div class="sec-subsection">
+              <h4 class="sub-title"><mat-icon>volume_off</mat-icon> Active Mutes</h4>
+              <div class="restriction-list" *ngIf="getMutedIds().length > 0">
+                <div *ngFor="let mute of getMutedIds()" class="restriction-item warning-item">
+                  <div class="item-details">
+                    <span class="ban-target">{{ mute.id }}</span>
+                    <span class="ban-meta">Reason: {{ mute.reason }} &bull; Till: {{ mute.till }}</span>
+                  </div>
+                  <button type="button" class="btn-unban-small" (click)="onUnmuteClick(mute.id, true)">
+                    Unmute
+                  </button>
+                </div>
+              </div>
+              <p class="empty-sub" *ngIf="getMutedIds().length === 0">
+                No active mutes.
+              </p>
+            </div>
+
+            <!-- Kick-Vote Disabled Section -->
+            <div class="sec-subsection">
+              <h4 class="sub-title"><mat-icon>how_to_vote</mat-icon> Kick-Vote Restrictions</h4>
+              <div class="restriction-list" *ngIf="getKickVoteDisabled().length > 0">
+                <div *ngFor="let kv of getKickVoteDisabled()" class="restriction-item warning-item">
+                  <div class="item-details">
+                    <span class="ban-target">{{ kv.id }}</span>
+                    <span class="ban-meta">Till: {{ kv.till }}</span>
+                  </div>
+                  <button type="button" class="btn-unban-small" (click)="onKickVoteClick(kv.id, true)">
+                    Enable
+                  </button>
+                </div>
+              </div>
+              <p class="empty-sub" *ngIf="getKickVoteDisabled().length === 0">
+                No kick-vote restrictions active.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- TAB 3: Legacy JSON Archives Search (V1) -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-label-icon">archive</mat-icon>
+        <span>Legacy JSON Archives (V1)</span>
+      </ng-template>
+
+      <div class="tab-content-wrap">
+        <div class="glass-card toolbar-card">
+          <div class="search-row">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Search keyword or player name...</mat-label>
+              <input
+                matInput
+                placeholder="e.g. Smoothy or pb-IF4VAk4a"
+                [formControl]="searchKeyControl"
+                (keyup.enter)="onSearchV1($event)"
+              />
+              <mat-hint>Press Enter to search archive</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="db-select-field">
+              <mat-label>Archive Database</mat-label>
+              <mat-select [formControl]="selectDBControl">
+                <mat-option *ngFor="let db of DBS" [value]="db">{{ db }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <button type="button" class="btn-primary-glow btn-refresh-db" (click)="onSearchV1($event)">
+              <mat-icon>search</mat-icon>
+              <span>Search</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Legacy Results Expansion Panels -->
+        <div class="legacy-results-list" *ngIf="getObjectKeys(PROFILES).length > 0">
+          <div *ngFor="let profile of getObjectKeys(PROFILES)" class="legacy-panel-wrap">
+            <mat-expansion-panel (opened)="onOpenLegacy(profile)">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <strong>{{ PROFILES[profile].name }}</strong>
+                </mat-panel-title>
+                <mat-panel-description>
+                  <code>{{ profile }}</code>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <div class="legacy-profile-body">
+                <div class="profile-meta-grid">
+                  <div><strong>Display Strings:</strong> {{ PROFILES[profile].display_string }}</div>
+                  <div><strong>Account Age:</strong> {{ PROFILES[profile].accountAge }}</div>
+                  <div><strong>Warn Count:</strong> {{ PROFILES[profile].warnCount }}</div>
+                  <div><strong>Last IP:</strong> {{ PROFILES[profile].lastIP }}</div>
+                  <div><strong>Device UUID:</strong> {{ PROFILES[profile].deviceUUID }}</div>
+                  <div><strong>Registered:</strong> {{ getDateTime(PROFILES[profile].registerOn) }}</div>
+                  <div *ngIf="getRestrictionInfo(profile)"><strong>Status:</strong> Ban: {{ getRestrictionInfo(profile).isBan }}, Muted: {{ getRestrictionInfo(profile).isMuted }}</div>
+                </div>
+
+                <div class="legacy-action-buttons" *ngIf="getRestrictionInfo(profile)">
+                  <button
+                    type="button"
+                    class="btn-legacy-action"
+                    [class.danger-btn]="!getRestrictionInfo(profile).isBan"
+                    [class.success-btn]="getRestrictionInfo(profile).isBan"
+                    (click)="onBanClick(profile, getRestrictionInfo(profile).isBan)"
+                  >
+                    {{ getRestrictionInfo(profile).isBan ? 'Unban' : 'Ban' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn-legacy-action"
+                    [class.danger-btn]="!getRestrictionInfo(profile).isMuted"
+                    [class.success-btn]="getRestrictionInfo(profile).isMuted"
+                    (click)="onUnmuteClick(profile, getRestrictionInfo(profile).isMuted)"
+                  >
+                    {{ getRestrictionInfo(profile).isMuted ? 'Unmute' : 'Mute' }}
+                  </button>
+                </div>
+              </div>
+            </mat-expansion-panel>
+          </div>
+        </div>
+
+        <div class="table-empty-state" *ngIf="!isLoadingV1 && getObjectKeys(PROFILES).length === 0">
+          <mat-icon>folder_open</mat-icon>
+          <h4>No Legacy Records Loaded</h4>
+          <p>Select an archive file and enter a search query above.</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+  <!-- Player Profile Detail & Edit Modal (Slide-in / Backdrop Overlay) -->
+  <div class="player-modal-backdrop" *ngIf="selectedPlayerV2" (click)="closePlayerModal()">
+    <div class="glass-card player-modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div>
+            <h3 class="modal-player-name">{{ selectedPlayerV2.name }}</h3>
+            <span class="modal-account-id">{{ selectedPlayerV2.account_id || selectedPlayerV2.v2Tag }}</span>
+          </div>
+        </div>
+
+        <button type="button" class="btn-close-modal" (click)="closePlayerModal()" title="Close">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
 
+      <div class="modal-body" *ngIf="!isLoadingPlayerDetails">
+        <!-- Moderation Quick Actions Bar -->
+        <div class="modal-moderation-bar">
+          <button
+            type="button"
+            class="btn-mod-action"
+            [class.btn-mod-danger]="!selectedPlayerV2.isBan"
+            [class.btn-mod-success]="selectedPlayerV2.isBan"
+            (click)="onBanClick(selectedPlayerV2.account_id || selectedPlayerV2.v2Tag, selectedPlayerV2.isBan)"
+          >
+            <mat-icon>{{ selectedPlayerV2.isBan ? 'check_circle' : 'block' }}</mat-icon>
+            <span>{{ selectedPlayerV2.isBan ? 'Unban Player' : 'Ban Player' }}</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-mod-action"
+            [class.btn-mod-warning]="!selectedPlayerV2.isMuted"
+            [class.btn-mod-success]="selectedPlayerV2.isMuted"
+            (click)="onUnmuteClick(selectedPlayerV2.account_id || selectedPlayerV2.v2Tag, selectedPlayerV2.isMuted)"
+          >
+            <mat-icon>{{ selectedPlayerV2.isMuted ? 'volume_up' : 'volume_off' }}</mat-icon>
+            <span>{{ selectedPlayerV2.isMuted ? 'Unmute Player' : 'Mute Player' }}</span>
+          </button>
+
+          <button
+            type="button"
+            class="btn-mod-action"
+            [class.btn-mod-warning]="selectedPlayerV2.canStartKickVote !== false"
+            [class.btn-mod-success]="selectedPlayerV2.canStartKickVote === false"
+            (click)="onKickVoteClick(selectedPlayerV2.account_id || selectedPlayerV2.v2Tag, selectedPlayerV2.canStartKickVote === false)"
+          >
+            <mat-icon>how_to_vote</mat-icon>
+            <span>{{ selectedPlayerV2.canStartKickVote === false ? 'Enable Kick Votes' : 'Disable Kick Votes' }}</span>
+          </button>
+
+          <a
+            [routerLink]="['/admin/economy']"
+            [queryParams]="{ account_id: selectedPlayerV2.account_id || selectedPlayerV2.v2Tag }"
+            class="btn-mod-action btn-mod-economy"
+            (click)="closePlayerModal()"
+          >
+            <mat-icon>monetization_on</mat-icon>
+            <span>Economy &amp; Tickets</span>
+          </a>
+        </div>
+
+        <!-- Editable Profile Form (PUT /v2/players/<id>) -->
+        <form [formGroup]="editForm" class="edit-player-form" (ngSubmit)="savePlayerEdits()">
+          <h4 class="section-heading"><mat-icon>edit_note</mat-icon> Profile Attributes (Editable via SQLite V2)</h4>
+
+          <div class="form-grid-2">
+            <mat-form-field appearance="fill">
+              <mat-label>Display Name</mat-label>
+              <input matInput formControlName="name" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Warn Count</mat-label>
+              <input matInput type="number" formControlName="warnCount" min="0" />
+            </mat-form-field>
+          </div>
+
+          <div class="toggles-row">
+            <mat-slide-toggle formControlName="verified" color="primary">
+              Verified Account Status
+            </mat-slide-toggle>
+
+            <mat-slide-toggle formControlName="canStartKickVote" color="primary">
+              Can Start Kick Votes
+            </mat-slide-toggle>
+          </div>
+
+          <button type="submit" class="btn-primary-glow btn-save-profile" [disabled]="isSavingPlayer">
+            <mat-icon>{{ isSavingPlayer ? 'sync' : 'save' }}</mat-icon>
+            <span>{{ isSavingPlayer ? 'Saving...' : 'Save Profile Changes' }}</span>
+          </button>
+        </form>
+
+        <!-- Read-Only Detailed Diagnostics -->
+        <div class="diagnostics-box">
+          <h4 class="section-heading"><mat-icon>analytics</mat-icon> Session &amp; Device Diagnostics</h4>
+          <div class="diag-grid">
+            <div class="diag-item">
+              <span class="diag-label">Last IP Address</span>
+              <span class="diag-val">{{ selectedPlayerV2.lastIP || 'Unknown' }}</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Device UUID</span>
+              <span class="diag-val">{{ selectedPlayerV2.deviceUUID || 'N/A' }}</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Registered On</span>
+              <span class="diag-val">{{ getDateTime(selectedPlayerV2.registerOn) }}</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Last Join Timestamp</span>
+              <span class="diag-val">{{ getDateTime(selectedPlayerV2.lastJoin) }}</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Total Playtime</span>
+              <span class="diag-val">{{ (selectedPlayerV2.totaltimeplayer || 0) / 60 | number:'1.0-0' }} mins</span>
+            </div>
+            <div class="diag-item">
+              <span class="diag-label">Rejoin Count</span>
+              <span class="diag-val">{{ selectedPlayerV2.rejoincount || 1 }} times</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading Details Spinner -->
+      <div class="modal-loading" *ngIf="isLoadingPlayerDetails">
+        <mat-spinner diameter="36"></mat-spinner>
+        <p>Fetching full player profile records...</p>
+      </div>
     </div>
   </div>
 </div>
