@@ -102,6 +102,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.refreshData();
     });
 
+    this.hostManager.onProxyChange.subscribe(() => {
+      this.refreshData();
+    });
+
     this.updateSubscription = interval(9000).subscribe(() => {
       if (!this.hostManager.getSelectedHost() || this.isPaused || this.isOffline) return;
       this.refreshData(true);

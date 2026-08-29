@@ -141,7 +141,14 @@
         margin: 0;
       }
 
+      .header-actions-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
       .btn-test-all {
+
         display: inline-flex;
         align-items: center;
         gap: 4px;

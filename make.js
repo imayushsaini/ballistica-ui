@@ -1,23 +1,43 @@
 var fs = require("fs");
 
 require("dotenv").config({ path: "variables.env" });
-const API = process.env.DEFAULT_API_PROXY;
-const HOST = process.env.DEFAULT_HOST;
+const API = process.env.DEFAULT_API_PROXY || "https://deno-prxy.bombsquad-community.deno.net";
+const PROXIES_RAW = process.env.DEFAULT_API_PROXIES || API;
+const PROXIES = Array.from(
+  new Set(
+    PROXIES_RAW.split(",")
+      .map((s) => s.trim().replace(/\/+$/, ""))
+      .filter(Boolean)
+  )
+);
+if (!PROXIES.includes(API.trim().replace(/\/+$/, ""))) {
+  PROXIES.unshift(API.trim().replace(/\/+$/, ""));
+}
+const HOST = process.env.DEFAULT_HOST || "127.0.0.1:43210";
 
-//updating vapid key
-data = `export const environment = {
+const devData = `export const environment = {
   production: false,
-  API_PROXY: "$API",
-  DEFAULT_HOST: "$HOST"
-};`;
-dev = "./src/environments/environment.ts";
-prod = "./src/environments/environment.prod.ts";
-var res = data.replace("$API", API);
-var res = res.replace("$HOST", HOST);
-fs.writeFile(dev, res, "utf8", (err) => {
+  API_PROXY: ${JSON.stringify(API)},
+  API_PROXIES: ${JSON.stringify(PROXIES)},
+  DEFAULT_HOST: ${JSON.stringify(HOST)}
+};
+`;
+
+const prodData = `export const environment = {
+  production: true,
+  API_PROXY: ${JSON.stringify(API)},
+  API_PROXIES: ${JSON.stringify(PROXIES)},
+  DEFAULT_HOST: ${JSON.stringify(HOST)}
+};
+`;
+
+const dev = "./src/environments/environment.ts";
+const prod = "./src/environments/environment.prod.ts";
+
+fs.writeFile(dev, devData, "utf8", (err) => {
   if (err) console.log(err);
 });
-res = res.replace("false", "true");
-fs.writeFile(prod, res, "utf8", (err) => {
+fs.writeFile(prod, prodData, "utf8", (err) => {
   if (err) console.log(err);
 });
+

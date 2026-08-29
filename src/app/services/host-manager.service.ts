@@ -16,6 +16,7 @@ const DEFAULT_PROXY = environment.API_PROXY;
 export class HostManagerService {
   onServerChange = new Subject<string>();
   onAuthChange = new Subject<boolean>();
+  onProxyChange = new Subject<string>();
   currentHost: string | null = null;
 
   constructor() {}
@@ -48,33 +49,55 @@ export class HostManagerService {
 
   // ==================== Multiple Proxies Management ====================
 
+  getDefaultProxies(): string[] {
+    const envProxies: string[] =
+      (environment as any).API_PROXIES ||
+      (DEFAULT_PROXY ? [DEFAULT_PROXY] : []);
+
+    return Array.from(
+      new Set(
+        envProxies
+          .map((u) => (u || '').trim().replace(/\/+$/, ''))
+          .filter((u) => !!u)
+      )
+    );
+  }
+
   getProxyList(): string[] {
+    const defaultList = this.getDefaultProxies();
     const stored = localStorage.getItem(PROXIES_DB);
     if (stored) {
       try {
         const list = JSON.parse(stored);
         if (Array.isArray(list) && list.length > 0) {
-          return list;
+          const cleanStored = list
+            .map((u) => (u || '').trim().replace(/\/+$/, ''))
+            .filter((u) => !!u);
+          // Always ensure configured default proxies are included in the available list
+          const merged = Array.from(new Set([...cleanStored, ...defaultList]));
+          if (merged.length !== list.length) {
+            this.saveProxyList(merged);
+          }
+          return merged;
         }
       } catch (e) {
         console.error('Error parsing proxies db', e);
       }
     }
-    const defaultList = [DEFAULT_PROXY.replace(/\/$/, '')];
     this.saveProxyList(defaultList);
     return defaultList;
   }
 
   saveProxyList(list: string[]): void {
     const cleanList = Array.from(
-      new Set(list.map((u) => u.trim().replace(/\/$/, '')).filter((u) => !!u))
+      new Set(list.map((u) => u.trim().replace(/\/+$/, '')).filter((u) => !!u))
     );
     localStorage.setItem(PROXIES_DB, JSON.stringify(cleanList));
   }
 
   addProxy(url: string): void {
     if (!url) return;
-    const cleanUrl = url.trim().replace(/\/$/, '');
+    const cleanUrl = url.trim().replace(/\/+$/, '');
     const list = this.getProxyList();
     if (!list.includes(cleanUrl)) {
       list.push(cleanUrl);
@@ -83,10 +106,10 @@ export class HostManagerService {
   }
 
   deleteProxy(url: string): void {
-    const cleanUrl = url.trim().replace(/\/$/, '');
+    const cleanUrl = url.trim().replace(/\/+$/, '');
     let list = this.getProxyList().filter((p) => p !== cleanUrl);
     if (list.length === 0) {
-      list = [DEFAULT_PROXY.replace(/\/$/, '')];
+      list = this.getDefaultProxies();
     }
     this.saveProxyList(list);
 
@@ -98,8 +121,9 @@ export class HostManagerService {
 
   getProxyUrl(): string {
     const cache = this.getCache();
-    let proxyUrl = cache.proxyUrl ? cache.proxyUrl : DEFAULT_PROXY;
-    proxyUrl = proxyUrl.replace(/\/$/, '');
+    const defaultProxy = this.getDefaultProxies()[0] || DEFAULT_PROXY;
+    let proxyUrl = cache.proxyUrl ? cache.proxyUrl : defaultProxy;
+    proxyUrl = (proxyUrl || '').replace(/\/+$/, '');
     return proxyUrl;
   }
 
@@ -107,12 +131,66 @@ export class HostManagerService {
     this.setActiveProxy(url);
   }
 
-  setActiveProxy(url: string): void {
-    const cleanUrl = url.trim().replace(/\/$/, '');
+  setActiveProxy(url: string, notify: boolean = true): void {
+    if (!url) return;
+    const cleanUrl = url.trim().replace(/\/+$/, '');
     const cache = this.getCache();
     cache.proxyUrl = cleanUrl;
     localStorage.setItem(CACHE, JSON.stringify(cache));
     this.addProxy(cleanUrl);
+    if (notify) {
+      this.onProxyChange.next(cleanUrl);
+    }
+  }
+
+  switchToNextProxy(failedProxyUrl?: string): string {
+    const list = this.getProxyList();
+    if (list.length <= 1) {
+      return this.getProxyUrl();
+    }
+    const current = (failedProxyUrl || this.getProxyUrl()).trim().replace(/\/+$/, '');
+    const currentIndex = list.indexOf(current);
+    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % list.length : 0;
+    const nextProxy = list[nextIndex];
+    this.setActiveProxy(nextProxy, true);
+    return nextProxy;
+  }
+
+  async findAndSetHealthyProxy(timeoutMs: number = 3000): Promise<string | null> {
+    const list = this.getProxyList();
+    if (list.length === 0) return null;
+
+    const checkProxy = async (
+      url: string
+    ): Promise<{ url: string; ok: boolean; latency: number }> => {
+      const start = Date.now();
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        const res = await fetch(`${url}/proxy-ping`, {
+          signal: controller.signal,
+          method: 'GET',
+        });
+        clearTimeout(timeoutId);
+        return { url, ok: res.ok, latency: Date.now() - start };
+      } catch {
+        return { url, ok: false, latency: Infinity };
+      }
+    };
+
+    const results = await Promise.all(list.map((u) => checkProxy(u)));
+    const healthy = results
+      .filter((r) => r.ok)
+      .sort((a, b) => a.latency - b.latency);
+
+    if (healthy.length > 0) {
+      const best = healthy[0].url;
+      if (this.getProxyUrl() !== best) {
+        this.setActiveProxy(best, true);
+      }
+      return best;
+    }
+    return null;
   }
 
   // ==================== Local IP Detection ====================
