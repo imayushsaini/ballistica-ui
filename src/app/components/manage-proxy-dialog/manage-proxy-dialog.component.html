@@ -47,11 +47,24 @@
     <div class="proxies-list-section">
       <div class="list-title-row">
         <h3>Saved Proxies ({{ proxyList.length }})</h3>
-        <button type="button" class="btn-test-all" (click)="testAllProxies()">
-          <mat-icon>sync</mat-icon>
-          <span>Test All</span>
-        </button>
+        <div class="header-actions-group">
+          <button
+            type="button"
+            class="btn-test-all"
+            (click)="autoSelectFastest()"
+            [disabled]="isAutoSelecting"
+            title="Automatically test all proxies and connect to the fastest healthy proxy"
+          >
+            <mat-icon>speed</mat-icon>
+            <span>Auto Select</span>
+          </button>
+          <button type="button" class="btn-test-all" (click)="testAllProxies()">
+            <mat-icon>sync</mat-icon>
+            <span>Test All</span>
+          </button>
+        </div>
       </div>
+
 
       <div class="proxies-items-list">
         <div

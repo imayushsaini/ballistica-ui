@@ -39,7 +39,8 @@ export class ManageProxyDialogComponent implements OnInit {
   activeProxy = '';
   newProxyUrl = '';
   proxyStatusMap: ProxyStatus = {};
-  isAddingProxy = false;
+  isAutoSelecting = false;
+  private proxySub?: any;
 
   constructor(
     public dialogRef: MatDialogRef<ManageProxyDialogComponent>,
@@ -51,6 +52,16 @@ export class ManageProxyDialogComponent implements OnInit {
   ngOnInit(): void {
     this.refreshList();
     this.testAllProxies();
+
+    this.proxySub = this.hostManager.onProxyChange.subscribe((proxy) => {
+      this.activeProxy = proxy;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.proxySub) {
+      this.proxySub.unsubscribe();
+    }
   }
 
   refreshList(): void {
@@ -63,6 +74,20 @@ export class ManageProxyDialogComponent implements OnInit {
     this.activeProxy = url;
     this.snackBar.open(`Active proxy switched to ${url}`, 'OK', { duration: 3000 });
   }
+
+  async autoSelectFastest(): Promise<void> {
+    this.isAutoSelecting = true;
+    const best = await this.hostManager.findAndSetHealthyProxy();
+    this.isAutoSelecting = false;
+    if (best) {
+      this.activeProxy = best;
+      this.testAllProxies();
+      this.snackBar.open(`Selected fastest online proxy: ${best}`, 'OK', { duration: 3500 });
+    } else {
+      this.snackBar.open(`No healthy proxies responded.`, 'OK', { duration: 3500 });
+    }
+  }
+
 
   testProxy(url: string): void {
     if (!this.proxyStatusMap[url]) {

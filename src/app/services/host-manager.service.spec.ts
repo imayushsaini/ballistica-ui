@@ -109,4 +109,50 @@ describe('HostManagerService', () => {
       );
     });
   });
+
+  describe('Proxy Management & Switching', () => {
+    it('should return default proxy list and merge new defaults into storage', () => {
+      const list = service.getProxyList();
+      expect(list.length).toBeGreaterThanOrEqual(1);
+      expect(list).toContain(environment.API_PROXY.replace(/\/+$/, ''));
+    });
+
+    it('should add and remove proxies correctly', () => {
+      const customProxy = 'https://custom-proxy.example.com';
+      service.addProxy(customProxy);
+      expect(service.getProxyList()).toContain(customProxy);
+
+      service.deleteProxy(customProxy);
+      expect(service.getProxyList()).not.toContain(customProxy);
+    });
+
+    it('should switch to the next proxy in sequence', () => {
+      const proxy1 = 'https://proxy1.example.com';
+      const proxy2 = 'https://proxy2.example.com';
+      service.saveProxyList([proxy1, proxy2]);
+      service.setActiveProxy(proxy1);
+
+      const next = service.switchToNextProxy(proxy1);
+      expect(next).toBe(proxy2);
+      expect(service.getProxyUrl()).toBe(proxy2);
+
+      const loopBack = service.switchToNextProxy(proxy2);
+      expect(loopBack).toBe(proxy1);
+      expect(service.getProxyUrl()).toBe(proxy1);
+    });
+
+    it('should emit on onProxyChange when active proxy is changed', (done) => {
+      const proxy1 = 'https://proxy1.example.com';
+      const proxy2 = 'https://proxy2.example.com';
+      service.saveProxyList([proxy1, proxy2]);
+
+      service.onProxyChange.subscribe((newProxy) => {
+        expect(newProxy).toBe(proxy2);
+        done();
+      });
+
+      service.setActiveProxy(proxy2);
+    });
+  });
 });
+
