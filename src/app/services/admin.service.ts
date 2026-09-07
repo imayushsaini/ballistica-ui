@@ -122,6 +122,128 @@ export class AdminService {
     return this.http.get(`${this.hostManager.getHostUrl()}/v2/blacklist`);
   }
 
+  // ==================== V2 Kick Vote Endpoints ====================
+
+  getKickVoteStatus(): Observable<{
+    restricted: string[];
+    immune: string[];
+    blacklist: { [accountId: string]: { till: string; reason: string } };
+  }> {
+    return this.http.get<{
+      restricted: string[];
+      immune: string[];
+      blacklist: { [accountId: string]: { till: string; reason: string } };
+    }>(`${this.hostManager.getHostUrl()}/v2/kickvote`);
+  }
+
+  restrictKickVote(
+    accountId: string,
+    duration: number = 30.0,
+    reason: string = 'Abuse of kick vote system'
+  ): Observable<any> {
+    return this.http.post(
+      `${this.hostManager.getHostUrl()}/v2/kickvote/restricted`,
+      {
+        account_id: accountId,
+        duration,
+        reason,
+      }
+    );
+  }
+
+  removeKickVoteRestriction(accountId: string): Observable<any> {
+    return this.http.request(
+      'delete',
+      `${this.hostManager.getHostUrl()}/v2/kickvote/restricted`,
+      {
+        body: { account_id: accountId },
+      }
+    );
+  }
+
+  grantKickVoteImmunity(accountId: string): Observable<any> {
+    return this.http.post(
+      `${this.hostManager.getHostUrl()}/v2/kickvote/immune`,
+      {
+        account_id: accountId,
+      }
+    );
+  }
+
+  revokeKickVoteImmunity(accountId: string): Observable<any> {
+    return this.http.request(
+      'delete',
+      `${this.hostManager.getHostUrl()}/v2/kickvote/immune`,
+      {
+        body: { account_id: accountId },
+      }
+    );
+  }
+
+  // ==================== V2 Replays Management Endpoints ====================
+
+  getReplays(
+    page: number = 1,
+    perPage: number = 50,
+    search: string = '',
+    sortBy: string = 'modified',
+    sortOrder: string = 'desc'
+  ): Observable<{
+    total: number;
+    page: number;
+    per_page: number;
+    total_pages: number;
+    directory: string;
+    replays: {
+      filename: string;
+      size_bytes: number;
+      size_formatted: string;
+      modified_at: string;
+      timestamp: number;
+    }[];
+  }> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('per_page', perPage.toString())
+      .set('sort_by', sortBy)
+      .set('sort_order', sortOrder);
+
+    if (search && search.trim()) {
+      params = params.set('search', search.trim());
+    }
+
+    return this.http.get<any>(`${this.hostManager.getHostUrl()}/v2/replays`, {
+      params,
+    });
+  }
+
+  downloadReplay(filename: string): Observable<Blob> {
+    return this.http.get(
+      `${this.hostManager.getHostUrl()}/v2/replays/${encodeURIComponent(
+        filename
+      )}/download`,
+      { responseType: 'blob' }
+    );
+  }
+
+  deleteReplay(filename: string): Observable<any> {
+    return this.http.delete(
+      `${this.hostManager.getHostUrl()}/v2/replays/${encodeURIComponent(
+        filename
+      )}`
+    );
+  }
+
+  deleteReplaysBatch(filenames: string[]): Observable<any> {
+    return this.http.request(
+      'delete',
+      `${this.hostManager.getHostUrl()}/v2/replays`,
+      {
+        body: { filenames },
+      }
+    );
+  }
+
   getRecentPlayers(): Observable<any[]> {
     return this.http.get<any[]>(`${this.hostManager.getHostUrl()}/v2/recents`);
   }

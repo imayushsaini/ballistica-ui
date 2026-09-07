@@ -87,10 +87,20 @@ export class PlayersProfileComponent implements OnInit {
   isSavingPlayer = false;
   editForm!: FormGroup;
 
-  // --- V2 Security Center (Whitelist & Blacklist) State ---
+  // --- V2 Security Center (Whitelist, Blacklist & Kick Vote) State ---
   whitelist: string[] = [];
   blacklist: BlacklistData | null = null;
+  kickvoteData: {
+    restricted: string[];
+    immune: string[];
+    blacklist: { [id: string]: { till: string; reason: string } };
+  } = {
+    restricted: [],
+    immune: [],
+    blacklist: {},
+  };
   newWhitelistId = "";
+  newImmuneSecId = "";
   isLoadingSecurity = false;
 
   // --- Legacy V1 Archives State ---
@@ -133,6 +143,7 @@ export class PlayersProfileComponent implements OnInit {
       warnCount: [0],
       verified: [false],
       canStartKickVote: [true],
+      isKickVoteImmune: [false],
     });
   }
 
@@ -211,6 +222,7 @@ export class PlayersProfileComponent implements OnInit {
           warnCount: this.selectedPlayerV2.warnCount || 0,
           verified: !!this.selectedPlayerV2.verified,
           canStartKickVote: this.selectedPlayerV2.canStartKickVote !== false,
+          isKickVoteImmune: !!this.selectedPlayerV2.isKickVoteImmune,
         });
       },
       error: () => {
@@ -220,6 +232,7 @@ export class PlayersProfileComponent implements OnInit {
           warnCount: this.selectedPlayerV2.warnCount || 0,
           verified: !!this.selectedPlayerV2.verified,
           canStartKickVote: this.selectedPlayerV2.canStartKickVote !== false,
+          isKickVoteImmune: !!this.selectedPlayerV2.isKickVoteImmune,
         });
       },
     });
@@ -269,6 +282,13 @@ export class PlayersProfileComponent implements OnInit {
       error: () => {},
     });
 
+    this.adminService.getKickVoteStatus().subscribe({
+      next: (kv) => {
+        this.kickvoteData = kv || { restricted: [], immune: [], blacklist: {} };
+      },
+      error: () => {},
+    });
+
     this.adminService.getBlacklist().subscribe({
       next: (bl) => {
         this.isLoadingSecurity = false;
@@ -298,14 +318,80 @@ export class PlayersProfileComponent implements OnInit {
     }));
   }
 
-  getKickVoteDisabled(): Array<{ id: string; till: string }> {
-    if (!this.blacklist?.["kick-vote-disabled"]) return [];
-    return Object.entries(this.blacklist["kick-vote-disabled"]).map(
-      ([id, info]) => ({
-        id,
-        till: info?.till || "Permanent",
-      })
-    );
+  getKickVoteDisabled(): Array<{ id: string; till: string; reason: string }> {
+    const map = new Map<string, { id: string; till: string; reason: string }>();
+
+    if (this.kickvoteData?.restricted) {
+      for (const id of this.kickvoteData.restricted) {
+        const info = this.kickvoteData.blacklist?.[id];
+        map.set(id, {
+          id,
+          till: info?.till || "Permanent",
+          reason: info?.reason || "Restricted via REST API",
+        });
+      }
+    }
+
+    if (this.blacklist?.["kick-vote-disabled"]) {
+      for (const [id, info] of Object.entries(
+        this.blacklist["kick-vote-disabled"]
+      )) {
+        if (!map.has(id)) {
+          map.set(id, {
+            id,
+            till: info?.till || "Permanent",
+            reason: (info as any)?.reason || "Restricted",
+          });
+        }
+      }
+    }
+
+    return Array.from(map.values());
+  }
+
+  getKickVoteImmune(): string[] {
+    return this.kickvoteData?.immune || [];
+  }
+
+  addImmunitySec() {
+    const id = this.newImmuneSecId.trim();
+    if (!id) return;
+    this.adminService.grantKickVoteImmunity(id).subscribe({
+      next: () => {
+        this.snackBar.open(`Granted kick vote immunity to "${id}"`, "OK", {
+          duration: 3000,
+        });
+        this.newImmuneSecId = "";
+        this.loadSecurityData();
+      },
+      error: (err) => {
+        this.snackBar.open(
+          "Error granting immunity: " + (err?.error?.message || err?.message),
+          "OK",
+          { duration: 4000 }
+        );
+      },
+    });
+  }
+
+  removeImmunitySec(accountId: string) {
+    if (confirm(`Revoke kick vote immunity from "${accountId}"?`)) {
+      this.adminService.revokeKickVoteImmunity(accountId).subscribe({
+        next: () => {
+          this.snackBar.open(`Revoked immunity from "${accountId}"`, "OK", {
+            duration: 3000,
+          });
+          this.loadSecurityData();
+        },
+        error: (err) => {
+          this.snackBar.open(
+            "Error: " + (err?.error?.message || err?.message),
+            "OK",
+            { duration: 4000 }
+          );
+        },
+      });
+    }
   }
 
   addWhitelist() {
@@ -369,6 +455,58 @@ export class PlayersProfileComponent implements OnInit {
     this.openDialog(action, account_id, this.needDuration(action));
   }
 
+  onToggleImmunityClick(
+    account_id: string,
+    isCurrentlyImmune: boolean = false
+  ) {
+    if (!account_id) return;
+    const actionText = isCurrentlyImmune ? "Revoke" : "Grant";
+    if (
+      !confirm(
+        `${actionText} kick vote immunity for player "${account_id}"?`
+      )
+    ) {
+      return;
+    }
+
+    const request$ = isCurrentlyImmune
+      ? this.adminService.revokeKickVoteImmunity(account_id)
+      : this.adminService.grantKickVoteImmunity(account_id);
+
+    this.updateInQueue.push(account_id);
+    request$.subscribe({
+      next: () => {
+        this.updateInQueue = this.updateInQueue.filter(
+          (item) => item !== account_id
+        );
+        this.snackBar.open(
+          `Kick vote immunity ${isCurrentlyImmune ? "revoked from" : "granted to"} ${account_id}`,
+          "OK",
+          { duration: 3000 }
+        );
+        if (
+          this.selectedPlayerV2 &&
+          (this.selectedPlayerV2.account_id === account_id ||
+            this.selectedPlayerV2.v2Tag === account_id)
+        ) {
+          this.inspectPlayerV2(this.selectedPlayerV2);
+        }
+        this.loadPlayersV2();
+        this.loadSecurityData();
+      },
+      error: (err) => {
+        this.updateInQueue = this.updateInQueue.filter(
+          (item) => item !== account_id
+        );
+        this.snackBar.open(
+          "Action failed: " + (err?.error?.message || err?.message),
+          "OK",
+          { duration: 4000 }
+        );
+      },
+    });
+  }
+
   openDialog(
     action: string,
     account_id: string,
@@ -381,13 +519,25 @@ export class PlayersProfileComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result || !requriedDuration) {
         this.updateInQueue.push(account_id);
-        this.adminService
-          .updatePlayer(
+        const duration = requriedDuration ? Number(result.duration) : 0;
+
+        let request$;
+        if (action === "disable-kick-vote") {
+          request$ = this.adminService.restrictKickVote(
+            account_id,
+            duration || 30.0
+          );
+        } else if (action === "enable-kick-vote") {
+          request$ = this.adminService.removeKickVoteRestriction(account_id);
+        } else {
+          request$ = this.adminService.updatePlayer(
             action,
             account_id,
-            requriedDuration ? Number(result.duration) : 0
-          )
-          .subscribe({
+            duration
+          );
+        }
+
+        request$.subscribe({
             next: () => {
               this.snackBar.open(
                 `Action "${action}" completed for ${account_id}`,

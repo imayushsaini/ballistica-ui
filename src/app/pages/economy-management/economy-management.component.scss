@@ -1029,6 +1029,57 @@
         .item-sub {
           font-size: 0.72rem;
           color: #78909c;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+          margin-top: 3px;
+
+          .badge-source {
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            background: rgba(255, 255, 255, 0.08);
+            color: #eceff1;
+
+            &.source-admin {
+              background: rgba(255, 215, 0, 0.15);
+              color: #ffd54f;
+              border: 1px solid rgba(255, 215, 0, 0.3);
+            }
+            &.source-shop {
+              background: rgba(0, 230, 118, 0.15);
+              color: #69f0ae;
+              border: 1px solid rgba(0, 230, 118, 0.3);
+            }
+            &.source-rank {
+              background: rgba(33, 150, 243, 0.15);
+              color: #64b5f6;
+              border: 1px solid rgba(33, 150, 243, 0.3);
+            }
+          }
+
+          .badge-status {
+            font-size: 0.65rem;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            color: #90a4ae;
+
+            &.is-equipped {
+              background: rgba(156, 39, 176, 0.2);
+              color: #e1bee7;
+              border: 1px solid rgba(156, 39, 176, 0.4);
+            }
+          }
+
+          .eff-duration {
+            color: #b0bec5;
+            font-weight: 500;
+          }
         }
       }
     }

@@ -23,6 +23,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { ManagePerksComponent } from "./pages/manage-perks/manage-perks.component";
 import { ServerConfigComponent } from "./pages/server-config/server-config.component";
 import { EconomyManagementComponent } from "./pages/economy-management/economy-management.component";
+import { ReplaysManagementComponent } from "./pages/replays-management/replays-management.component";
 import { MatChipsModule } from "@angular/material/chips";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
@@ -49,6 +50,7 @@ const routes: Routes = [
       { path: "roles", component: RoleManagementComponent },
       { path: "players", component: PlayersProfileComponent },
       { path: "server-logs", component: LogsViewerComponent },
+      { path: "replays", component: ReplaysManagementComponent },
       { path: "server-config", component: ServerConfigComponent },
       { path: "perks", component: ManagePerksComponent },
       { path: "config", component: ServerConfigComponent },
@@ -68,6 +70,7 @@ const routes: Routes = [
     ManagePerksComponent,
     ServerConfigComponent,
     QuickToolsComponent,
+    ReplaysManagementComponent,
     AppNumberValueAccessorDirective,
     KeysPipe,
   ],

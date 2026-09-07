@@ -53,57 +53,119 @@
   }
 }
 
-// Available Effects Banner
-.available-effects-banner {
-  padding: 14px 18px;
+// Redirect Banner to Economy
+.effects-redirect-banner {
+  padding: 14px 20px;
   margin-bottom: 24px;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(156, 39, 176, 0.12);
+  border: 1px solid rgba(156, 39, 176, 0.35);
+  border-radius: 12px;
+  flex-wrap: wrap;
 
-  .effects-badge-title {
+  .banner-left {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.76rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #ce93d8;
+    gap: 12px;
 
-    mat-icon {
-      font-size: 16px;
-      width: 16px;
-      height: 16px;
+    .info-icon {
+      color: #ce93d8;
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
+
+    .banner-text {
+      strong {
+        color: #f3e5f5;
+        font-size: 0.92rem;
+        display: block;
+        margin-bottom: 2px;
+      }
+      p {
+        color: #e1bee7;
+        font-size: 0.82rem;
+        margin: 0;
+      }
     }
   }
 
-  .effects-chips-row {
-    display: flex;
-    flex-wrap: wrap;
+  .btn-goto-economy {
+    display: inline-flex;
+    align-items: center;
     gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: rgba(156, 39, 176, 0.25);
+    border: 1px solid rgba(156, 39, 176, 0.5);
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.84rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s ease;
 
-    .effect-pill-preview {
-      background: rgba(156, 39, 176, 0.15);
-      border: 1px solid rgba(156, 39, 176, 0.35);
-      color: #e1bee7;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.74rem;
-      font-weight: 600;
-      font-family: monospace;
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      background: #9c27b0;
+      color: #ffffff;
     }
   }
 }
 
-// 2-Column Perks Grid
 .perks-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     grid-template-columns: 1fr;
+  }
+}
+
+.count-pill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #b0bec5;
+  letter-spacing: 0.03em;
+
+  &.immune-pill-count {
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd54f;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+  }
+}
+
+.immunity-card {
+  .icon-immune {
+    color: #ffd54f !important;
+  }
+
+  .btn-add-immune {
+    background: rgba(255, 215, 0, 0.15) !important;
+    border: 1px solid rgba(255, 215, 0, 0.35) !important;
+    color: #ffe082 !important;
+
+    &:hover {
+      background: #ffb300 !important;
+      color: #000000 !important;
+    }
+  }
+
+  .inline-immune-box {
+    background: rgba(255, 215, 0, 0.06);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
   }
 }
 
@@ -256,17 +318,7 @@
     }
   }
 
-  .chip-form {
-    mat-form-field {
-      width: 100%;
-    }
 
-    .effect-active-chip {
-      background: rgba(156, 39, 176, 0.25) !important;
-      border: 1px solid rgba(156, 39, 176, 0.5) !important;
-      color: #e1bee7 !important;
-    }
-  }
 
   .tag-input-field {
     width: 100%;
@@ -292,10 +344,94 @@
     height: 40px;
     color: #607d8b;
     margin-bottom: 6px;
+
+    &.immune-empty-icon {
+      color: #ffb74d;
+    }
   }
 
   p {
     font-size: 0.84rem;
     margin: 0;
+  }
+}
+
+.immune-item-card {
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  .immune-item-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    .account-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        color: #9fa8da;
+      }
+
+      code {
+        font-size: 0.82rem;
+        color: #ffffff;
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+    }
+
+    .immunity-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #ffd54f;
+      background: rgba(255, 215, 0, 0.12);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      padding: 3px 8px;
+      border-radius: 6px;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  .btn-delete-perk {
+    background: transparent;
+    border: none;
+    color: #78909c;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s ease;
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover {
+      color: #ef5350;
+    }
   }
 }
