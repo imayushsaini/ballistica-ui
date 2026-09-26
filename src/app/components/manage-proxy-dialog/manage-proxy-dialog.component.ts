@@ -53,9 +53,10 @@ export class ManageProxyDialogComponent implements OnInit {
     this.refreshList();
     this.testAllProxies();
 
-    this.proxySub = this.hostManager.onProxyChange.subscribe((proxy) => {
-      this.activeProxy = proxy;
+    this.proxySub = this.hostManager.onProxyChange.subscribe((event) => {
+      this.activeProxy = typeof event === 'object' && event ? event.url : event;
     });
+
   }
 
   ngOnDestroy(): void {

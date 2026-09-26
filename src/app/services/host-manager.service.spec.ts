@@ -146,13 +146,27 @@ describe('HostManagerService', () => {
       const proxy2 = 'https://proxy2.example.com';
       service.saveProxyList([proxy1, proxy2]);
 
-      service.onProxyChange.subscribe((newProxy) => {
-        expect(newProxy).toBe(proxy2);
+      service.onProxyChange.subscribe((event) => {
+        const url = typeof event === 'object' ? event.url : event;
+        expect(url).toBe(proxy2);
         done();
       });
 
       service.setActiveProxy(proxy2);
     });
+
+    it('should rate-limit auto switching during a cooldown window', () => {
+      const proxy1 = 'https://proxy1.example.com';
+      const proxy2 = 'https://proxy2.example.com';
+      service.saveProxyList([proxy1, proxy2]);
+
+      expect(service.canAutoSwitchProxy()).toBeTrue();
+      service.recordAutoSwitch();
+      service.recordAutoSwitch();
+
+      expect(service.canAutoSwitchProxy()).toBeFalse();
+    });
+
   });
 });
 
