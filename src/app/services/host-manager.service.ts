@@ -22,6 +22,7 @@ export class HostManagerService {
   onServerChange = new Subject<string>();
   onAuthChange = new Subject<boolean>();
   onProxyChange = new Subject<ProxyChangeEvent | string>();
+  onWebSocketToggle = new Subject<boolean>();
   currentHost: string | null = null;
 
   private lastAutoSwitchTime = 0;
@@ -31,6 +32,20 @@ export class HostManagerService {
 
 
   constructor() {}
+
+  isWebSocketEnabled(): boolean {
+    const stored = localStorage.getItem('USE_WEBSOCKET');
+    if (stored !== null) {
+      return stored === 'true';
+    }
+    return (environment as any).USE_WEBSOCKET ?? false;
+  }
+
+  setWebSocketEnabled(enabled: boolean): void {
+    localStorage.setItem('USE_WEBSOCKET', String(enabled));
+    this.onWebSocketToggle.next(enabled);
+  }
+
 
   getHostDB(): Host {
     const hostDb = localStorage.getItem(HOST_DB);

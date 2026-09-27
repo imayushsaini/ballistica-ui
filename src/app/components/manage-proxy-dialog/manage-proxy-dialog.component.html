@@ -20,6 +20,27 @@
       <span>Localhost and LAN IPs (127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x) always connect directly and bypass the proxy.</span>
     </div>
 
+    <!-- WebSocket / HTTP Protocol Toggle -->
+    <div class="local-hint-banner ws-toggle-banner" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 150, 255, 0.1); border: 1px solid rgba(0, 150, 255, 0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <mat-icon style="color: #00d2ff;">input</mat-icon>
+        <div>
+          <strong style="color: #fff; font-size: 14px; display: block;">Proxy Protocol Mode</strong>
+          <span style="color: #aaa; font-size: 12px;">Toggle between persistent WebSocket connection and HTTP REST API for proxy requests.</span>
+        </div>
+      </div>
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #fff; font-weight: 500;">
+        <input
+          type="checkbox"
+          [ngModel]="useWebSocket"
+          (ngModelChange)="toggleWebSocket($event)"
+          style="width: 18px; height: 18px; accent-color: #00d2ff; cursor: pointer;"
+        />
+        <span>Use WebSocket</span>
+      </label>
+    </div>
+
+
     <!-- Add New Proxy Row -->
     <div class="add-proxy-card">
       <mat-form-field appearance="fill" class="proxy-input-field">

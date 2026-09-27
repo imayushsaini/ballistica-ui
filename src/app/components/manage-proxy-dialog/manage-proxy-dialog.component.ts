@@ -38,6 +38,7 @@ export class ManageProxyDialogComponent implements OnInit {
   proxyList: string[] = [];
   activeProxy = '';
   newProxyUrl = '';
+  useWebSocket = false;
   proxyStatusMap: ProxyStatus = {};
   isAutoSelecting = false;
   private proxySub?: any;
@@ -52,12 +53,20 @@ export class ManageProxyDialogComponent implements OnInit {
   ngOnInit(): void {
     this.refreshList();
     this.testAllProxies();
+    this.useWebSocket = this.hostManager.isWebSocketEnabled();
 
     this.proxySub = this.hostManager.onProxyChange.subscribe((event) => {
       this.activeProxy = typeof event === 'object' && event ? event.url : event;
     });
-
   }
+
+  toggleWebSocket(enabled: boolean): void {
+    this.useWebSocket = enabled;
+    this.hostManager.setWebSocketEnabled(enabled);
+    const mode = enabled ? 'WebSocket' : 'HTTP REST';
+    this.snackBar.open(`Proxy communication mode set to ${mode}`, 'OK', { duration: 3000 });
+  }
+
 
   ngOnDestroy(): void {
     if (this.proxySub) {

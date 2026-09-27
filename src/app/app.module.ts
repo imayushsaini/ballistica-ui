@@ -26,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlayerprofileComponent } from './pages/leaderboard/playerprofile/playerprofile.component';
 import { AdminDashboardComponent } from './pages/admin-dashboard/admin-dashboard.component';
 import { authInterceptorProvider } from './helpers/auth.interceptor';
+import { webSocketInterceptorProvider } from './helpers/websocket.interceptor';
 import { proxyFailoverInterceptorProvider } from './helpers/proxy-failover.interceptor';
 import { SelectServerComponent } from './pages/select-server/select-server.component';
 import { errorInterceptorProvider } from './helpers/error.interceptor';
@@ -71,6 +72,7 @@ import { ManageProxyDialogComponent } from './components/manage-proxy-dialog/man
   ],
   providers: [
     authInterceptorProvider,
+    webSocketInterceptorProvider,
     proxyFailoverInterceptorProvider,
     errorInterceptorProvider,
     provideHttpClient(withInterceptorsFromDi()),
