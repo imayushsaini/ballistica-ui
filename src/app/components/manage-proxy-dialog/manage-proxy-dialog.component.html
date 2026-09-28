@@ -17,25 +17,24 @@
     <!-- Local IP Direct Hint -->
     <div class="local-hint-banner">
       <mat-icon>info_outline</mat-icon>
-      <span>Localhost and LAN IPs (127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x) always connect directly and bypass the proxy.</span>
+      <span>Localhost and LAN IPs (127.0.0.1, 192.168.x.x, 10.x.x.x, 172.16-31.x.x) always connect directly and bypass
+        the proxy.</span>
     </div>
 
     <!-- WebSocket / HTTP Protocol Toggle -->
-    <div class="local-hint-banner ws-toggle-banner" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 150, 255, 0.1); border: 1px solid rgba(0, 150, 255, 0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;">
+    <div class="local-hint-banner ws-toggle-banner"
+      style="display: flex; align-items: center; justify-content: space-between; background: rgba(0, 150, 255, 0.1); border: 1px solid rgba(0, 150, 255, 0.25); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;">
       <div style="display: flex; align-items: center; gap: 10px;">
         <mat-icon style="color: #00d2ff;">input</mat-icon>
         <div>
           <strong style="color: #fff; font-size: 14px; display: block;">Proxy Protocol Mode</strong>
-          <span style="color: #aaa; font-size: 12px;">Toggle between persistent WebSocket connection and HTTP REST API for proxy requests.</span>
+          <span style="color: #aaa; font-size: 12px;">Toggle between persistent WebSocket connection and HTTP REST API
+            for proxy requests.</span>
         </div>
       </div>
       <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #fff; font-weight: 500;">
-        <input
-          type="checkbox"
-          [ngModel]="useWebSocket"
-          (ngModelChange)="toggleWebSocket($event)"
-          style="width: 18px; height: 18px; accent-color: #00d2ff; cursor: pointer;"
-        />
+        <input type="checkbox" [ngModel]="useWebSocket" (ngModelChange)="toggleWebSocket($event)"
+          style="width: 18px; height: 18px; accent-color: #00d2ff; cursor: pointer;" />
         <span>Use WebSocket</span>
       </label>
     </div>
@@ -45,20 +44,12 @@
     <div class="add-proxy-card">
       <mat-form-field appearance="fill" class="proxy-input-field">
         <mat-label>Add New Proxy Gateway URL</mat-label>
-        <input
-          matInput
-          [(ngModel)]="newProxyUrl"
-          placeholder="https://my-custom-proxy.deno.net"
-          (keyup.enter)="onAddProxy()"
-        />
+        <input matInput [(ngModel)]="newProxyUrl" placeholder="https://my-custom-proxy.deno.net"
+          (keyup.enter)="onAddProxy()" />
         <mat-icon matPrefix class="field-icon">add_link</mat-icon>
       </mat-form-field>
-      <button
-        type="button"
-        class="btn-primary-glow btn-add-proxy"
-        (click)="onAddProxy()"
-        [disabled]="!newProxyUrl.trim()"
-      >
+      <button type="button" class="btn-primary-glow btn-add-proxy" (click)="onAddProxy()"
+        [disabled]="!newProxyUrl.trim()">
         <mat-icon>add</mat-icon>
         <span>Add</span>
       </button>
@@ -69,13 +60,8 @@
       <div class="list-title-row">
         <h3>Saved Proxies ({{ proxyList.length }})</h3>
         <div class="header-actions-group">
-          <button
-            type="button"
-            class="btn-test-all"
-            (click)="autoSelectFastest()"
-            [disabled]="isAutoSelecting"
-            title="Automatically test all proxies and connect to the fastest healthy proxy"
-          >
+          <button type="button" class="btn-test-all" (click)="autoSelectFastest()" [disabled]="isAutoSelecting"
+            title="Automatically test all proxies and connect to the fastest healthy proxy">
             <mat-icon>speed</mat-icon>
             <span>Auto Select</span>
           </button>
@@ -88,12 +74,8 @@
 
 
       <div class="proxies-items-list">
-        <div
-          *ngFor="let url of proxyList"
-          class="proxy-item"
-          [class.active-proxy-item]="url === activeProxy"
-          (click)="selectProxy(url)"
-        >
+        <div *ngFor="let url of proxyList" class="proxy-item" [class.active-proxy-item]="url === activeProxy"
+          (click)="selectProxy(url)">
           <div class="proxy-radio-wrap">
             <span class="custom-radio" [class.checked]="url === activeProxy"></span>
           </div>
@@ -128,22 +110,13 @@
           </div>
 
           <div class="proxy-actions">
-            <button
-              type="button"
-              class="btn-proxy-action btn-ping"
-              (click)="testProxy(url); $event.stopPropagation()"
-              title="Test this proxy"
-            >
+            <button type="button" class="btn-proxy-action btn-ping" (click)="testProxy(url); $event.stopPropagation()"
+              title="Test this proxy">
               <mat-icon>network_ping</mat-icon>
             </button>
 
-            <button
-              type="button"
-              class="btn-proxy-action btn-delete-p"
-              *ngIf="proxyList.length > 1"
-              (click)="onDeleteProxy(url, $event)"
-              title="Delete proxy"
-            >
+            <button type="button" class="btn-proxy-action btn-delete-p" *ngIf="proxyList.length > 1"
+              (click)="onDeleteProxy(url, $event)" title="Delete proxy">
               <mat-icon>delete_outline</mat-icon>
             </button>
           </div>
