@@ -23,6 +23,7 @@ export const ATTEMPTED_PROXIES = new HttpContextToken<string[]>(() => []);
 export class ProxyFailoverInterceptor implements HttpInterceptor {
   private hostManager = inject(HostManagerService);
   private snackBar = inject(MatSnackBar);
+  private static lastSnackBarTime = 0;
 
   intercept(
     request: HttpRequest<any>,
@@ -61,6 +62,12 @@ export class ProxyFailoverInterceptor implements HttpInterceptor {
           return throwError(() => error);
         }
 
+        // Check rate limits to prevent rapid infinite switching cascades
+        if (!this.hostManager.canAutoSwitchProxy()) {
+          console.warn('[ProxyFailover] Auto-switch cooldown active. Stopping auto-retry.');
+          return throwError(() => error);
+        }
+
         const attempted = [...(request.context.get(ATTEMPTED_PROXIES) || [])];
         if (!attempted.includes(matchedProxy)) {
           attempted.push(matchedProxy);
@@ -72,7 +79,7 @@ export class ProxyFailoverInterceptor implements HttpInterceptor {
         );
 
         if (candidateProxies.length === 0) {
-          // All proxies have been attempted and failed
+          // All proxies have been attempted for this request
           return throwError(() => error);
         }
 
@@ -81,8 +88,11 @@ export class ProxyFailoverInterceptor implements HttpInterceptor {
           `[ProxyFailover] Proxy "${matchedProxy}" failed (status ${error.status}). Auto-switching to backup proxy "${nextProxy}".`
         );
 
-        // Update active proxy in hostManager so future requests use the working proxy immediately
-        this.hostManager.setActiveProxy(nextProxy, true);
+        // Record switch in hostManager rate limiter
+        this.hostManager.recordAutoSwitch();
+
+        // Update active proxy in hostManager with isAuto = true flag so UI components don't launch new requests
+        this.hostManager.setActiveProxy(nextProxy, true, true);
 
         // Replace the failed proxy URL prefix with the new proxy URL
         const newUrl = request.url.replace(matchedProxy, nextProxy);
@@ -98,18 +108,23 @@ export class ProxyFailoverInterceptor implements HttpInterceptor {
           context: updatedContext,
         });
 
-        // Notify user about the proxy auto-switch
-        this.snackBar.open(
-          `Connection issue on current proxy. Switched to ${nextProxy}`,
-          'OK',
-          { duration: 3500 }
-        );
+        // Throttled notification (at most once every 10 seconds)
+        const now = Date.now();
+        if (now - ProxyFailoverInterceptor.lastSnackBarTime > 10000) {
+          ProxyFailoverInterceptor.lastSnackBarTime = now;
+          this.snackBar.open(
+            `Connection issue on current proxy. Switched to ${nextProxy}`,
+            'OK',
+            { duration: 3500 }
+          );
+        }
 
         return next.handle(retryRequest);
       })
     );
   }
 }
+
 
 export const proxyFailoverInterceptorProvider = [
   {

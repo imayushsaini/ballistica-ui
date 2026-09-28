@@ -477,7 +477,11 @@
                       </div>
                       <div class="item-name-meta">
                         <span class="item-name">{{ item.item_id | titlecase }}</span>
-                        <span class="item-sub">Particle Effect (Permanent)</span>
+                        <span class="item-sub">
+                          <span class="badge-source source-{{ item.source || 'admin' }}">{{ (item.source || 'admin') | uppercase }}</span>
+                          <span class="badge-status" [class.is-equipped]="item.is_equipped">{{ item.is_equipped ? 'Equipped' : 'Disabled' }}</span>
+                          <span class="eff-duration">&bull; {{ item.duration_display || 'Permanent' }}</span>
+                        </span>
                       </div>
                     </div>
 
@@ -554,15 +558,15 @@
                   </td>
                 </ng-container>
 
-                <!-- Usages Left Column -->
+                <!-- Usages Left / Duration Column -->
                 <ng-container matColumnDef="usages_left">
-                  <th mat-header-cell *matHeaderCellDef>Usages Left</th>
+                  <th mat-header-cell *matHeaderCellDef>Usages / Duration</th>
                   <td mat-cell *matCellDef="let p" class="usages-col">
                     <span class="usages-pill" *ngIf="p.item_type === 'command'">
                       {{ p.usages_left ?? 0 }} Left
                     </span>
                     <span class="perm-pill" *ngIf="p.item_type === 'effect'">
-                      Permanent
+                      {{ p.duration_display || (p.expires_at ? 'Rental' : 'Permanent') }}
                     </span>
                   </td>
                 </ng-container>

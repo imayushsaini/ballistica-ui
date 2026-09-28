@@ -1,0 +1,329 @@
+<div class="admin-tool-page replays-page">
+  <!-- Top Action Bar -->
+  <div class="tool-top-bar">
+    <div class="tool-title-group">
+      <h2>
+        <mat-icon class="title-icon">videocam</mat-icon>
+        Game Play Recordings (.brp)
+      </h2>
+      <p>Browse recorded server replays, download matches for playback, or prune disk storage.</p>
+    </div>
+
+    <div class="top-action-buttons">
+      <button
+        type="button"
+        class="btn-refresh"
+        (click)="loadReplays()"
+        [disabled]="isLoading"
+        title="Refresh replays list"
+      >
+        <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+        <span>Refresh</span>
+      </button>
+
+      <button
+        type="button"
+        class="btn-danger-glow"
+        *ngIf="selectedReplays.size > 0"
+        (click)="deleteBatch()"
+        [disabled]="isBatchDeleting"
+        title="Delete selected replay files"
+      >
+        <mat-icon [class.spinning]="isBatchDeleting">delete_forever</mat-icon>
+        <span>Delete Selected ({{ selectedReplays.size }})</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Metric Badges Row -->
+  <div class="glass-card metrics-row">
+    <div class="metric-item">
+      <div class="metric-icon-wrap icon-total">
+        <mat-icon>video_library</mat-icon>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Total Recordings</span>
+        <span class="metric-val">{{ totalReplays | number }}</span>
+      </div>
+    </div>
+
+    <div class="metric-item">
+      <div class="metric-icon-wrap icon-disk">
+        <mat-icon>storage</mat-icon>
+      </div>
+      <div class="metric-info">
+        <span class="metric-label">Current Page Usage</span>
+        <span class="metric-val">{{ getTotalDiskSize() }}</span>
+      </div>
+    </div>
+
+    <div class="metric-item dir-metric">
+      <div class="metric-icon-wrap icon-dir">
+        <mat-icon>folder_open</mat-icon>
+      </div>
+      <div class="metric-info dir-info">
+        <span class="metric-label">Server Replay Path</span>
+        <code class="dir-code" [title]="directory">{{ directory || 'staged/dist/ba_root/replays' }}</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls / Filter Toolbar -->
+  <div class="glass-card toolbar-card">
+    <div class="search-box">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input
+        type="text"
+        [formControl]="searchControl"
+        placeholder="Filter by filename (e.g. replay_2026...)"
+        (keyup.enter)="onSearch()"
+      />
+      <button
+        type="button"
+        class="btn-clear-search"
+        *ngIf="searchControl.value"
+        (click)="clearSearch()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <button type="button" class="btn-search-go" (click)="onSearch()">
+        Search
+      </button>
+    </div>
+
+    <div class="toolbar-sort-group">
+      <span class="sort-label">Sort:</span>
+      <button
+        type="button"
+        class="sort-chip"
+        [class.active]="sortBy === 'modified'"
+        (click)="onSort('modified')"
+      >
+        <span>Date</span>
+        <mat-icon class="sort-icon" *ngIf="sortBy === 'modified'">
+          {{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+        </mat-icon>
+      </button>
+
+      <button
+        type="button"
+        class="sort-chip"
+        [class.active]="sortBy === 'name'"
+        (click)="onSort('name')"
+      >
+        <span>Name</span>
+        <mat-icon class="sort-icon" *ngIf="sortBy === 'name'">
+          {{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+        </mat-icon>
+      </button>
+
+      <button
+        type="button"
+        class="sort-chip"
+        [class.active]="sortBy === 'size'"
+        (click)="onSort('size')"
+      >
+        <span>Size</span>
+        <mat-icon class="sort-icon" *ngIf="sortBy === 'size'">
+          {{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+        </mat-icon>
+      </button>
+
+      <div class="per-page-select">
+        <label>Per page:</label>
+        <select [ngModel]="perPage" (ngModelChange)="onPerPageChange($event)">
+          <option [value]="25">25</option>
+          <option [value]="50">50</option>
+          <option [value]="100">100</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="table-loading-state" *ngIf="isLoading">
+    <mat-spinner diameter="36"></mat-spinner>
+    <p>Loading game recordings...</p>
+  </div>
+
+  <!-- Replays Table Card -->
+  <div class="glass-card replays-table-card" *ngIf="!isLoading">
+    <div class="table-responsive" *ngIf="replays.length > 0">
+      <table class="replays-table">
+        <thead>
+          <tr>
+            <th class="col-check">
+              <input
+                type="checkbox"
+                class="custom-check"
+                [checked]="isAllSelected()"
+                (change)="toggleSelectAll($event)"
+                title="Select all on this page"
+              />
+            </th>
+            <th class="col-name" (click)="onSort('name')">
+              <div class="th-content">
+                <span>File Name</span>
+                <mat-icon *ngIf="sortBy === 'name'" class="th-sort-icon">
+                  {{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+                </mat-icon>
+              </div>
+            </th>
+            <th class="col-size" (click)="onSort('size')">
+              <div class="th-content">
+                <span>File Size</span>
+                <mat-icon *ngIf="sortBy === 'size'" class="th-sort-icon">
+                  {{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+                </mat-icon>
+              </div>
+            </th>
+            <th class="col-date" (click)="onSort('modified')">
+              <div class="th-content">
+                <span>Recorded On (Latest First)</span>
+                <mat-icon *ngIf="sortBy === 'modified'" class="th-sort-icon">
+                  {{ sortOrder === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+                </mat-icon>
+              </div>
+            </th>
+            <th class="col-actions text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let replay of replays"
+            class="replay-row"
+            [class.row-selected]="isSelected(replay.filename)"
+          >
+            <!-- Checkbox -->
+            <td class="col-check">
+              <input
+                type="checkbox"
+                class="custom-check"
+                [checked]="isSelected(replay.filename)"
+                (change)="toggleSelect(replay.filename)"
+              />
+            </td>
+
+            <!-- Filename with Badge -->
+            <td class="col-name">
+              <div class="replay-file-cell">
+                <div class="file-icon-wrap">
+                  <mat-icon>movie</mat-icon>
+                </div>
+                <div class="file-meta">
+                  <span class="replay-name">{{ replay.filename }}</span>
+                  <span class="replay-tag">.BRP REPLAY</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- File Size -->
+            <td class="col-size">
+              <span class="size-pill">{{ replay.size_formatted }}</span>
+            </td>
+
+            <!-- Date / Timestamp -->
+            <td class="col-date">
+              <div class="date-meta">
+                <mat-icon class="date-icon">schedule</mat-icon>
+                <span>{{ replay.modified_at }}</span>
+              </div>
+            </td>
+
+            <!-- Actions -->
+            <td class="col-actions text-right">
+              <div class="action-buttons-wrap">
+                <!-- Download -->
+                <button
+                  type="button"
+                  class="btn-action btn-download"
+                  (click)="downloadReplay(replay)"
+                  [disabled]="downloadingFiles[replay.filename]"
+                  title="Download .brp replay file"
+                >
+                  <mat-icon [class.spinning]="downloadingFiles[replay.filename]">
+                    {{ downloadingFiles[replay.filename] ? 'hourglass_top' : 'download' }}
+                  </mat-icon>
+                  <span>Download</span>
+                </button>
+
+                <!-- Delete -->
+                <button
+                  type="button"
+                  class="btn-action btn-delete"
+                  (click)="deleteSingleReplay(replay)"
+                  [disabled]="deletingFiles[replay.filename]"
+                  title="Permanently delete this replay"
+                >
+                  <mat-icon [class.spinning]="deletingFiles[replay.filename]">
+                    delete_outline
+                  </mat-icon>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-replays-state" *ngIf="replays.length === 0">
+      <mat-icon class="empty-icon">videocam_off</mat-icon>
+      <h3>No Game Recordings Found</h3>
+      <p *ngIf="searchQuery">No replay files matched your search query "{{ searchQuery }}".</p>
+      <p *ngIf="!searchQuery">The server replays folder currently contains no recorded matches.</p>
+    </div>
+
+    <!-- Pagination Footer -->
+    <div class="table-pagination-footer" *ngIf="totalReplays > 0">
+      <div class="pagination-info">
+        Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong>
+        <span class="sep">&bull;</span>
+        <strong>{{ totalReplays }}</strong> total recordings
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          type="button"
+          class="btn-page"
+          [disabled]="currentPage <= 1"
+          (click)="onPageChange(1)"
+          title="First Page"
+        >
+          <mat-icon>first_page</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="btn-page"
+          [disabled]="currentPage <= 1"
+          (click)="onPageChange(currentPage - 1)"
+          title="Previous Page"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <span class="current-page-num">{{ currentPage }}</span>
+
+        <button
+          type="button"
+          class="btn-page"
+          [disabled]="currentPage >= totalPages"
+          (click)="onPageChange(currentPage + 1)"
+          title="Next Page"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="btn-page"
+          [disabled]="currentPage >= totalPages"
+          (click)="onPageChange(totalPages)"
+          title="Last Page"
+        >
+          <mat-icon>last_page</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

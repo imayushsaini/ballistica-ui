@@ -102,9 +102,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.refreshData();
     });
 
-    this.hostManager.onProxyChange.subscribe(() => {
-      this.refreshData();
+    this.hostManager.onProxyChange.subscribe((event) => {
+      const isAuto = typeof event === 'object' && event ? event.isAuto : false;
+      // Do not launch duplicate requests on automatic failover since the interceptor retries in-flight requests
+      if (!isAuto && !this.isLoadingStats) {
+        this.refreshData();
+      }
     });
+
 
     this.updateSubscription = interval(9000).subscribe(() => {
       if (!this.hostManager.getSelectedHost() || this.isPaused || this.isOffline) return;

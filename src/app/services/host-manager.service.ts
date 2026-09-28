@@ -10,16 +10,42 @@ const LOCAL_HOST = '127.0.0.1:43210';
 const DEFAULT_HOST = environment.DEFAULT_HOST;
 const DEFAULT_PROXY = environment.API_PROXY;
 
+export interface ProxyChangeEvent {
+  url: string;
+  isAuto: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class HostManagerService {
   onServerChange = new Subject<string>();
   onAuthChange = new Subject<boolean>();
-  onProxyChange = new Subject<string>();
+  onProxyChange = new Subject<ProxyChangeEvent | string>();
+  onWebSocketToggle = new Subject<boolean>();
   currentHost: string | null = null;
 
+  private lastAutoSwitchTime = 0;
+  private autoSwitchWindowCount = 0;
+  private readonly AUTO_SWITCH_COOLDOWN_MS = 15000;
+  private readonly MAX_AUTO_SWITCH_PER_WINDOW = 3;
+
+
   constructor() {}
+
+  isWebSocketEnabled(): boolean {
+    const stored = localStorage.getItem('USE_WEBSOCKET');
+    if (stored !== null) {
+      return stored === 'true';
+    }
+    return (environment as any).USE_WEBSOCKET ?? false;
+  }
+
+  setWebSocketEnabled(enabled: boolean): void {
+    localStorage.setItem('USE_WEBSOCKET', String(enabled));
+    this.onWebSocketToggle.next(enabled);
+  }
+
 
   getHostDB(): Host {
     const hostDb = localStorage.getItem(HOST_DB);
@@ -127,11 +153,29 @@ export class HostManagerService {
     return proxyUrl;
   }
 
+  canAutoSwitchProxy(): boolean {
+    const now = Date.now();
+    if (now - this.lastAutoSwitchTime > this.AUTO_SWITCH_COOLDOWN_MS) {
+      this.autoSwitchWindowCount = 0;
+    }
+    const maxAllowed = Math.min(this.getProxyList().length, this.MAX_AUTO_SWITCH_PER_WINDOW);
+    return this.autoSwitchWindowCount < maxAllowed;
+  }
+
+  recordAutoSwitch(): void {
+    const now = Date.now();
+    if (now - this.lastAutoSwitchTime > this.AUTO_SWITCH_COOLDOWN_MS) {
+      this.autoSwitchWindowCount = 0;
+    }
+    this.lastAutoSwitchTime = now;
+    this.autoSwitchWindowCount++;
+  }
+
   setProxyUrl(url: string): void {
     this.setActiveProxy(url);
   }
 
-  setActiveProxy(url: string, notify: boolean = true): void {
+  setActiveProxy(url: string, notify: boolean = true, isAuto: boolean = false): void {
     if (!url) return;
     const cleanUrl = url.trim().replace(/\/+$/, '');
     const cache = this.getCache();
@@ -139,11 +183,11 @@ export class HostManagerService {
     localStorage.setItem(CACHE, JSON.stringify(cache));
     this.addProxy(cleanUrl);
     if (notify) {
-      this.onProxyChange.next(cleanUrl);
+      this.onProxyChange.next({ url: cleanUrl, isAuto });
     }
   }
 
-  switchToNextProxy(failedProxyUrl?: string): string {
+  switchToNextProxy(failedProxyUrl?: string, isAuto: boolean = false): string {
     const list = this.getProxyList();
     if (list.length <= 1) {
       return this.getProxyUrl();
@@ -152,9 +196,10 @@ export class HostManagerService {
     const currentIndex = list.indexOf(current);
     const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % list.length : 0;
     const nextProxy = list[nextIndex];
-    this.setActiveProxy(nextProxy, true);
+    this.setActiveProxy(nextProxy, true, isAuto);
     return nextProxy;
   }
+
 
   async findAndSetHealthyProxy(timeoutMs: number = 3000): Promise<string | null> {
     const list = this.getProxyList();

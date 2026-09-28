@@ -280,7 +280,7 @@
                 <div *ngFor="let kv of getKickVoteDisabled()" class="restriction-item warning-item">
                   <div class="item-details">
                     <span class="ban-target">{{ kv.id }}</span>
-                    <span class="ban-meta">Till: {{ kv.till }}</span>
+                    <span class="ban-meta">Reason: {{ kv.reason }} &bull; Till: {{ kv.till }}</span>
                   </div>
                   <button type="button" class="btn-unban-small" (click)="onKickVoteClick(kv.id, true)">
                     Enable
@@ -289,6 +289,47 @@
               </div>
               <p class="empty-sub" *ngIf="getKickVoteDisabled().length === 0">
                 No kick-vote restrictions active.
+              </p>
+            </div>
+
+            <!-- Kick-Vote Immunity (VIP Perks) Section -->
+            <div class="sec-subsection">
+              <div class="sec-sub-header">
+                <h4 class="sub-title"><mat-icon class="text-gold">shield</mat-icon> Kick-Vote Immunity (VIP Perks)</h4>
+                <span class="count-pill">{{ getKickVoteImmune().length }} Immune</span>
+              </div>
+
+              <div class="inline-add-sec-bar">
+                <input
+                  type="text"
+                  [(ngModel)]="newImmuneSecId"
+                  placeholder="Account ID (e.g. pb-IF4VAk4a)"
+                  (keyup.enter)="addImmunitySec()"
+                />
+                <button
+                  type="button"
+                  class="btn-sec-add"
+                  (click)="addImmunitySec()"
+                  [disabled]="!newImmuneSecId.trim()"
+                >
+                  <mat-icon>add</mat-icon>
+                  <span>Grant</span>
+                </button>
+              </div>
+
+              <div class="restriction-list" *ngIf="getKickVoteImmune().length > 0">
+                <div *ngFor="let accId of getKickVoteImmune()" class="restriction-item immune-item">
+                  <div class="item-details">
+                    <span class="ban-target">{{ accId }}</span>
+                    <span class="ban-meta text-gold">Kick-Vote Immune (VIP Perk)</span>
+                  </div>
+                  <button type="button" class="btn-unban-small btn-revoke-small" (click)="removeImmunitySec(accId)">
+                    Revoke
+                  </button>
+                </div>
+              </div>
+              <p class="empty-sub" *ngIf="getKickVoteImmune().length === 0">
+                No players currently have kick-vote immunity.
               </p>
             </div>
           </div>
@@ -445,6 +486,17 @@
             <span>{{ selectedPlayerV2.canStartKickVote === false ? 'Enable Kick Votes' : 'Disable Kick Votes' }}</span>
           </button>
 
+          <button
+            type="button"
+            class="btn-mod-action"
+            [class.btn-mod-warning]="selectedPlayerV2.isKickVoteImmune"
+            [class.btn-mod-immune]="!selectedPlayerV2.isKickVoteImmune"
+            (click)="onToggleImmunityClick(selectedPlayerV2.account_id || selectedPlayerV2.v2Tag, selectedPlayerV2.isKickVoteImmune)"
+          >
+            <mat-icon>{{ selectedPlayerV2.isKickVoteImmune ? 'shield' : 'verified_user' }}</mat-icon>
+            <span>{{ selectedPlayerV2.isKickVoteImmune ? 'Revoke Immunity' : 'Grant Immunity' }}</span>
+          </button>
+
           <a
             [routerLink]="['/admin/economy']"
             [queryParams]="{ account_id: selectedPlayerV2.account_id || selectedPlayerV2.v2Tag }"
@@ -479,6 +531,10 @@
 
             <mat-slide-toggle formControlName="canStartKickVote" color="primary">
               Can Start Kick Votes
+            </mat-slide-toggle>
+
+            <mat-slide-toggle formControlName="isKickVoteImmune" color="accent">
+              Kick Vote Immunity (VIP Perk)
             </mat-slide-toggle>
           </div>
 

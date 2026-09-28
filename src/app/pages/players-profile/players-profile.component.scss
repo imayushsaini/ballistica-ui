@@ -487,6 +487,79 @@
     }
   }
 
+  .sec-sub-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+
+    .sub-title {
+      margin-bottom: 0;
+    }
+
+    .count-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      background: rgba(255, 215, 0, 0.15);
+      color: #ffd54f;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+  }
+
+  .inline-add-sec-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+
+    input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: #ffffff;
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      outline: none;
+
+      &:focus {
+        border-color: #ffd54f;
+      }
+    }
+
+    .btn-sec-add {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255, 215, 0, 0.18);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      color: #ffe082;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+      }
+
+      &:hover:not(:disabled) {
+        background: #ffb300;
+        color: #000000;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
   .restriction-list {
     display: flex;
     flex-direction: column;
@@ -508,6 +581,11 @@
     &.warning-item {
       background: rgba(255, 152, 0, 0.1);
       border: 1px solid rgba(255, 152, 0, 0.25);
+    }
+
+    &.immune-item {
+      background: rgba(255, 215, 0, 0.08);
+      border: 1px solid rgba(255, 215, 0, 0.25);
     }
 
     .item-details {
@@ -541,6 +619,13 @@
       &:hover {
         background: #00e676;
         color: #000000;
+      }
+
+      &.btn-revoke-small {
+        &:hover {
+          background: #f44336;
+          color: #ffffff;
+        }
       }
     }
   }
@@ -799,6 +884,17 @@
           color: #000000;
         }
       }
+
+      &.btn-mod-immune {
+        background: rgba(255, 215, 0, 0.15);
+        color: #ffd54f;
+        border: 1px solid rgba(255, 215, 0, 0.35);
+
+        &:hover {
+          background: #ffb300;
+          color: #000000;
+        }
+      }
     }
   }
 
@@ -897,4 +993,8 @@
   to {
     opacity: 1;
   }
+}
+
+.text-gold {
+  color: #ffd54f !important;
 }

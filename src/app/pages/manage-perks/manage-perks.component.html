@@ -2,8 +2,8 @@
   <!-- Top Action Bar -->
   <div class="tool-top-bar">
     <div class="tool-title-group">
-      <h2><mat-icon class="title-icon">auto_awesome</mat-icon> Perks &amp; Character Effects</h2>
-      <p>Assign custom in-game title tags and particle visual effects to specific player accounts.</p>
+      <h2><mat-icon class="title-icon">stars</mat-icon> Manage Player Perks &amp; Tags</h2>
+      <p>Assign custom in-game title tags and VIP kick vote immunity privileges.</p>
     </div>
 
     <button
@@ -13,125 +13,41 @@
       [disabled]="isSaving || isLoading"
     >
       <mat-icon [class.spinning]="isSaving">save</mat-icon>
-      <span>{{ isSaving ? 'Saving...' : 'Save Perks' }}</span>
+      <span>{{ isSaving ? 'Saving...' : 'Save All Perks' }}</span>
     </button>
   </div>
 
-  <!-- Available Effects List Overview -->
-  <div class="glass-card available-effects-banner" *ngIf="availableEffects.length > 0">
-    <span class="effects-badge-title"><mat-icon>flare</mat-icon> Available Game Engine Particle Effects:</span>
-    <div class="effects-chips-row">
-      <span *ngFor="let fx of availableEffects" class="effect-pill-preview">{{ fx }}</span>
+  <!-- Redirect Banner to Economy Management for Effects -->
+  <div class="glass-card effects-redirect-banner">
+    <div class="banner-left">
+      <mat-icon class="info-icon">auto_awesome</mat-icon>
+      <div class="banner-text">
+        <strong>Looking to manage player particle effects?</strong>
+        <p>Player effects (including Admin permanent gifts, shop rentals, and rank rewards) are now unified under Economy Management.</p>
+      </div>
     </div>
+    <a routerLink="/economy-management" class="btn-goto-economy">
+      <mat-icon>storefront</mat-icon>
+      <span>Go to Economy &amp; Effects</span>
+    </a>
   </div>
 
   <div class="table-loading-state" *ngIf="isLoading">
     <mat-spinner diameter="36"></mat-spinner>
-    <p>Loading perks and particle effects...</p>
+    <p>Loading player perks &amp; tags...</p>
   </div>
 
-  <!-- Main 2-Column Split: Custom Effects (Left) & Custom Tags (Right) -->
+  <!-- 2-Column Perks Grid -->
   <div class="perks-grid" *ngIf="!isLoading">
-    <!-- Left Column: Custom Character Effects -->
+    <!-- Column 1: Custom Tags Section -->
     <div class="glass-card perk-section-card">
       <div class="card-header-bar">
         <div class="header-title-wrap">
-          <mat-icon class="header-icon">sparkles</mat-icon>
-          <h3>Player Particle Effects</h3>
-        </div>
-        <button type="button" class="btn-add-perk" (click)="onAddNew('effect')">
-          <mat-icon>add</mat-icon>
-          <span>Add Account</span>
-        </button>
-      </div>
-
-      <!-- Add New Account Form (Effects) -->
-      <div class="inline-add-box" *ngIf="showNewEffectDialog">
-        <mat-form-field appearance="fill" class="full-width">
-          <mat-label>Account ID for Effects</mat-label>
-          <input matInput [(ngModel)]="newEffectAccountId" placeholder="e.g. pb-IF4VAk4a" (keyup.enter)="onSaveId('effect')" />
-        </mat-form-field>
-        <div class="inline-add-actions">
-          <button type="button" class="btn-dialog-secondary" (click)="showNewEffectDialog = false">Cancel</button>
-          <button type="button" class="btn-primary-glow" (click)="onSaveId('effect')" [disabled]="!newEffectAccountId.trim()">Confirm</button>
-        </div>
-      </div>
-
-      <div class="perks-body-list">
-        <div
-          *ngFor="let account of CUSTOM['customeffects'] | keyvalue"
-          class="perk-item-card"
-        >
-          <div class="perk-item-top">
-            <div class="account-badge">
-              <mat-icon>account_circle</mat-icon>
-              <code>{{ account.key }}</code>
-            </div>
-            <button
-              type="button"
-              class="btn-delete-perk"
-              (click)="onDeletePlayerEffect(account.key)"
-              title="Remove effects for this player"
-            >
-              <mat-icon>delete_outline</mat-icon>
-            </button>
-          </div>
-
-          <form class="chip-form">
-            <mat-form-field appearance="fill" class="full-width">
-              <mat-label>Assigned Particle Effects</mat-label>
-              <mat-chip-grid #chipGrid aria-label="effect selection">
-                <mat-chip-row
-                  *ngFor="let effect of CUSTOM['customeffects'][account.key]"
-                  (removed)="remove(effect, account.key)"
-                  class="effect-active-chip"
-                >
-                  <span>{{ effect }}</span>
-                  <button matChipRemove [attr.aria-label]="'remove ' + effect">
-                    <mat-icon>cancel</mat-icon>
-                  </button>
-                </mat-chip-row>
-              </mat-chip-grid>
-
-              <input
-                placeholder="Type or select effect (e.g. glow, spark)..."
-                [formControl]="getAccountEffectControl(account.key)"
-                [matChipInputFor]="chipGrid"
-                [matAutocomplete]="auto"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                (matChipInputTokenEnd)="add($event, account.key)"
-              />
-
-              <mat-autocomplete
-                #auto="matAutocomplete"
-                (optionSelected)="selected($event, account.key)"
-              >
-                <mat-option
-                  *ngFor="let effect of this.accountEffectControlMap[account.key]?.filter | async"
-                  [value]="effect"
-                >
-                  {{ effect }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </form>
-        </div>
-
-        <div class="empty-perks" *ngIf="(CUSTOM['customeffects'] | keyvalue).length === 0">
-          <mat-icon>auto_awesome_motion</mat-icon>
-          <p>No custom player particle effects assigned yet.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right Column: Custom Tags -->
-    <div class="glass-card perk-section-card">
-      <div class="card-header-bar">
-        <div class="header-title-wrap">
-          <mat-icon class="header-icon">label</mat-icon>
+          <mat-icon class="header-icon">badge</mat-icon>
           <h3>Player In-Game Tags</h3>
+          <span class="count-pill">{{ (CUSTOM['customtag'] | keyvalue).length }} Tags</span>
         </div>
-        <button type="button" class="btn-add-perk" (click)="onAddNew('tag')">
+        <button type="button" class="btn-add-perk" (click)="onAddNewTag()">
           <mat-icon>add</mat-icon>
           <span>Add Account</span>
         </button>
@@ -141,11 +57,11 @@
       <div class="inline-add-box" *ngIf="showNewTagDialog">
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Account ID for Custom Tag</mat-label>
-          <input matInput [(ngModel)]="newTagAccountId" placeholder="e.g. pb-IF4VAk4a" (keyup.enter)="onSaveId('tag')" />
+          <input matInput [(ngModel)]="newTagAccountId" placeholder="e.g. pb-IF4VAk4a" (keyup.enter)="onSaveTag()" />
         </mat-form-field>
         <div class="inline-add-actions">
           <button type="button" class="btn-dialog-secondary" (click)="showNewTagDialog = false">Cancel</button>
-          <button type="button" class="btn-primary-glow" (click)="onSaveId('tag')" [disabled]="!newTagAccountId.trim()">Confirm</button>
+          <button type="button" class="btn-primary-glow" (click)="onSaveTag()" [disabled]="!newTagAccountId.trim()">Confirm</button>
         </div>
       </div>
 
@@ -183,7 +99,66 @@
 
         <div class="empty-perks" *ngIf="(CUSTOM['customtag'] | keyvalue).length === 0">
           <mat-icon>local_offer</mat-icon>
-          <p>No custom player title tags assigned yet.</p>
+          <p>No custom player title tags assigned yet. Click "Add Account" to add one.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Column 2: Kick Vote Immunity VIP Perk Section -->
+    <div class="glass-card perk-section-card immunity-card">
+      <div class="card-header-bar">
+        <div class="header-title-wrap">
+          <mat-icon class="header-icon icon-immune">verified_user</mat-icon>
+          <h3>Kick Vote Immunity (VIP)</h3>
+          <span class="count-pill immune-pill-count">{{ CUSTOM.kick_vote_immune.length }} Immune</span>
+        </div>
+        <button type="button" class="btn-add-perk btn-add-immune" (click)="onAddNewImmune()">
+          <mat-icon>add_moderator</mat-icon>
+          <span>Add Player</span>
+        </button>
+      </div>
+
+      <!-- Add New Immune Player Form -->
+      <div class="inline-add-box inline-immune-box" *ngIf="showNewImmuneDialog">
+        <mat-form-field appearance="fill" class="full-width">
+          <mat-label>Account ID for Kick Vote Immunity</mat-label>
+          <input matInput [(ngModel)]="newImmuneAccountId" placeholder="e.g. pb-IF4VAk4a" (keyup.enter)="onSaveImmune()" />
+        </mat-form-field>
+        <div class="inline-add-actions">
+          <button type="button" class="btn-dialog-secondary" (click)="showNewImmuneDialog = false">Cancel</button>
+          <button type="button" class="btn-primary-glow" (click)="onSaveImmune()" [disabled]="!newImmuneAccountId.trim()">Grant Immunity</button>
+        </div>
+      </div>
+
+      <div class="perks-body-list">
+        <div
+          *ngFor="let accountId of CUSTOM.kick_vote_immune"
+          class="immune-item-card"
+        >
+          <div class="immune-item-left">
+            <div class="account-badge">
+              <mat-icon>account_circle</mat-icon>
+              <code>{{ accountId }}</code>
+            </div>
+            <span class="immunity-pill">
+              <mat-icon>shield</mat-icon>
+              <span>Kick-Vote Immune</span>
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="btn-delete-perk"
+            (click)="onDeleteImmune(accountId)"
+            title="Revoke kick vote immunity"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </div>
+
+        <div class="empty-perks" *ngIf="CUSTOM.kick_vote_immune.length === 0">
+          <mat-icon class="immune-empty-icon">gavel</mat-icon>
+          <p>No players currently have kick vote immunity. Click "Add Player" to make a player immune from kick votes.</p>
         </div>
       </div>
     </div>

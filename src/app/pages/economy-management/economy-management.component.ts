@@ -10,6 +10,10 @@ export interface PurchaseItem {
   item_type: string;
   item_id: string;
   usages_left: number | null;
+  source?: string;
+  expires_at?: number | null;
+  is_equipped?: boolean;
+  duration_display?: string;
 }
 
 export interface EconomyLeaderboardItem {
@@ -27,6 +31,9 @@ export interface PurchaserItem {
   usages_left: number | null;
   name: string;
   v2Tag: string;
+  source?: string;
+  expires_at?: number | null;
+  duration_display?: string;
 }
 
 export interface TransactionItem {
@@ -87,15 +94,30 @@ export class EconomyManagementComponent implements OnInit {
   ];
 
   presetEffects = [
-    'rainbow',
-    'fairydust',
     'spark',
+    'sparkground',
+    'sweat',
+    'sweatground',
+    'distortion',
     'glow',
+    'shine',
+    'highlightshine',
+    'scorch',
+    'ice',
+    'iceground',
     'slime',
     'metal',
-    'ice',
-    'sweat',
-    'ghost',
+    'splinter',
+    'rainbow',
+    'fairydust',
+    'firespark',
+    'smoketrail',
+    'frosty',
+    'hyper',
+    'magical',
+    'toxic',
+    'heavymetal',
+    'meteor',
   ];
 
   // ==================== Tab 2: Server-Wide Active Purchasers ====================
